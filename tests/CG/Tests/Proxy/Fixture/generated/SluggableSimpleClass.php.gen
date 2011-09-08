@@ -1,0 +1,18 @@
+/** @namespace */
+namespace CG\Tests\Proxy\Fixture;
+
+/**
+ * CG library enhanced proxy class.
+ * 
+ * This code was generated automatically by the CG library, manual changes to it
+ * will be lost.
+ */
+class SluggableSimpleClass extends \CG\Tests\Proxy\Fixture\SimpleClass implements \CG\Tests\Proxy\Fixture\SluggableInterface
+{
+
+    public function getSlug()
+    {
+    }
+
+
+}
