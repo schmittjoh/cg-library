@@ -11,11 +11,6 @@ class LazyInitializingEntity extends \CG\Tests\Proxy\Fixture\Entity
     private $__CG__lazyInitializer;
     private $__CG__initialized = false;
 
-    public function __CG__setLazyInitializer(\CG\Proxy\LazyInitializerInterface $initializer)
-    {
-        $this->__CG__lazyInitializer = $initializer;
-    }
-
     public function getName()
     {
         if (false === $this->__CG__initialized) {
@@ -23,6 +18,11 @@ class LazyInitializingEntity extends \CG\Tests\Proxy\Fixture\Entity
         }
 
         return \CG\Tests\Proxy\Fixture\Entity::getName();
+    }
+
+    public function __CG__setLazyInitializer(\CG\Proxy\LazyInitializerInterface $initializer)
+    {
+        $this->__CG__lazyInitializer = $initializer;
     }
 
     private function __CG__initialize()

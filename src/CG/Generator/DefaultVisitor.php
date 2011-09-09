@@ -11,6 +11,11 @@ class DefaultVisitor implements DefaultVisitorInterface
         $this->writer = new Writer();
     }
 
+    public function reset()
+    {
+        $this->writer->reset();
+    }
+
     public function startVisitingClass(PhpClass $class)
     {
         if ($namespace = $class->getNamespace()) {

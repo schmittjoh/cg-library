@@ -4,6 +4,7 @@ namespace CG\Generator;
 
 interface DefaultVisitorInterface
 {
+    function reset();
     function startVisitingClass(PhpClass $class);
     function startVisitingConstants();
     function visitConstant($name, $value);
