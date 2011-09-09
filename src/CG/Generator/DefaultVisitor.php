@@ -132,6 +132,10 @@ class DefaultVisitor implements DefaultVisitorInterface
                 );
             }
 
+            if ($parameter->isPassedByReference()) {
+                $this->writer->write('&');
+            }
+
             $this->writer->write('$'.$parameter->getName());
 
             if ($parameter->hasDefaultValue()) {

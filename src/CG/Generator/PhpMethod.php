@@ -2,12 +2,19 @@
 
 namespace CG\Generator;
 
+use CG\Core\ReflectionUtils;
+
 class PhpMethod extends AbstractPhpMember
 {
     private $final = false;
     private $abstract = false;
     private $parameters = array();
     private $body = '';
+
+    public static function create($name = null)
+    {
+        return new static($name);
+    }
 
     public static function fromReflection(\ReflectionMethod $ref)
     {
@@ -17,9 +24,12 @@ class PhpMethod extends AbstractPhpMember
             ->setAbstract($ref->isAbstract())
             ->setStatic($ref->isStatic())
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
-            ->setDocblock($ref->getDocComment())
             ->setName($ref->name)
         ;
+
+        if ($docComment = $ref->getDocComment()) {
+            $method->setDocblock(ReflectionUtils::getUnindentedDocComment($docComment));
+        }
 
         foreach ($ref->getParameters() as $param) {
             $method->addParameter(static::createParameter($param));

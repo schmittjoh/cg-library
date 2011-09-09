@@ -18,5 +18,24 @@ abstract class ReflectionUtils
         );
     }
 
+    public static function getUnindentedDocComment($docComment)
+    {
+        $lines = explode("\n", $docComment);
+        for ($i=0,$c=count($lines); $i<$c; $i++) {
+            if (0 === $i) {
+                $docBlock = $lines[0]."\n";
+                continue;
+            }
+
+            $docBlock .= ' '.ltrim($lines[$i]);
+
+            if ($i+1 < $c) {
+                $docBlock .= "\n";
+            }
+        }
+
+        return $docBlock;
+    }
+
     private final function __construct() { }
 }

@@ -71,35 +71,4 @@ abstract class AbstractPhpMember
     {
         return $this->docblock;
     }
-
-    protected function updateFromReflection($ref)
-    {
-        if (!$ref instanceof \ReflectionProperty && !$ref instanceof \ReflectionMethod) {
-            throw new \InvalidArgumentException('$ref must be an instance of \ReflectionProperty, or \ReflectionMethod.');
-        }
-
-        $this->static = $ref->isStatic();
-
-        $modifiers = $ref->getModifiers();
-        if ($ref instanceof \ReflectionProperty) {
-            if (0 !== $modifiers & \ReflectionProperty::IS_PUBLIC) {
-                $this->visibility = self::VISIBILITY_PUBLIC;
-            } else if (0 !== $modifiers & \ReflectionProperty::IS_PROTECTED) {
-                $this->visibility = self::VISIBILITY_PROTECTED;
-            } else {
-                $this->visibility = self::VISIBILITY_PRIVATE;
-            }
-        } else {
-            if (0 !== $modifiers & \ReflectionMethod::IS_PUBLIC) {
-                $this->visibility = self::VISIBILITY_PUBLIC;
-            } else if (0 !== $modifiers & \ReflectionMethod::IS_PROTECTED) {
-                $this->visibility = self::VISIBILITY_PROTECTED;
-            } else {
-                $this->visibility = self::VISIBILITY_PRIVATE;
-            }
-        }
-
-        $this->name = $ref->name;
-        $this->docblock = $ref->getDocComment();
-    }
 }

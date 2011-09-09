@@ -2,6 +2,8 @@
 
 namespace CG\Generator;
 
+use CG\Core\ReflectionUtils;
+
 class PhpClass
 {
     private $name;
@@ -15,6 +17,11 @@ class PhpClass
     private $final = false;
     private $docblock;
 
+    public static function create($name = null)
+    {
+        return new self($name);
+    }
+
     public static function fromReflection(\ReflectionClass $ref)
     {
         $class = new static();
@@ -23,8 +30,11 @@ class PhpClass
             ->setAbstract($ref->isAbstract())
             ->setFinal($ref->isFinal())
             ->setConstants($ref->getConstants())
-            ->setDocblock($ref->getDocComment())
         ;
+
+        if ($docComment = $ref->getDocComment()) {
+            $class->setDocblock(ReflectionUtils::getUnindentedDocComment($docComment));
+        }
 
         foreach ($ref->getMethods() as $method) {
             $class->setMethod(static::createMethod($method));
@@ -160,6 +170,7 @@ class PhpClass
         if (!array_key_exists($property, $this->properties)) {
             throw new \InvalidArgumentException(sprintf('The property "%s" does not exist.', $property));
         }
+        unset($this->properties[$property]);
 
         return $this;
     }
@@ -196,6 +207,7 @@ class PhpClass
         if (!array_key_exists($method, $this->methods)) {
             throw new \InvalidArgumentException(sprintf('The method "%s" does not exist.', $method));
         }
+        unset($this->methods[$method]);
 
         return $this;
     }

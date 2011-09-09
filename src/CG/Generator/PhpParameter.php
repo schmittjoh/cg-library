@@ -10,6 +10,11 @@ class PhpParameter
     private $passedByReference = false;
     private $type;
 
+    public static function create($name = null)
+    {
+        return new static($name);
+    }
+
     public static function fromReflection(\ReflectionParameter $ref)
     {
         $parameter = new static();

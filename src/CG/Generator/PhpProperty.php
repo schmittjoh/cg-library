@@ -2,10 +2,17 @@
 
 namespace CG\Generator;
 
+use CG\Core\ReflectionUtils;
+
 class PhpProperty extends AbstractPhpMember
 {
     private $hasDefaultValue = false;
     private $defaultValue;
+
+    public static function create($name = null)
+    {
+        return new static($name);
+    }
 
     public static function fromReflection(\ReflectionProperty $ref)
     {
@@ -14,11 +21,14 @@ class PhpProperty extends AbstractPhpMember
             ->setName($ref->name)
             ->setStatic($ref->isStatic())
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
-            ->setDocblock($ref->getDocComment())
         ;
 
+        if ($docComment = $ref->getDocComment()) {
+            $property->setDocblock(ReflectionUtils::getUnindentedDocComment($docComment));
+        }
+
         $defaultProperties = $ref->getDeclaringClass()->getDefaultProperties();
-        if (array_key_exists($ref->name, $defaultProperties)) {
+        if (isset($defaultProperties[$ref->name])) {
             $property->setDefaultValue($defaultProperties[$ref->name]);
         }
 
