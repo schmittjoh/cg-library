@@ -13,19 +13,17 @@ class Enhancer extends AbstractClassGenerator
     private $generatedClass;
     private $class;
     private $interfaces;
-    private $callbacks;
-    private $interceptors;
+    private $generators;
 
-    public function __construct(\ReflectionClass $class, array $interfaces = array(), array $interceptors = array(), array $callbacks = array())
+    public function __construct(\ReflectionClass $class, array $interfaces = array(), array $generators = array())
     {
-        if (empty($callbacks) && empty($interceptors) && empty($interfaces)) {
-            throw new \RuntimeException('Either callbacks, or interceptors, or interfaces must be given.');
+        if (empty($generators) && empty($interfaces)) {
+            throw new \RuntimeException('Either generators, or interfaces must be given.');
         }
 
         $this->class = $class;
         $this->interfaces = $interfaces;
-        $this->interceptors = $interceptors;
-        $this->callbacks = $callbacks;
+        $this->generators = $generators;
     }
 
     public function createInstance(array $args = array())
@@ -63,8 +61,10 @@ class Enhancer extends AbstractClassGenerator
             }
         }
 
-        if (!empty($this->callbacks)) {
-
+        if (!empty($this->generators)) {
+            foreach ($this->generators as $generator) {
+                $generator->generate($this->class, $this->generatedClass);
+            }
         }
 
         return $this->generatedClass->generate();

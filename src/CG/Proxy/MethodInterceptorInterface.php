@@ -12,9 +12,7 @@ interface MethodInterceptorInterface
     /**
      * Called when intercepting a method call.
      *
-     * @param object $object The object on which the method has been invoked
-     * @param \ReflectionMethod $method The original method which has been invoked
-     * @param array $args The arguments the method has been invoked with
+     * @param MethodInvocation $invocation
      */
-    function intercept($object, \ReflectionMethod $method, array $args);
+    function intercept(MethodInvocation $invocation);
 }

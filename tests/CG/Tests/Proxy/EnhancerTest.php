@@ -2,6 +2,8 @@
 
 namespace CG\Tests\Proxy;
 
+use CG\Proxy\LazyInitializerGenerator;
+
 use CG\Proxy\Enhancer;
 
 class EnhancerTest extends \PHPUnit_Framework_TestCase
@@ -9,19 +11,22 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGenerationTests
      */
-    public function testGenerateClass($class, array $interfaces, $generatedClass)
+    public function testGenerateClass($class, $generatedClass, array $interfaces, array $generators)
     {
-        $enhancer = new Enhancer(new \ReflectionClass($class), $interfaces);
+        $enhancer = new Enhancer(new \ReflectionClass($class), $interfaces, $generators);
         $enhancer->setNamingStrategy($this->getNamingStrategy($generatedClass));
 
-        $this->assertEquals($this->getContent(basename($generatedClass)), $enhancer->generateClass());
+        $this->assertEquals($this->getContent(substr($generatedClass, strrpos($generatedClass, '\\') + 1)), $enhancer->generateClass());
     }
 
     public function getGenerationTests()
     {
         return array(
-            array('CG\Tests\Proxy\Fixture\SimpleClass', array('CG\Tests\Proxy\Fixture\MarkerInterface'), 'CG\Tests\Proxy\Fixture\EnhancedSimpleClass'),
-            array('CG\Tests\Proxy\Fixture\SimpleClass', array('CG\Tests\Proxy\Fixture\SluggableInterface'), 'CG\Tests\Proxy\Fixture\SluggableSimpleClass'),
+            array('CG\Tests\Proxy\Fixture\SimpleClass', 'CG\Tests\Proxy\Fixture\EnhancedSimpleClass', array('CG\Tests\Proxy\Fixture\MarkerInterface'), array()),
+            array('CG\Tests\Proxy\Fixture\SimpleClass', 'CG\Tests\Proxy\Fixture\SluggableSimpleClass', array('CG\Tests\Proxy\Fixture\SluggableInterface'), array()),
+            array('CG\Tests\Proxy\Fixture\Entity', 'CG\Tests\Proxy\Fixture\LazyInitializingEntity', array(), array(
+                new LazyInitializerGenerator(),
+            ))
         );
     }
 
