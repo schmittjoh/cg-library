@@ -2,9 +2,11 @@
 
 namespace CG\Tests\Proxy;
 
+use CG\Proxy\LazyInitializerInterface;
+use CG\Proxy\InterceptionGenerator;
 use CG\Proxy\LazyInitializerGenerator;
-
 use CG\Proxy\Enhancer;
+use CG\Tests\Proxy\Fixture\TraceInterceptor;
 
 class EnhancerTest extends \PHPUnit_Framework_TestCase
 {
@@ -30,6 +32,51 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testInterceptionGenerator()
+    {
+        $enhancer = new Enhancer(new \ReflectionClass('CG\Tests\Proxy\Fixture\Entity'), array(), array(
+            $generator = new InterceptionGenerator()
+        ));
+        $enhancer->setNamingStrategy($this->getNamingStrategy('CG\Tests\Proxy\Fixture\TraceableEntity'.sha1(microtime(true))));
+        $generator->setPrefix('');
+
+        $traceable = $enhancer->createInstance();
+        $traceable->setLoader($this->getLoader(array(
+            $interceptor1 = new TraceInterceptor(),
+            $interceptor2 = new TraceInterceptor(),
+        )));
+
+        $this->assertEquals('foo', $traceable->getName());
+        $this->assertEquals('foo', $traceable->getName());
+        $this->assertEquals(2, count($interceptor1->getLog()));
+        $this->assertEquals(2, count($interceptor2->getLog()));
+    }
+
+    public function testLazyInitializerGenerator()
+    {
+        $enhancer = new Enhancer(new \ReflectionClass('CG\Tests\Proxy\Fixture\Entity'), array(), array(
+            $generator = new LazyInitializerGenerator(),
+        ));
+        $generator->setPrefix('');
+
+        $entity = $enhancer->createInstance();
+        $entity->setLazyInitializer($initializer = new Initializer());
+        $this->assertEquals('foo', $entity->getName());
+        $this->assertSame($entity, $initializer->getLastObject());
+    }
+
+    private function getLoader(array $interceptors)
+    {
+        $loader = $this->getMock('CG\Proxy\InterceptorLoaderInterface');
+        $loader
+            ->expects($this->any())
+            ->method('loadInterceptors')
+            ->will($this->returnValue($interceptors))
+        ;
+
+        return $loader;
+    }
+
     private function getContent($file)
     {
         return file_get_contents(__DIR__.'/Fixture/generated/'.$file.'.php.gen');
@@ -45,5 +92,20 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
         ;
 
         return $namingStrategy;
+    }
+}
+
+class Initializer implements LazyInitializerInterface
+{
+    private $lastObject;
+
+    public function initializeObject($object)
+    {
+        $this->lastObject = $object;
+    }
+
+    public function getLastObject()
+    {
+        return $this->lastObject;
     }
 }

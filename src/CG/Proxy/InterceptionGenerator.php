@@ -53,9 +53,9 @@ class InterceptionGenerator implements GeneratorInterface
         $loaderParam = new PhpParameter();
         $loaderParam
             ->setName('loader')
-            ->setType('\CG\Proxy\InterceptorLoaderInterface')
+            ->setType('CG\Proxy\InterceptorLoaderInterface')
         ;
-        $loaderSetter->setParameter($loaderParam);
+        $loaderSetter->addParameter($loaderParam);
 
         $interceptorCode =
              '$ref = new \ReflectionMethod(%s, %s);'

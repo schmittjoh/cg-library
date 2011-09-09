@@ -2,10 +2,9 @@
 
 namespace CG\Proxy;
 
+use CG\Generator\Writer;
 use CG\Core\ReflectionUtils;
-
 use CG\Generator\GeneratorUtils;
-
 use CG\Generator\PhpParameter;
 use CG\Generator\PhpMethod;
 use CG\Generator\PhpProperty;
@@ -13,8 +12,14 @@ use CG\Generator\PhpClass;
 
 class LazyInitializerGenerator implements GeneratorInterface
 {
+    private $writer;
     private $prefix = '__CG__';
     private $markerInterface;
+
+    public function __construct()
+    {
+        $this->writer = new Writer();
+    }
 
     public function setPrefix($prefix)
     {
@@ -73,7 +78,7 @@ class LazyInitializerGenerator implements GeneratorInterface
         $parameter = new PhpParameter();
         $parameter->setName('initializer');
         $parameter->setType('\CG\Proxy\LazyInitializerInterface');
-        $initializerSetter->setParameter($parameter);
+        $initializerSetter->addParameter($parameter);
         $class->setMethod($initializerSetter);
 
         $this->addMethods($class, $methods);
@@ -82,11 +87,16 @@ class LazyInitializerGenerator implements GeneratorInterface
         $initializingMethod->setName($this->prefix.'initialize');
         $initializingMethod->setVisibility(PhpMethod::VISIBILITY_PRIVATE);
         $initializingMethod->setBody(
-            'if (null === $this->'.$this->prefix.'lazyInitializer) {'."\n"
-            .'    throw new \RuntimeException("'.$this->prefix.'setLazyInitializer() must be called prior to any other public method on this object.");'."\n"
-            .'}'."\n\n"
-            .'$this->'.$this->prefix.'lazyInitializer->initializeObject($this);'."\n"
-            .'$this->'.$this->prefix.'initialized = true;'
+            $this->writer
+                ->reset()
+                ->writeln('if (null === $this->'.$this->prefix.'lazyInitializer) {')
+                    ->indent()
+                    ->writeln('throw new \RuntimeException("'.$this->prefix.'setLazyInitializer() must be called prior to any other public method on this object.");')
+                    ->outdent()
+                ->write("}\n\n")
+                ->writeln('$this->'.$this->prefix.'lazyInitializer->initializeObject($this);')
+                ->writeln('$this->'.$this->prefix.'initialized = true;')
+                ->getContent()
         );
         $class->setMethod($initializingMethod);
     }

@@ -1,14 +1,11 @@
-/** @namespace */
 namespace CG\Tests\Proxy\Fixture;
 
 /**
  * CG library enhanced proxy class.
- * 
+ *
  * This code was generated automatically by the CG library, manual changes to it
- * will be lost.
+ * will be lost upon next generation.
  */
 class EnhancedSimpleClass extends \CG\Tests\Proxy\Fixture\SimpleClass implements \CG\Tests\Proxy\Fixture\MarkerInterface
 {
-
-
 }

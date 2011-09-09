@@ -1,17 +1,14 @@
-/** @namespace */
 namespace CG\Tests\Proxy\Fixture;
 
 /**
  * CG library enhanced proxy class.
- * 
+ *
  * This code was generated automatically by the CG library, manual changes to it
- * will be lost.
+ * will be lost upon next generation.
  */
 class LazyInitializingEntity extends \CG\Tests\Proxy\Fixture\Entity
 {
-
-    private $__CG__lazyInitializer = null;
-
+    private $__CG__lazyInitializer;
     private $__CG__initialized = false;
 
     public function __CG__setLazyInitializer(\CG\Proxy\LazyInitializerInterface $initializer)
@@ -37,6 +34,4 @@ class LazyInitializingEntity extends \CG\Tests\Proxy\Fixture\Entity
         $this->__CG__lazyInitializer->initializeObject($this);
         $this->__CG__initialized = true;
     }
-
-
 }

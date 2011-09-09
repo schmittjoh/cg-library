@@ -2,7 +2,7 @@
 
 namespace CG\Proxy;
 
-use Zend\Reflection\ReflectionClass;
+use CG\Generator\Writer;
 use CG\Generator\PhpMethod;
 use CG\Generator\PhpDocblock;
 use CG\Generator\PhpClass;
@@ -43,21 +43,31 @@ class Enhancer extends AbstractClassGenerator
     {
         static $docBlock;
         if (empty($docBlock)) {
-            $docBlock = new PhpDocblock();
-            $docBlock->setShortDescription('CG library enhanced proxy class.');
-            $docBlock->setLongDescription('This code was generated automatically by the CG library, manual changes to it will be lost.');
+            $writer = new Writer();
+            $writer
+                ->writeln('/**')
+                ->writeln(' * CG library enhanced proxy class.')
+                ->writeln(' *')
+                ->writeln(' * This code was generated automatically by the CG library, manual changes to it')
+                ->writeln(' * will be lost upon next generation.')
+                ->writeln(' */')
+            ;
+            $docBlock = $writer->getContent();
         }
 
         $this->generatedClass = new PhpClass();
         $this->generatedClass->setDocblock($docBlock);
         $this->generatedClass->setName($this->getClassName($this->class));
-        $this->generatedClass->setExtendedClass('\\'.$this->class->name);
+        $this->generatedClass->setParentClassName('\\'.$this->class->name);
 
         if (!empty($this->interfaces)) {
-            $this->generatedClass->setImplementedInterfaces(array_map(function($v) { return '\\'.$v; }, $this->interfaces));
+            $this->generatedClass->setInterfaceNames(array_map(function($v) { return '\\'.$v; }, $this->interfaces));
 
             foreach ($this->getInterfaceMethods() as $method) {
-                $this->generatedClass->setMethod(PhpMethod::fromReflection($method));
+                $method = PhpMethod::fromReflection($method);
+                $method->setAbstract(false);
+
+                $this->generatedClass->setMethod($method);
             }
         }
 
@@ -67,7 +77,7 @@ class Enhancer extends AbstractClassGenerator
             }
         }
 
-        return $this->generatedClass->generate();
+        return $this->generateCode($this->generatedClass);
     }
 
     /**
@@ -78,7 +88,7 @@ class Enhancer extends AbstractClassGenerator
         $methods = array();
 
         foreach ($this->interfaces as $interface) {
-            $ref = new ReflectionClass($interface);
+            $ref = new \ReflectionClass($interface);
             $methods = array_merge($methods, $ref->getMethods());
         }
 
