@@ -2,6 +2,11 @@
 
 namespace CG\Generator;
 
+/**
+ * Represents a PHP parameter.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class PhpParameter
 {
     private $name;

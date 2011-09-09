@@ -4,6 +4,11 @@ namespace CG\Core;
 
 use CG\Generator\PhpClass;
 
+/**
+ * Abstract base class for all class generators.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 abstract class AbstractClassGenerator implements ClassGeneratorInterface
 {
     private $namingStrategy;

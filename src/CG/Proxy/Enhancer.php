@@ -8,6 +8,17 @@ use CG\Generator\PhpDocblock;
 use CG\Generator\PhpClass;
 use CG\Core\AbstractClassGenerator;
 
+/**
+ * Class enhancing generator implementation.
+ *
+ * This class enhances existing classes by generating a proxy and leveraging
+ * different generator implementation.
+ *
+ * There are several built-in generator such as lazy-initializing objects, or
+ * a generator for creating AOP joinpoints.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class Enhancer extends AbstractClassGenerator
 {
     private $generatedClass;
@@ -26,6 +37,12 @@ class Enhancer extends AbstractClassGenerator
         $this->generators = $generators;
     }
 
+    /**
+     * Creates a new instance  of the enhanced class.
+     *
+     * @param array $args
+     * @return object
+     */
     public function createInstance(array $args = array())
     {
         $generatedClass = $this->getClassName($this->class);
@@ -39,6 +56,11 @@ class Enhancer extends AbstractClassGenerator
         return $ref->newInstanceArgs($args);
     }
 
+    /**
+     * Creates a new enhanced class
+     *
+     * @return string
+     */
     public final function generateClass()
     {
         static $docBlock;

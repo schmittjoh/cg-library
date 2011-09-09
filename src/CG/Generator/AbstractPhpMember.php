@@ -2,6 +2,11 @@
 
 namespace CG\Generator;
 
+/**
+ * Abstract PHP member class.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 abstract class AbstractPhpMember
 {
     const VISIBILITY_PRIVATE = 'private';

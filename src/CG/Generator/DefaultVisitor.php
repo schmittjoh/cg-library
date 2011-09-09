@@ -2,6 +2,11 @@
 
 namespace CG\Generator;
 
+/**
+ * The default code generation visitor.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class DefaultVisitor implements DefaultVisitorInterface
 {
     private $writer;

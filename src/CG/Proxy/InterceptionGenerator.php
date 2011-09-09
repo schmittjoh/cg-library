@@ -9,6 +9,14 @@ use CG\Generator\PhpProperty;
 use CG\Generator\PhpMethod;
 use CG\Generator\PhpClass;
 
+/**
+ * Interception Generator.
+ *
+ * This generator creates joinpoints to allow for AOP advices. Right now, it only
+ * supports the most powerful around advice.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class InterceptionGenerator implements GeneratorInterface
 {
     private $prefix = '__CGInterception__';

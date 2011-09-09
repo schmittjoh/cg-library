@@ -4,6 +4,11 @@ namespace CG\Proxy;
 
 use CG\Generator\PhpClass;
 
+/**
+ * Interface for enhancing generators.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 interface GeneratorInterface
 {
     /**

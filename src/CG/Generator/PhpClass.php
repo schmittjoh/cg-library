@@ -4,6 +4,11 @@ namespace CG\Generator;
 
 use CG\Core\ReflectionUtils;
 
+/**
+ * Represents a PHP class.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class PhpClass
 {
     private $name;

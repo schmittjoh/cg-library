@@ -2,22 +2,48 @@
 
 namespace CG\Generator;
 
+/**
+ * The default navigator.
+ *
+ * This class is responsible for the default traversal algorithm of the different
+ * code elements.
+ *
+ * Unlike other visitor pattern implementations, this allows to separate the
+ * traversal logic from the objects that are traversed.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class DefaultNavigator
 {
     private $constantSortFunc;
     private $propertySortFunc;
     private $methodSortFunc;
 
+    /**
+     * Sets a custom constant sorting function.
+     *
+     * @param \Closure $func
+     */
     public function setConstantSortFunc(\Closure $func = null)
     {
         $this->constantSortFunc = $func;
     }
 
+    /**
+     * Sets a custom property sorting function.
+     *
+     * @param \Closure $func
+     */
     public function setPropertySortFunc(\Closure $func = null)
     {
         $this->propertySortFunc = $func;
     }
 
+    /**
+     * Sets a custom method sorting function.
+     *
+     * @param \Closure $func
+     */
     public function setMethodSortFunc(\Closure $func = null)
     {
         $this->methodSortFunc = $func;

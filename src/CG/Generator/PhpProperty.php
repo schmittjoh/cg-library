@@ -4,6 +4,11 @@ namespace CG\Generator;
 
 use CG\Core\ReflectionUtils;
 
+/**
+ * Represents a PHP property.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class PhpProperty extends AbstractPhpMember
 {
     private $hasDefaultValue = false;

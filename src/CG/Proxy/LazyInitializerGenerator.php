@@ -10,6 +10,14 @@ use CG\Generator\PhpMethod;
 use CG\Generator\PhpProperty;
 use CG\Generator\PhpClass;
 
+/**
+ * Generator for creating lazy-initializing instances.
+ *
+ * This generator enhances concrete classes to allow for them to be lazily
+ * initialized upon first access.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class LazyInitializerGenerator implements GeneratorInterface
 {
     private $writer;

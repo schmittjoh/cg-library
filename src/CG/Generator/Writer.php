@@ -2,6 +2,13 @@
 
 namespace CG\Generator;
 
+/**
+ * A writer implementation.
+ *
+ * This may be used to simplify writing well-formatted code.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class Writer
 {
     private $content = '';

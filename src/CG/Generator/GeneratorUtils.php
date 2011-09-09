@@ -2,6 +2,11 @@
 
 namespace CG\Generator;
 
+/**
+ * Some Generator utils.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 abstract class GeneratorUtils
 {
     private final function __construct() {}

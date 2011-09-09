@@ -4,6 +4,11 @@ namespace CG\Generator;
 
 use CG\Core\ReflectionUtils;
 
+/**
+ * Represents a PHP method.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class PhpMethod extends AbstractPhpMember
 {
     private $final = false;
