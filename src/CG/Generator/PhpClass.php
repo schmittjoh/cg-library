@@ -2,6 +2,8 @@
 
 namespace CG\Generator;
 
+use Doctrine\Common\Annotations\PhpParser;
+
 use CG\Core\ReflectionUtils;
 
 /**
@@ -11,12 +13,15 @@ use CG\Core\ReflectionUtils;
  */
 class PhpClass
 {
+    private static $phpParser;
+
     private $name;
     private $parentClassName;
     private $interfaceNames = array();
     private $useStatements = array();
     private $constants = array();
     private $properties = array();
+    private $requiredFiles = array();
     private $methods = array();
     private $abstract = false;
     private $final = false;
@@ -36,6 +41,18 @@ class PhpClass
             ->setFinal($ref->isFinal())
             ->setConstants($ref->getConstants())
         ;
+
+        if (null === self::$phpParser) {
+            if (!class_exists('Doctrine\Common\Annotations\PhpParser')) {
+                self::$phpParser = false;
+            } else {
+                self::$phpParser = new PhpParser();
+            }
+        }
+
+        if (false !== self::$phpParser) {
+            $class->setUseStatements(self::$phpParser->parseClass($ref));
+        }
 
         if ($docComment = $ref->getDocComment()) {
             $class->setDocblock(ReflectionUtils::getUnindentedDocComment($docComment));
@@ -91,6 +108,20 @@ class PhpClass
     public function addInterfaceName($name)
     {
         $this->interfaceNames[] = $name;
+
+        return $this;
+    }
+
+    public function setRequiredFiles(array $files)
+    {
+        $this->files = $files;
+
+        return $this;
+    }
+
+    public function addRequiredFile($file)
+    {
+        $this->files[] = $file;
 
         return $this;
     }
@@ -251,6 +282,11 @@ class PhpClass
     public function getInterfaceNames()
     {
         return $this->interfaceNames;
+    }
+
+    public function getRequiredFiles()
+    {
+        return $this->requiredFiles;
     }
 
     public function getUseStatements()

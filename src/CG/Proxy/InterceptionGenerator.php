@@ -2,6 +2,8 @@
 
 namespace CG\Proxy;
 
+use CG\Core\ClassUtils;
+
 use CG\Core\ReflectionUtils;
 
 use CG\Generator\PhpParameter;
@@ -21,6 +23,12 @@ class InterceptionGenerator implements GeneratorInterface
 {
     private $prefix = '__CGInterception__';
     private $filter;
+    private $requiredFile;
+
+    public function setRequiredFile($file)
+    {
+        $this->requiredFile = $file;
+    }
 
     public function setPrefix($prefix)
     {
@@ -42,6 +50,10 @@ class InterceptionGenerator implements GeneratorInterface
 
         if (empty($methods)) {
             return;
+        }
+
+        if (!empty($this->requiredFile)) {
+            $genClass->addRequiredFile($this->requiredFile);
         }
 
         $interceptorLoader = new PhpProperty();
@@ -66,9 +78,9 @@ class InterceptionGenerator implements GeneratorInterface
         $loaderSetter->addParameter($loaderParam);
 
         $interceptorCode =
-             '$ref = new \ReflectionMethod(%s, %s);'
+             '$ref = new \ReflectionMethod(%s, %s);'."\n"
             .'$interceptors = $this->'.$this->prefix.'loader->loadInterceptors($ref, $this, array(%s));'."\n"
-        	.'$invocation = new \CG\Proxy\MethodInvocation($ref, $this, array(%s), $interceptors);'."\n"
+        	.'$invocation = new \CG\Proxy\MethodInvocation($ref, $this, array(%s), $interceptors);'."\n\n"
             .'return $invocation->proceed();'
         ;
 
@@ -79,8 +91,10 @@ class InterceptionGenerator implements GeneratorInterface
             }
             $params = implode(', ', $params);
 
-            $genMethod = PhpMethod::fromReflection($method);
-            $genMethod->setBody(sprintf($interceptorCode, var_export($method->class, true), var_export($method->name, true), $params, $params));
+            $genMethod = PhpMethod::fromReflection($method)
+                ->setBody(sprintf($interceptorCode, var_export(ClassUtils::getUserClass($method->class), true), var_export($method->name, true), $params, $params))
+                ->setDocblock(null)
+            ;
             $genClass->setMethod($genMethod);
         }
     }

@@ -56,6 +56,21 @@ class Enhancer extends AbstractClassGenerator
         return $ref->newInstanceArgs($args);
     }
 
+    public function writeClass($filename)
+    {
+        if (!is_dir($dir = dirname($filename))) {
+            if (false === @mkdir($dir, 0777, true)) {
+                throw new \RuntimeException(sprintf('Could not create directory "%s".', $dir));
+            }
+        }
+
+        if (!is_writable($dir)) {
+            throw new \RuntimeException(sprintf('The directory "%s" is not writable.', $dir));
+        }
+
+        file_put_contents($filename, "<?php\n\n".$this->generateClass());
+    }
+
     /**
      * Creates a new enhanced class
      *

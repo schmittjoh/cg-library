@@ -14,6 +14,7 @@ class PhpMethod extends AbstractPhpMember
     private $final = false;
     private $abstract = false;
     private $parameters = array();
+    private $referenceReturned = false;
     private $body = '';
 
     public static function create($name = null)
@@ -29,6 +30,7 @@ class PhpMethod extends AbstractPhpMember
             ->setAbstract($ref->isAbstract())
             ->setStatic($ref->isStatic())
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
+            ->setReferenceReturned($ref->returnsReference())
             ->setName($ref->name)
         ;
 
@@ -60,6 +62,13 @@ class PhpMethod extends AbstractPhpMember
     public function setAbstract($bool)
     {
         $this->abstract = $bool;
+
+        return $this;
+    }
+
+    public function setReferenceReturned($bool)
+    {
+        $this->referenceReturned = (Boolean) $bool;
 
         return $this;
     }
@@ -114,6 +123,11 @@ class PhpMethod extends AbstractPhpMember
     public function isAbstract()
     {
         return $this->abstract;
+    }
+
+    public function isReferenceReturned()
+    {
+        return $this->referenceReturned;
     }
 
     public function getBody()

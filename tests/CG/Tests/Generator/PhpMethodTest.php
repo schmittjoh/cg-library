@@ -60,4 +60,15 @@ class PhpMethodTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($method, $method->setBody('foo'));
         $this->assertEquals('foo', $method->getBody());
     }
+
+    public function testSetIsReferenceReturned()
+    {
+        $method = new PhpMethod();
+
+        $this->assertFalse($method->isReferenceReturned());
+        $this->assertSame($method, $method->setReferenceReturned(true));
+        $this->assertTrue($method->isReferenceReturned());
+        $this->assertSame($method, $method->setReferenceReturned(false));
+        $this->assertFalse($method->isReferenceReturned());
+    }
 }

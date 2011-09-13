@@ -13,7 +13,7 @@ namespace CG\Proxy;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-final class MethodInvocation
+class MethodInvocation
 {
     public $reflection;
     public $object;

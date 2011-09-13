@@ -40,6 +40,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
             ->addParameter(PhpParameter::create()
                 ->setName('b')
                 ->setType('array')
+                ->setPassedByReference(true)
             )
             ->addParameter(PhpParameter::create()
                 ->setName('c')

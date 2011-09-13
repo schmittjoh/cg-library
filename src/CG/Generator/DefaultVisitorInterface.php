@@ -27,4 +27,5 @@ interface DefaultVisitorInterface
     function visitMethod(PhpMethod $method);
     function endVisitingMethods();
     function endVisitingClass(PhpClass $class);
+    function visitFunction(PhpFunction $function);
 }
