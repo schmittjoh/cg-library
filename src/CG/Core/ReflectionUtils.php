@@ -14,7 +14,7 @@ abstract class ReflectionUtils
 
         return array_filter(
             $class->getMethods($filter),
-            function($method) { return !$method->isFinal(); }
+            function($method) { return !$method->isFinal() && !$method->isStatic(); }
         );
     }
 

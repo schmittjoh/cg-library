@@ -7,6 +7,14 @@ use CG\Generator\PhpClass;
 use CG\Generator\DefaultVisitor;
 use CG\Generator\DefaultNavigator;
 
+/**
+ * The default generator strategy.
+ *
+ * This strategy allows to change the order in which methods, properties and
+ * constants are sorted.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class DefaultGeneratorStrategy implements GeneratorStrategyInterface
 {
     private $navigator;

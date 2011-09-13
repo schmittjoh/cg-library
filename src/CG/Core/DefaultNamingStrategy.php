@@ -2,6 +2,11 @@
 
 namespace CG\Core;
 
+/**
+ * The default naming strategy.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */
 class DefaultNamingStrategy implements NamingStrategyInterface
 {
     public function getClassName(\ReflectionClass $class)
