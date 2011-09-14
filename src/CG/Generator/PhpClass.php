@@ -130,14 +130,14 @@ class PhpClass
 
     public function setRequiredFiles(array $files)
     {
-        $this->files = $files;
+        $this->requiredFiles = $files;
 
         return $this;
     }
 
     public function addRequiredFile($file)
     {
-        $this->files[] = $file;
+        $this->requiredFiles[] = $file;
 
         return $this;
     }

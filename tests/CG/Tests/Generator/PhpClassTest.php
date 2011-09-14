@@ -201,4 +201,15 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($class, $class->setDocblock('foo'));
         $this->assertEquals('foo', $class->getDocblock());
     }
+
+    public function testSetGetRequiredFiles()
+    {
+        $class = new PhpClass();
+
+        $this->assertEquals(array(), $class->getRequiredFiles());
+        $this->assertSame($class, $class->setRequiredFiles(array('foo')));
+        $this->assertEquals(array('foo'), $class->getRequiredFiles());
+        $this->assertSame($class, $class->addRequiredFile('bar'));
+        $this->assertEquals(array('foo', 'bar'), $class->getRequiredFiles());
+    }
 }
