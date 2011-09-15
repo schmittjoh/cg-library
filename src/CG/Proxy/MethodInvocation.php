@@ -60,4 +60,16 @@ class MethodInvocation
 
         return $this->reflection->invokeArgs($this->object, $this->arguments);
     }
+
+    /**
+     * Returns a string representation of the method.
+     *
+     * This is intended for debugging purposes only.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf('%s::%s', $this->reflection->class, $this->reflection->name);
+    }
 }
