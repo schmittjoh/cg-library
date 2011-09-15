@@ -58,6 +58,8 @@ class MethodInvocation
             return $this->interceptors[$this->pointer++]->intercept($this);
         }
 
+        $this->reflection->setAccessible(true);
+
         return $this->reflection->invokeArgs($this->object, $this->arguments);
     }
 
