@@ -18,6 +18,8 @@
 
 namespace CG\Proxy;
 
+use CG\Core\NamingStrategyInterface;
+
 use CG\Generator\Writer;
 use CG\Generator\PhpMethod;
 use CG\Generator\PhpDocblock;
@@ -108,10 +110,16 @@ class Enhancer extends AbstractClassGenerator
             $docBlock = $writer->getContent();
         }
 
-        $this->generatedClass = new PhpClass();
-        $this->generatedClass->setDocblock($docBlock);
-        $this->generatedClass->setName($this->getClassName($this->class));
-        $this->generatedClass->setParentClassName('\\'.$this->class->name);
+        $this->generatedClass = PhpClass::create()
+            ->setDocblock($docBlock)
+            ->setParentClassName($this->class->name)
+        ;
+
+        $proxyClassName = $this->getClassName($this->class);
+        if (false === strpos($proxyClassName, NamingStrategyInterface::SEPARATOR)) {
+            throw new \RuntimeException(sprintf('The proxy class name must be suffixed with "%s" and an optional string, but got "%s".', NamingStrategyInterface::SEPARATOR, $proxyClassName));
+        }
+        $this->generatedClass->setName($proxyClassName);
 
         if (!empty($this->interfaces)) {
             $this->generatedClass->setInterfaceNames(array_map(function($v) { return '\\'.$v; }, $this->interfaces));

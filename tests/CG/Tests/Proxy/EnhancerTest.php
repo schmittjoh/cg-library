@@ -24,9 +24,9 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
     public function getGenerationTests()
     {
         return array(
-            array('CG\Tests\Proxy\Fixture\SimpleClass', 'CG\Tests\Proxy\Fixture\EnhancedSimpleClass', array('CG\Tests\Proxy\Fixture\MarkerInterface'), array()),
-            array('CG\Tests\Proxy\Fixture\SimpleClass', 'CG\Tests\Proxy\Fixture\SluggableSimpleClass', array('CG\Tests\Proxy\Fixture\SluggableInterface'), array()),
-            array('CG\Tests\Proxy\Fixture\Entity', 'CG\Tests\Proxy\Fixture\LazyInitializingEntity', array(), array(
+            array('CG\Tests\Proxy\Fixture\SimpleClass', 'CG\Tests\Proxy\Fixture\SimpleClass__CG__Enhanced', array('CG\Tests\Proxy\Fixture\MarkerInterface'), array()),
+            array('CG\Tests\Proxy\Fixture\SimpleClass', 'CG\Tests\Proxy\Fixture\SimpleClass__CG__Sluggable', array('CG\Tests\Proxy\Fixture\SluggableInterface'), array()),
+            array('CG\Tests\Proxy\Fixture\Entity', 'CG\Tests\Proxy\Fixture\Entity__CG__LazyInitializing', array(), array(
                 new LazyInitializerGenerator(),
             ))
         );
@@ -37,7 +37,7 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
         $enhancer = new Enhancer(new \ReflectionClass('CG\Tests\Proxy\Fixture\Entity'), array(), array(
             $generator = new InterceptionGenerator()
         ));
-        $enhancer->setNamingStrategy($this->getNamingStrategy('CG\Tests\Proxy\Fixture\TraceableEntity'.sha1(microtime(true))));
+        $enhancer->setNamingStrategy($this->getNamingStrategy('CG\Tests\Proxy\Fixture\Entity__CG__Traceable_'.sha1(microtime(true))));
         $generator->setPrefix('');
 
         $traceable = $enhancer->createInstance();
