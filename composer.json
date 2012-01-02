@@ -1,5 +1,5 @@
 {
-    "name": "cg/cg",
+    "name": "jms/cg",
     "description": "Toolset for generating PHP code",
     "keywords": ["code generation"],
     "type": "library",
