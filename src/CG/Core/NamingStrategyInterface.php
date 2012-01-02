@@ -26,12 +26,22 @@ namespace CG\Core;
 interface NamingStrategyInterface
 {
     const SEPARATOR = '__CG__';
+    const SEPARATOR_LENGTH = 6;
 
     /**
      * Returns the class name for the proxy class.
      *
-     * The generated class name MUST be the original class appended with the
-     * separator, and an optional string that is up to the implementation.
+     * The generated class name MUST be the concatenation of a nonempty prefix,
+     * the namespace separator __CG__, and the original class name.
+     *
+     * Examples:
+     *
+     *    +----------------------------+------------------------------+
+     *    | Original Name              | Generated Name               |
+     *    +============================+==============================+
+     *    | Foo\Bar                    | dred332\__CG__\Foo\Bar       |
+     *    | Bar\Baz                    | Foo\Doo\__CG__\Bar\Baz       |
+     *    +----------------------------+------------------------------+
      *
      * @param \ReflectionClass $class
      * @return string the class name for the generated class

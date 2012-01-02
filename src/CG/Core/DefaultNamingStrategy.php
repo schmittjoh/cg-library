@@ -25,10 +25,17 @@ namespace CG\Core;
  */
 class DefaultNamingStrategy implements NamingStrategyInterface
 {
+	private $prefix;
+
+	public function __construct($prefix = 'EnhancedProxy')
+	{
+		$this->prefix = $prefix;
+	}
+
     public function getClassName(\ReflectionClass $class)
     {
         $userClass = ClassUtils::getUserClass($class->name);
 
-        return $userClass.self::SEPARATOR.sha1($class->name);
+        return $this->prefix.'_'.sha1($class->name).'\\'.self::SEPARATOR.'\\'.$userClass;
     }
 }
