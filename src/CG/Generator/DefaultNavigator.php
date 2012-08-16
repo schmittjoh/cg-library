@@ -38,7 +38,7 @@ class DefaultNavigator
     /**
      * Sets a custom constant sorting function.
      *
-     * @param \Closure $func
+     * @param null|\Closure $func
      */
     public function setConstantSortFunc(\Closure $func = null)
     {
@@ -48,7 +48,7 @@ class DefaultNavigator
     /**
      * Sets a custom property sorting function.
      *
-     * @param \Closure $func
+     * @param null|\Closure $func
      */
     public function setPropertySortFunc(\Closure $func = null)
     {
@@ -58,7 +58,7 @@ class DefaultNavigator
     /**
      * Sets a custom method sorting function.
      *
-     * @param \Closure $func
+     * @param null|\Closure $func
      */
     public function setMethodSortFunc(\Closure $func = null)
     {
