@@ -64,8 +64,8 @@ class LazyInitializerGenerator implements GeneratorInterface
     /**
      * Generates the necessary methods in the class.
      *
-     * @param \ReflectionClass $originalClass
-     * @param PhpClass $class
+     * @param  \ReflectionClass $originalClass
+     * @param  PhpClass         $class
      * @return void
      */
     public function generate(\ReflectionClass $originalClass, PhpClass $class)

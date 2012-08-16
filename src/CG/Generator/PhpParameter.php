@@ -50,7 +50,7 @@ class PhpParameter
 
         if ($ref->isArray()) {
             $parameter->setType('array');
-        } else if ($class = $ref->getClass()) {
+        } elseif ($class = $ref->getClass()) {
             $parameter->setType($class->name);
         }
 

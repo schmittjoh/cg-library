@@ -53,5 +53,5 @@ abstract class ReflectionUtils
         return $docBlock;
     }
 
-    private final function __construct() { }
+    final private function __construct() { }
 }

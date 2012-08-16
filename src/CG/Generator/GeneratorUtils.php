@@ -25,7 +25,7 @@ namespace CG\Generator;
  */
 abstract class GeneratorUtils
 {
-    private final function __construct() {}
+    final private function __construct() {}
 
     public static function callMethod(\ReflectionMethod $method, array $params = null)
     {

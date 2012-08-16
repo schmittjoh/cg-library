@@ -59,7 +59,6 @@ class PhpMethod extends AbstractPhpMember
         }
 
         // FIXME: Extract body?
-
         return $method;
     }
 

@@ -19,11 +19,11 @@ abstract class Entity
      * Another doc comment.
      *
      * @param unknown_type $a
-     * @param array $b
-     * @param \stdClass $c
-     * @param unknown_type $d
+     * @param array        $b
+     * @param \stdClass    $c
+     * @param string       $d
      */
-    public final function __construct($a, array &$b, \stdClass $c, $d = 'foo')
+    final public function __construct($a, array &$b, \stdClass $c, $d = 'foo')
     {
     }
 

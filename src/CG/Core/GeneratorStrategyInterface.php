@@ -30,5 +30,5 @@ use CG\Generator\PhpClass;
  */
 interface GeneratorStrategyInterface
 {
-    function generate(PhpClass $class);
+    public function generate(PhpClass $class);
 }

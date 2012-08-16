@@ -18,8 +18,6 @@
 
 namespace CG\Core;
 
-use CG\Proxy\Enhancer;
-
 abstract class ClassUtils
 {
     public static function getUserClass($className)
@@ -31,5 +29,5 @@ abstract class ClassUtils
         return substr($className, $pos + NamingStrategyInterface::SEPARATOR_LENGTH + 2);
     }
 
-    private final function __construct() {}
+    final private function __construct() {}
 }

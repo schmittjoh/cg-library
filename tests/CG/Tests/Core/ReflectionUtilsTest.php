@@ -37,11 +37,11 @@ class ReflectionUtilsTest extends \PHPUnit_Framework_TestCase
 abstract class OverridableReflectionTest
 {
     public function a() { }
-    public final function b() { }
+    final public function b() { }
     public static function c() { }
     abstract public function d();
     protected function e() { }
-    protected final function f() {}
+    final protected function f() {}
     protected static function g() { }
     abstract protected function h();
     private function i() { }

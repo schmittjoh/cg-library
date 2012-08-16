@@ -53,9 +53,9 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
  * Another doc comment.
  *
  * @param unknown_type $a
- * @param array $b
- * @param \stdClass $c
- * @param unknown_type $d
+ * @param array        $b
+ * @param \stdClass    $c
+ * @param string       $d
  */')
         ;
         $class->setMethod($method);
