@@ -34,6 +34,9 @@ interface DefaultVisitorInterface
 
     public function startVisitingClass(PhpClass $class);
     public function startVisitingConstants();
+    /**
+     * @param integer|string $name
+     */
     public function visitConstant($name, $value);
     public function endVisitingConstants();
     public function startVisitingProperties();

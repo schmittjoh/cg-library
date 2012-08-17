@@ -30,6 +30,9 @@ class PhpProperty extends AbstractPhpMember
     private $hasDefaultValue = false;
     private $defaultValue;
 
+    /**
+     * @param string|null $name
+     */
     public static function create($name = null)
     {
         return new static($name);
@@ -56,6 +59,9 @@ class PhpProperty extends AbstractPhpMember
         return $property;
     }
 
+    /**
+     * @param string|false $value
+     */
     public function setDefaultValue($value)
     {
         $this->defaultValue = $value;

@@ -20,6 +20,9 @@ namespace CG\Core;
 
 abstract class ClassUtils
 {
+    /**
+     * @param string $className
+     */
     public static function getUserClass($className)
     {
         if (false === $pos = strrpos($className, '\\'.NamingStrategyInterface::SEPARATOR.'\\')) {

@@ -39,6 +39,9 @@ abstract class AbstractPhpMember
         $this->setName($name);
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -46,6 +49,9 @@ abstract class AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param string $visibility
+     */
     public function setVisibility($visibility)
     {
         if ($visibility !== self::VISIBILITY_PRIVATE
@@ -59,6 +65,9 @@ abstract class AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setStatic($bool)
     {
         $this->static = (Boolean) $bool;
@@ -66,6 +75,9 @@ abstract class AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param string|null $doc
+     */
     public function setDocblock($doc)
     {
         $this->docblock = $doc;

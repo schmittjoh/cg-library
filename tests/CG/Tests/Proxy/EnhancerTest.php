@@ -77,11 +77,17 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
         return $loader;
     }
 
+    /**
+     * @param string $file
+     */
     private function getContent($file)
     {
         return file_get_contents(__DIR__.'/Fixture/generated/'.$file.'.php.gen');
     }
 
+    /**
+     * @param string $name
+     */
     private function getNamingStrategy($name)
     {
         $namingStrategy = $this->getMock('CG\Core\NamingStrategyInterface');

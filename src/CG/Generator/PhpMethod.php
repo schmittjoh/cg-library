@@ -33,6 +33,9 @@ class PhpMethod extends AbstractPhpMember
     private $referenceReturned = false;
     private $body = '';
 
+    /**
+     * @param string|null $name
+     */
     public static function create($name = null)
     {
         return new static($name);
@@ -67,6 +70,9 @@ class PhpMethod extends AbstractPhpMember
         return PhpParameter::fromReflection($parameter);
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setFinal($bool)
     {
         $this->final = (Boolean) $bool;
@@ -74,6 +80,9 @@ class PhpMethod extends AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setAbstract($bool)
     {
         $this->abstract = $bool;
@@ -81,6 +90,9 @@ class PhpMethod extends AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setReferenceReturned($bool)
     {
         $this->referenceReturned = (Boolean) $bool;
@@ -88,6 +100,9 @@ class PhpMethod extends AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param string $body
+     */
     public function setBody($body)
     {
         $this->body = $body;
@@ -119,6 +134,9 @@ class PhpMethod extends AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param integer $position
+     */
     public function removeParameter($position)
     {
         if (!isset($this->parameters[$position])) {

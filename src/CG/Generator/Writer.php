@@ -49,6 +49,9 @@ class Writer
         return $this;
     }
 
+    /**
+     * @param string $content
+     */
     public function writeln($content)
     {
         $this->write($content."\n");
@@ -56,6 +59,9 @@ class Writer
         return $this;
     }
 
+    /**
+     * @param string $content
+     */
     public function write($content)
     {
         $lines = explode("\n", $content);

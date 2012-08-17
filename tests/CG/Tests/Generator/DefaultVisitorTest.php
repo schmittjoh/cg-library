@@ -36,6 +36,9 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->getContent('a_b_function.php'), $visitor->getContent());
     }
 
+    /**
+     * @param string $filename
+     */
     private function getContent($filename)
     {
         if (!is_file($path = __DIR__.'/Fixture/generated/'.$filename)) {

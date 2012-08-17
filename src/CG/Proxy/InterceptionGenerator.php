@@ -46,6 +46,9 @@ class InterceptionGenerator implements GeneratorInterface
         $this->requiredFile = $file;
     }
 
+    /**
+     * @param string $prefix
+     */
     public function setPrefix($prefix)
     {
         $this->prefix = $prefix;

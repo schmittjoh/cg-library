@@ -44,6 +44,9 @@ class DefaultGeneratorStrategyTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @param string $file
+     */
     private function getContent($file)
     {
         return file_get_contents(__DIR__.'/generated/'.$file);

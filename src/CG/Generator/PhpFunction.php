@@ -42,6 +42,9 @@ class PhpFunction
         $this->name = $name;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -49,6 +52,9 @@ class PhpFunction
         return $this;
     }
 
+    /**
+     * @param string $namespace
+     */
     public function setNamespace($namespace)
     {
         $this->namespace = $namespace;
@@ -63,6 +69,9 @@ class PhpFunction
         return $this;
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setReferenceReturned($bool)
     {
         $this->referenceReturned = (Boolean) $bool;
@@ -70,6 +79,9 @@ class PhpFunction
         return $this;
     }
 
+    /**
+     * @param integer $position
+     */
     public function replaceParameter($position, PhpParameter $parameter)
     {
         if ($position < 0 || $position > count($this->parameters)) {
@@ -88,6 +100,9 @@ class PhpFunction
         return $this;
     }
 
+    /**
+     * @param integer $position
+     */
     public function removeParameter($position)
     {
         if (!isset($this->parameters[$position])) {
@@ -100,6 +115,9 @@ class PhpFunction
         return $this;
     }
 
+    /**
+     * @param string $body
+     */
     public function setBody($body)
     {
         $this->body = $body;
@@ -107,6 +125,9 @@ class PhpFunction
         return $this;
     }
 
+    /**
+     * @param string $docBlock
+     */
     public function setDocblock($docBlock)
     {
         $this->docblock = $docBlock;

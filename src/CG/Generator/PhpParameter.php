@@ -31,6 +31,9 @@ class PhpParameter
     private $passedByReference = false;
     private $type;
 
+    /**
+     * @param string|null $name
+     */
     public static function create($name = null)
     {
         return new static($name);
@@ -62,6 +65,9 @@ class PhpParameter
         $this->name = $name;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -85,6 +91,9 @@ class PhpParameter
         return $this;
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setPassedByReference($bool)
     {
         $this->passedByReference = (Boolean) $bool;
@@ -92,6 +101,9 @@ class PhpParameter
         return $this;
     }
 
+    /**
+     * @param string $type
+     */
     public function setType($type)
     {
         $this->type = $type;

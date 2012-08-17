@@ -100,6 +100,9 @@ class PhpClass
         $this->name = $name;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
@@ -107,6 +110,9 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string|null $name
+     */
     public function setParentClassName($name)
     {
         $this->parentClassName = $name;
@@ -121,6 +127,9 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string $name
+     */
     public function addInterfaceName($name)
     {
         $this->interfaceNames[] = $name;
@@ -135,6 +144,9 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string $file
+     */
     public function addRequiredFile($file)
     {
         $this->requiredFiles[] = $file;
@@ -149,6 +161,10 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string      $namespace
+     * @param string|null $alias
+     */
     public function addUseStatement($namespace, $alias = null)
     {
         if (null === $alias) {
@@ -167,6 +183,10 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     */
     public function setConstant($name, $value)
     {
         $this->constants[$name] = $value;
@@ -179,6 +199,9 @@ class PhpClass
         return array_key_exists($this->constants, $name);
     }
 
+    /**
+     * @param string $name
+     */
     public function removeConstant($name)
     {
         if (!array_key_exists($name, $this->constants)) {
@@ -204,19 +227,25 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string $property
+     */
     public function hasProperty($property)
     {
         if ($property instanceof PhpProperty) {
-            $property = $property->getName();
+            $property = $property->name;
         }
 
         return isset($this->properties[$property]);
     }
 
+    /**
+     * @param string $property
+     */
     public function removeProperty($property)
     {
         if ($property instanceof PhpProperty) {
-            $property = $property->getName();
+            $property = $property->name;
         }
 
         if (!array_key_exists($property, $this->properties)) {
@@ -241,19 +270,25 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string $method
+     */
     public function hasMethod($method)
     {
         if ($method instanceof PhpMethod) {
-            $method = $method->getName();
+            $method = $method->name;
         }
 
         return isset($this->methods[$method]);
     }
 
+    /**
+     * @param string $method
+     */
     public function removeMethod($method)
     {
         if ($method instanceof PhpMethod) {
-            $method = $method->getName();
+            $method = $method->name;
         }
 
         if (!array_key_exists($method, $this->methods)) {
@@ -264,6 +299,9 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setAbstract($bool)
     {
         $this->abstract = (Boolean) $bool;
@@ -271,6 +309,9 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param boolean $bool
+     */
     public function setFinal($bool)
     {
         $this->final = (Boolean) $bool;
@@ -278,6 +319,9 @@ class PhpClass
         return $this;
     }
 
+    /**
+     * @param string $block
+     */
     public function setDocblock($block)
     {
         $this->docblock = $block;
