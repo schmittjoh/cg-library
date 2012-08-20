@@ -31,8 +31,10 @@ interface InterceptorLoaderInterface
     /**
      * Loads interceptors.
      *
+     * @param \ReflectionClass  $class
      * @param \ReflectionMethod $method
+     *
      * @return array<MethodInterceptorInterface>
      */
-    function loadInterceptors(\ReflectionMethod $method);
+    function loadInterceptors(\ReflectionClass $class, \ReflectionMethod $method);
 }
