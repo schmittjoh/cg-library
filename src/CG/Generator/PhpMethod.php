@@ -65,6 +65,9 @@ class PhpMethod extends AbstractPhpMember
         return $method;
     }
 
+    /**
+     * @return PhpParameter
+     */
     protected static function createParameter(\ReflectionParameter $parameter)
     {
         return PhpParameter::fromReflection($parameter);

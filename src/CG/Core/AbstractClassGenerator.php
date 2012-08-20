@@ -40,6 +40,9 @@ abstract class AbstractClassGenerator implements ClassGeneratorInterface
         $this->generatorStrategy = $generatorStrategy;
     }
 
+    /**
+     * @return string
+     */
     public function getClassName(\ReflectionClass $class)
     {
         if (null === $this->namingStrategy) {

@@ -85,11 +85,17 @@ class PhpClass
         return $class;
     }
 
+    /**
+     * @return PhpMethod
+     */
     protected static function createMethod(\ReflectionMethod $method)
     {
         return PhpMethod::fromReflection($method);
     }
 
+    /**
+     * @return PhpProperty
+     */
     protected static function createProperty(\ReflectionProperty $property)
     {
         return PhpProperty::fromReflection($property);
