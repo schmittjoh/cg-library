@@ -32,19 +32,64 @@ interface DefaultVisitorInterface
      */
     public function reset();
 
-    public function startVisitingClass(PhpClass $class);
-    public function startVisitingConstants();
     /**
-     * @param integer|string $name
+     * @return void
+     */
+    public function startVisitingClass(PhpClass $class);
+
+    /**
+     * @return void
+     */
+    public function startVisitingConstants();
+
+    /**
+     * @param  integer|string $name
+     * @return void
      */
     public function visitConstant($name, $value);
+
+    /**
+     * @return void
+     */
     public function endVisitingConstants();
+
+    /**
+     * @return void
+     */
     public function startVisitingProperties();
+
+    /**
+     * @return void
+     */
     public function visitProperty(PhpProperty $property);
+
+    /**
+     * @return void
+     */
     public function endVisitingProperties();
+
+    /**
+     * @return void
+     */
     public function startVisitingMethods();
+
+    /**
+     * @return void
+     */
     public function visitMethod(PhpMethod $method);
+
+    /**
+     * @return void
+     */
     public function endVisitingMethods();
+
+    /**
+     * @return void
+     */
     public function endVisitingClass(PhpClass $class);
+
+    /**
+     * @return void
+     */
     public function visitFunction(PhpFunction $function);
 }
