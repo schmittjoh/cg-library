@@ -42,7 +42,7 @@ class AdvancedRegexInterceptionLoader implements AdvancedInterceptorLoaderInterf
      */
     public function loadInterceptors(\ReflectionClass $class, \ReflectionMethod $method)
     {
-        $signature = $method->class.'::'.$method->name;
+        $signature = $class->name.'::'.$method->name;
 
         $matchingInterceptors = array();
         foreach ($this->interceptors as $pattern => $interceptor) {
