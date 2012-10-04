@@ -38,9 +38,8 @@ class MethodInvocation
     private $interceptors;
     private $pointer;
 
-    public function __construct(\ReflectionClass $class, \ReflectionMethod $reflection, $object, array $arguments, array $interceptors)
+    public function __construct(\ReflectionMethod $reflection, $object, array $arguments, array $interceptors)
     {
-        $this->reflectionClass = $class;
         $this->reflection = $reflection;
         $this->object = $object;
         $this->arguments = $arguments;
@@ -73,6 +72,6 @@ class MethodInvocation
      */
     public function __toString()
     {
-        return sprintf('%s::%s', $this->reflectionClass->name, $this->reflection->name);
+        return sprintf('%s::%s', $this->reflection->class, $this->reflection->name);
     }
 }

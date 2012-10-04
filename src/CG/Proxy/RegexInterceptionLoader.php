@@ -27,7 +27,7 @@ class RegexInterceptionLoader implements InterceptorLoaderInterface
         $this->interceptors = $interceptors;
     }
 
-    public function loadInterceptors(\ReflectionClass $class, \ReflectionMethod $method)
+    public function loadInterceptors(\ReflectionMethod $method)
     {
         $signature = $method->class.'::'.$method->name;
 
