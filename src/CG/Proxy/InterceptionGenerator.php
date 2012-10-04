@@ -37,10 +37,14 @@ use CG\Generator\PhpClass;
  */
 class InterceptionGenerator implements GeneratorInterface
 {
-    private $prefix = '__CGInterception__';
-    private $filter;
-    private $requiredFile;
+    protected $prefix = '__CGInterception__';
+    protected $filter;
+    protected $requiredFile;
+    protected $type = 'CG\Proxy\InterceptorLoaderInterface';
 
+    /**
+     * @param string $file
+     */
     public function setRequiredFile($file)
     {
         $this->requiredFile = $file;
@@ -54,11 +58,18 @@ class InterceptionGenerator implements GeneratorInterface
         $this->prefix = $prefix;
     }
 
+    /**
+     * @param callable $filter
+     */
     public function setFilter(\Closure $filter)
     {
         $this->filter = $filter;
     }
 
+    /**
+     * @param \ReflectionClass       $originalClass
+     * @param \CG\Generator\PhpClass $genClass
+     */
     public function generate(\ReflectionClass $originalClass, PhpClass $genClass)
     {
         $methods = ReflectionUtils::getOverrideableMethods($originalClass);
@@ -92,10 +103,20 @@ class InterceptionGenerator implements GeneratorInterface
         $loaderParam = new PhpParameter();
         $loaderParam
             ->setName('loader')
-            ->setType('CG\Proxy\InterceptorLoaderInterface')
+            ->setType($this->type)
         ;
         $loaderSetter->addParameter($loaderParam);
 
+        $this->doGenerate($originalClass, $genClass, $methods);
+    }
+
+    /**
+     * @param \ReflectionClass       $originalClass
+     * @param \CG\Generator\PhpClass $genClass
+     * @param array                  $methods
+     */
+    protected function doGenerate(\ReflectionClass $originalClass, PhpClass $genClass, array $methods)
+    {
         $interceptorCode =
              '$ref = new \ReflectionMethod(%s, %s);'."\n"
             .'$interceptors = $this->'.$this->prefix.'loader->loadInterceptors($ref, $this, array(%s));'."\n"

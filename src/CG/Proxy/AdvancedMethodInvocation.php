@@ -28,9 +28,19 @@ namespace CG\Proxy;
  * proceed() method on this class.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Thomas Rabaix <thomas.rabaix@gmail.com>
  */
-class MethodInvocation
+class AdvancedMethodInvocation
 {
+
+    /**
+     * @var \ReflectionClass
+     */
+    public $reflectionClass;
+
+    /**
+     * @var \ReflectionMethod
+     */
     public $reflection;
     public $object;
     public $arguments;
@@ -39,13 +49,15 @@ class MethodInvocation
     private $pointer;
 
     /**
+     * @param \ReflectionClass  $class
      * @param \ReflectionMethod $reflection
      * @param object            $object
      * @param array             $arguments
      * @param array             $interceptors
      */
-    public function __construct(\ReflectionMethod $reflection, $object, array $arguments, array $interceptors)
+    public function __construct(\ReflectionClass $class, \ReflectionMethod $reflection, $object, array $arguments, array $interceptors)
     {
+        $this->reflectionClass = $class;
         $this->reflection = $reflection;
         $this->object = $object;
         $this->arguments = $arguments;
@@ -78,6 +90,6 @@ class MethodInvocation
      */
     public function __toString()
     {
-        return sprintf('%s::%s', $this->reflection->class, $this->reflection->name);
+        return sprintf('%s::%s', $this->reflectionClass->name, $this->reflection->name);
     }
 }
