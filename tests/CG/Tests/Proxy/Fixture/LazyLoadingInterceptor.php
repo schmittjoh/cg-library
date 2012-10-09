@@ -1,3 +1,3 @@
 <?php
 
-namespace CG\Tests\Proxy
+namespace CG\Tests\Proxy\Fixture;
