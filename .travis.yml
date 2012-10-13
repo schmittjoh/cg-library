@@ -8,3 +8,7 @@ before_script:
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install --dev
 
+test: phpunit --coverage-clover clover
+
+after_success:
+    - php upload_artifacts.php
