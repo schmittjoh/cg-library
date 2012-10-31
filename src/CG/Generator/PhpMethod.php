@@ -127,6 +127,32 @@ class PhpMethod extends AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param string|integer $nameOrIndex
+     *
+     * @return PhpParameter
+     */
+    public function getParameter($nameOrIndex)
+    {
+        if (is_int($nameOrIndex)) {
+            if ( ! isset($this->parameters[$nameOrIndex])) {
+                throw new \InvalidArgumentException(sprintf('There is no parameter at position %d (0-based).', $nameOrIndex));
+            }
+
+            return $this->parameters[$nameOrIndex];
+        }
+
+        foreach ($this->parameters as $param) {
+            assert($param instanceof PhpParameter);
+
+            if ($param->getName() === $nameOrIndex) {
+                return $param;
+            }
+        }
+
+        throw new \InvalidArgumentException(sprintf('There is no parameter named "%s".', $nameOrIndex));
+    }
+
     public function replaceParameter($position, PhpParameter $parameter)
     {
         if ($position < 0 || $position > strlen($this->parameters)) {
