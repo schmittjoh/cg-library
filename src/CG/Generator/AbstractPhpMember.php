@@ -33,6 +33,7 @@ abstract class AbstractPhpMember
     private $visibility = self::VISIBILITY_PUBLIC;
     private $name;
     private $docblock;
+    private $attributes = array();
 
     public function __construct($name = null)
     {
@@ -103,5 +104,52 @@ abstract class AbstractPhpMember
     public function getDocblock()
     {
         return $this->docblock;
+    }
+
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
+
+        return $this;
+    }
+
+    public function removeAttribute($key)
+    {
+        unset($this->attributes[$key]);
+    }
+
+    public function getAttribute($key)
+    {
+        if ( ! isset($this->attributes[$key])) {
+            throw new \InvalidArgumentException(sprintf('There is no attribute named "%s".', $key));
+        }
+
+        return $this->attributes[$key];
+    }
+
+    public function getAttributeOrElse($key, $default)
+    {
+        if ( ! isset($this->attributes[$key])) {
+            return $default;
+        }
+
+        return $this->attributes[$key];
+    }
+
+    public function hasAttribute($key)
+    {
+        return isset($this->attributes[$key]);
+    }
+
+    public function setAttributes(array $attrs)
+    {
+        $this->attributes = $attrs;
+
+        return $this;
+    }
+
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }
