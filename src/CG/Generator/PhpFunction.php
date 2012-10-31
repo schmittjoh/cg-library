@@ -23,7 +23,7 @@ namespace CG\Generator;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class PhpFunction
+class PhpFunction extends AbstractBuilder
 {
     private $name;
     private $namespace;
@@ -31,7 +31,6 @@ class PhpFunction
     private $body = '';
     private $referenceReturned = false;
     private $docblock;
-    private $attributes = array();
 
     public static function create($name = null)
     {
@@ -164,53 +163,5 @@ class PhpFunction
     public function isReferenceReturned()
     {
         return $this->referenceReturned;
-    }
-
-
-    public function setAttribute($key, $value)
-    {
-        $this->attributes[$key] = $value;
-
-        return $this;
-    }
-
-    public function removeAttribute($key)
-    {
-        unset($this->attributes[$key]);
-    }
-
-    public function getAttribute($key)
-    {
-        if ( ! isset($this->attributes[$key])) {
-            throw new \InvalidArgumentException(sprintf('There is no attribute named "%s".', $key));
-        }
-
-        return $this->attributes[$key];
-    }
-
-    public function getAttributeOrElse($key, $default)
-    {
-        if ( ! isset($this->attributes[$key])) {
-            return $default;
-        }
-
-        return $this->attributes[$key];
-    }
-
-    public function hasAttribute($key)
-    {
-        return isset($this->attributes[$key]);
-    }
-
-    public function setAttributes(array $attrs)
-    {
-        $this->attributes = $attrs;
-
-        return $this;
-    }
-
-    public function getAttributes()
-    {
-        return $this->attributes;
     }
 }
