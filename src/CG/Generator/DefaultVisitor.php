@@ -69,10 +69,21 @@ class DefaultVisitor implements DefaultVisitorInterface
             $this->writer->write($docblock);
         }
 
-        $this->writer->write('class '.$class->getShortName());
+        if ($class->isAbstract()) {
+            $this->writer->write('abstract ');
+        }
 
-        if ($parentClassName = $class->getParentClassName()) {
-            $this->writer->write(' extends '.('\\' === $parentClassName[0] ? $parentClassName : '\\'.$parentClassName));
+        if ($class->isFinal()) {
+            $this->writer->write('final ');
+        }
+
+        $this->writer->write($class->getAttributeOrElse('interface', false) ? 'interface ' : 'class ');
+        $this->writer->write($class->getShortName());
+
+        if (false === $class->getAttributeOrElse('interface', false)) {
+            if ($parentClassName = $class->getParentClassName()) {
+                $this->writer->write(' extends '.('\\' === $parentClassName[0] ? $parentClassName : '\\'.$parentClassName));
+            }
         }
 
         $interfaceNames = $class->getInterfaceNames();
@@ -87,7 +98,8 @@ class DefaultVisitor implements DefaultVisitorInterface
                 return '\\'.$name;
             }, $interfaceNames);
 
-            $this->writer->write(' implements '.implode(', ', $interfaceNames));
+            $this->writer->write($class->getAttributeOrElse('interface', false) ? ' extends ' : ' implements ');
+            $this->writer->write(implode(', ', $interfaceNames));
         }
 
         $this->writer

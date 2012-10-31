@@ -276,8 +276,17 @@ class PhpClass extends AbstractBuilder
         return $this;
     }
 
+    public function getMethod($method)
+    {
+        if ( ! isset($this->methods[$method])) {
+            throw new \InvalidArgumentException(sprintf('The method "%s" does not exist.', $method));
+        }
+
+        return $this->methods[$method];
+    }
+
     /**
-     * @param string $method
+     * @param string|PhpMethod $method
      */
     public function hasMethod($method)
     {
