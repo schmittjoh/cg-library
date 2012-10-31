@@ -239,7 +239,7 @@ class PhpClass extends AbstractBuilder
     public function hasProperty($property)
     {
         if ($property instanceof PhpProperty) {
-            $property = $property->name;
+            $property = $property->getName();
         }
 
         return isset($this->properties[$property]);
@@ -251,7 +251,7 @@ class PhpClass extends AbstractBuilder
     public function removeProperty($property)
     {
         if ($property instanceof PhpProperty) {
-            $property = $property->name;
+            $property = $property->getName();
         }
 
         if (!array_key_exists($property, $this->properties)) {
@@ -291,19 +291,19 @@ class PhpClass extends AbstractBuilder
     public function hasMethod($method)
     {
         if ($method instanceof PhpMethod) {
-            $method = $method->name;
+            $method = $method->getName();
         }
 
         return isset($this->methods[$method]);
     }
 
     /**
-     * @param string $method
+     * @param string|PhpMethod $method
      */
     public function removeMethod($method)
     {
         if ($method instanceof PhpMethod) {
-            $method = $method->name;
+            $method = $method->getName();
         }
 
         if (!array_key_exists($method, $this->methods)) {
