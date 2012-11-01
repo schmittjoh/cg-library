@@ -23,6 +23,8 @@ namespace CG\Generator;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
+use CG\Core\ReflectionUtils;
+
 class PhpFunction extends AbstractBuilder
 {
     private $name;
@@ -31,6 +33,30 @@ class PhpFunction extends AbstractBuilder
     private $body = '';
     private $referenceReturned = false;
     private $docblock;
+
+    public static function fromReflection(\ReflectionFunction $ref)
+    {
+        $function = new static();
+
+        if (false === $pos = strrpos($ref->name, '\\')) {
+            $function->setName(substr($ref->name, $pos + 1));
+            $function->setNamespace(substr($ref->name, $pos));
+        } else {
+            $function->setName($ref->name);
+        }
+
+        $function->referenceReturned = $ref->returnsReference();
+        $function->docblock = ReflectionUtils::getUnindentedDocComment($ref->getDocComment());
+
+        foreach ($ref->getParameters() as $refParam) {
+            assert($refParam instanceof \ReflectionParameter);
+
+            $param = PhpParameter::fromReflection($refParam);
+            $function->addParameter($param);
+        }
+
+        return $function;
+    }
 
     public static function create($name = null)
     {
