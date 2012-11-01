@@ -62,6 +62,27 @@ class PhpFunction extends AbstractBuilder
         return $this;
     }
 
+    /**
+     * In contrast to getName(), this method accepts the fully qualified name
+     * including the namespace.
+     *
+     * @param string $name
+     */
+    public function setQualifiedName($name)
+    {
+        if (false !== $pos = strrpos($name, '\\')) {
+            $this->namespace = substr($name, 0, $pos);
+            $this->name = substr($name, $pos + 1);
+
+            return $this;
+        }
+
+        $this->namespace = null;
+        $this->name = $name;
+
+        return $this;
+    }
+
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
@@ -169,6 +190,15 @@ class PhpFunction extends AbstractBuilder
     public function getNamespace()
     {
         return $this->namespace;
+    }
+
+    public function getQualifiedName()
+    {
+        if ($this->namespace) {
+            return $this->namespace.'\\'.$this->name;
+        }
+
+        return $this->name;
     }
 
     public function getParameters()
