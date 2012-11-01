@@ -26,6 +26,7 @@ namespace CG\Generator;
 class DefaultVisitor implements DefaultVisitorInterface
 {
     private $writer;
+    private $isInterface;
 
     public function __construct()
     {
@@ -77,10 +78,12 @@ class DefaultVisitor implements DefaultVisitorInterface
             $this->writer->write('final ');
         }
 
-        $this->writer->write($class->getAttributeOrElse('interface', false) ? 'interface ' : 'class ');
+        // TODO: Interfaces should be modeled as separate classes.
+        $this->isInterface = $class->getAttributeOrElse('interface', false);
+        $this->writer->write($this->isInterface ? 'interface ' : 'class ');
         $this->writer->write($class->getShortName());
 
-        if (false === $class->getAttributeOrElse('interface', false)) {
+        if ( ! $this->isInterface) {
             if ($parentClassName = $class->getParentClassName()) {
                 $this->writer->write(' extends '.('\\' === $parentClassName[0] ? $parentClassName : '\\'.$parentClassName));
             }
@@ -98,7 +101,7 @@ class DefaultVisitor implements DefaultVisitorInterface
                 return '\\'.$name;
             }, $interfaceNames);
 
-            $this->writer->write($class->getAttributeOrElse('interface', false) ? ' extends ' : ' implements ');
+            $this->writer->write($this->isInterface ? ' extends ' : ' implements ');
             $this->writer->write(implode(', ', $interfaceNames));
         }
 
@@ -166,7 +169,7 @@ class DefaultVisitor implements DefaultVisitorInterface
 
         $this->writeParameters($method->getParameters());
 
-        if ($method->isAbstract()) {
+        if ($method->isAbstract() || $this->isInterface) {
             $this->writer->write(");\n\n");
 
             return;
