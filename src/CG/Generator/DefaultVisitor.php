@@ -253,7 +253,14 @@ class DefaultVisitor implements DefaultVisitorInterface
             $this->writer->write('$'.$parameter->getName());
 
             if ($parameter->hasDefaultValue()) {
-                $this->writer->write(' = '.var_export($parameter->getDefaultValue(), true));
+                $this->writer->write(' = ');
+                $defaultValue = $parameter->getDefaultValue();
+
+                if (is_array($defaultValue) && empty($defaultValue)) {
+                    $this->writer->write('array()');
+                } else {
+                    $this->writer->write(var_export($defaultValue, true));
+                }
             }
         }
     }
