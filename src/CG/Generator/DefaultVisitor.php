@@ -111,16 +111,16 @@ class DefaultVisitor implements DefaultVisitorInterface
         ;
     }
 
-    public function startVisitingConstants()
+    public function startVisitingClassConstants()
     {
     }
 
-    public function visitConstant($name, $value)
+    public function visitClassConstant(PhpConstant $constant)
     {
-        $this->writer->writeln('const '.$name.' = '.var_export($value, true).';');
+        $this->writer->writeln('const '.$constant->getName().' = '.var_export($constant->getValue(), true).';');
     }
 
-    public function endVisitingConstants()
+    public function endVisitingClassConstants()
     {
         $this->writer->write("\n");
     }

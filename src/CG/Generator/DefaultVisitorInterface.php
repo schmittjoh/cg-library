@@ -40,18 +40,18 @@ interface DefaultVisitorInterface
     /**
      * @return void
      */
-    public function startVisitingConstants();
+    public function startVisitingClassConstants();
 
     /**
-     * @param  integer|string $name
+     * @param  PhpConstant $constant
      * @return void
      */
-    public function visitConstant($name, $value);
+    public function visitClassConstant(PhpConstant $constant);
 
     /**
      * @return void
      */
-    public function endVisitingConstants();
+    public function endVisitingClassConstants();
 
     /**
      * @return void

@@ -69,15 +69,15 @@ class DefaultNavigator
     {
         $visitor->startVisitingClass($class);
 
-        $constants = $class->getConstants();
+        $constants = $class->getConstants(true);
         if (!empty($constants)) {
             uksort($constants, $this->getConstantSortFunc());
 
-            $visitor->startVisitingConstants();
-            foreach ($constants as $name => $value) {
-                $visitor->visitConstant($name, $value);
+            $visitor->startVisitingClassConstants();
+            foreach ($constants as $constant) {
+                $visitor->visitClassConstant($constant);
             }
-            $visitor->endVisitingConstants();
+            $visitor->endVisitingClassConstants();
         }
 
         $properties = $class->getProperties();
