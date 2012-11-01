@@ -25,7 +25,7 @@ namespace CG\Generator;
  */
 class DefaultVisitor implements DefaultVisitorInterface
 {
-    private $writer;
+    protected $writer;
     private $isInterface;
 
     public function __construct()
@@ -131,6 +131,10 @@ class DefaultVisitor implements DefaultVisitorInterface
 
     public function visitProperty(PhpProperty $property)
     {
+        if ($docblock = $property->getDocblock()) {
+            $this->writer->write($docblock)->rtrim();
+        }
+
         $this->writer->write($property->getVisibility().' '.($property->isStatic()? 'static ' : '').'$'.$property->getName());
 
         if ($property->hasDefaultValue()) {
