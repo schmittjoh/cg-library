@@ -209,6 +209,10 @@ class DefaultVisitor implements DefaultVisitorInterface
             $this->writer->write("namespace $namespace;\n\n");
         }
 
+        if ($docblock = $function->getDocblock()) {
+            $this->writer->write($docblock)->rtrim();
+        }
+
         $this->writer->write("function {$function->getName()}(");
         $this->writeParameters($function->getParameters());
         $this->writer
