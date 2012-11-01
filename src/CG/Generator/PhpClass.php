@@ -224,9 +224,14 @@ class PhpClass extends AbstractBuilder
         return $this;
     }
 
+    /**
+     * @param string $name
+     * 
+     * @return boolean
+     */
     public function hasConstant($name)
     {
-        return array_key_exists($this->constants, $name);
+        return array_key_exists($name, $this->constants);
     }
 
     /**
