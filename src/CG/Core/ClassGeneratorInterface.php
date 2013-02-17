@@ -18,8 +18,6 @@
 
 namespace CG\Core;
 
-use CG\Generator\PhpClass;
-
 /**
  * Interface for class generators.
  *

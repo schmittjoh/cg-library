@@ -19,7 +19,6 @@
 namespace CG\Generator;
 
 use Doctrine\Common\Annotations\PhpParser;
-
 use CG\Core\ReflectionUtils;
 
 /**
