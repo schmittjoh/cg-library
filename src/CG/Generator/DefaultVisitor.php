@@ -246,10 +246,11 @@ class DefaultVisitor implements DefaultVisitorInterface
             $first = false;
 
             if ($type = $parameter->getType()) {
-                $this->writer->write(
-                ('array' === $type ? 'array' : ('\\' === $type[0] ? $type : '\\'. $type))
-                .' '
-                );
+                if ('array' === $type || 'callable' === $type) {
+                    $this->writer->write($type . ' ');
+                } else {
+                    $this->writer->write(('\\' === $type[0] ? $type : '\\'. $type) . ' ');
+                }
             }
 
             if ($parameter->isPassedByReference()) {
