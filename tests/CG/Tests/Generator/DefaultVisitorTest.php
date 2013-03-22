@@ -39,14 +39,12 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function testVisitMethod()
     {
-        $writer = new Writer();
+        $method  = new PhpMethod();
+        $visitor = new DefaultVisitor();
 
-        $method = new PhpMethod();
         $method
             ->setName('foo')
             ->setReferenceReturned(true);
-
-        $visitor = new DefaultVisitor();
         $visitor->visitMethod($method);
 
         $this->assertEquals($this->getContent('reference_returned_method.php'), $visitor->getContent());
