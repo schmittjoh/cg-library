@@ -169,7 +169,13 @@ class DefaultVisitor implements DefaultVisitorInterface
             $this->writer->write('static ');
         }
 
-        $this->writer->write('function '.$method->getName().'(');
+        $this->writer->write('function ');
+
+        if ($method->isReferenceReturned()) {
+            $this->writer->write('& ');
+        }
+
+        $this->writer->write($method->getName().'(');
 
         $this->writeParameters($method->getParameters());
 
