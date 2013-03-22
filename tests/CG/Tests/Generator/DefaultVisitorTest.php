@@ -3,6 +3,7 @@
 namespace CG\Tests\Generator;
 
 use CG\Generator\DefaultVisitor;
+use CG\Generator\PhpMethod;
 use CG\Generator\PhpParameter;
 use CG\Generator\Writer;
 use CG\Generator\PhpFunction;
@@ -34,6 +35,19 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
         $visitor->visitFunction($function);
 
         $this->assertEquals($this->getContent('a_b_function.php'), $visitor->getContent());
+    }
+
+    public function testVisitMethod()
+    {
+        $method  = new PhpMethod();
+        $visitor = new DefaultVisitor();
+
+        $method
+            ->setName('foo')
+            ->setReferenceReturned(true);
+        $visitor->visitMethod($method);
+
+        $this->assertEquals($this->getContent('reference_returned_method.php'), $visitor->getContent());
     }
 
     /**
