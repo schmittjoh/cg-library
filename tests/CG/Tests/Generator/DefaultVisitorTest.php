@@ -50,6 +50,26 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->getContent('reference_returned_method.php'), $visitor->getContent());
     }
 
+    public function testVisitMethodWithCallable()
+    {
+        if (PHP_VERSION_ID < 50400) {
+            $this->markTestSkipped('`callable` is only supported in PHP >=5.4.0');
+        }
+
+        $method    = new PhpMethod();
+        $parameter = new PhpParameter('bar');
+        $parameter->setType('callable');
+
+        $method
+            ->setName('foo')
+            ->addParameter($parameter);
+
+        $visitor = new DefaultVisitor();
+        $visitor->visitMethod($method);
+
+        $this->assertEquals($this->getContent('callable_parameter.php'), $visitor->getContent());
+    }
+
     /**
      * @param string $filename
      */

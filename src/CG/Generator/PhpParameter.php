@@ -55,6 +55,8 @@ class PhpParameter extends AbstractBuilder
             $parameter->setType('array');
         } elseif ($class = $ref->getClass()) {
             $parameter->setType($class->name);
+        } elseif (method_exists($ref, 'isCallable') && $ref->isCallable()) {
+            $parameter->setType('callable');
         }
 
         return $parameter;
