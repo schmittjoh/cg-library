@@ -72,9 +72,9 @@ class PhpMethod extends AbstractPhpMember
      */
     public static function getBodyFromReflection(\ReflectionMethod $ref)
     {
-        $start_line = $ref->getStartLine();
-        $end_line = $ref->getEndLine();
-        if ($start_line>=$end_line){
+        $startLine = $ref->getStartLine();
+        $endLine = $ref->getEndLine();
+        if ($startLine>=$endLine){
             return '';
         }
         $file = $ref->getFileName();
@@ -85,10 +85,10 @@ class PhpMethod extends AbstractPhpMember
         if (empty($content)){
             return '';
         }
-        $line_array = explode("\n",$content);
+        $lineArray = explode("\n",$content);
         $body = '';
-        for($i=$start_line;$i<$end_line;$i++){
-            $body .= $line_array[$i]."\n";
+        for($i=$startLine;$i<$endLine;$i++){
+            $body .= $lineArray[$i]."\n";
         }
         $body = trim($body);
         $body = ltrim($body,'{');
