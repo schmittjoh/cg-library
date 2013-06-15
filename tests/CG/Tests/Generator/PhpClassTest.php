@@ -55,7 +55,13 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
  * @param array        $b
  * @param \stdClass    $c
  * @param string       $d
- */')->setBody('$this->id = $a;')
+ */')->setBody(<<<'PHP'
+$this->id = $a;
+        if ($d === 'foo'){
+            $this->enabled = true;
+        }
+PHP
+)
         ;
         $class->setMethod($method);
 
@@ -68,6 +74,30 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $class->setMethod(PhpMethod::create()
             ->setName('bar')
             ->setStatic(true)
+            ->setVisibility('private')
+            ->setBody("return 'abc';")
+        );
+
+        $class->setMethod(PhpMethod::create()
+            ->setName('BraceAbove')
+            ->setVisibility('private')
+            ->setBody(<<<'PHP'
+$ret = $this->bar();
+        return $ret;
+PHP
+        ));
+
+        $class->setMethod(PhpMethod::create()
+            ->setName('BadFormat')
+            ->setVisibility('private')
+            ->setBody(<<<'PHP'
+$ret = $this->bar();
+             return $ret;
+PHP
+            ));
+
+        $class->setMethod(PhpMethod::create()
+            ->setName('oneLine')
             ->setVisibility('private')
             ->setBody("return 'abc';")
         );

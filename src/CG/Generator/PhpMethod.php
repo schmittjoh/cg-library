@@ -74,9 +74,6 @@ class PhpMethod extends AbstractPhpMember
     {
         $startLine = $ref->getStartLine();
         $endLine = $ref->getEndLine();
-        if ($startLine>=$endLine){
-            return '';
-        }
         $file = $ref->getFileName();
         if (empty($file)){
             return '';
@@ -87,12 +84,19 @@ class PhpMethod extends AbstractPhpMember
         }
         $lineArray = explode("\n",$content);
         $body = '';
-        for($i=$startLine;$i<$endLine;$i++){
-            $body .= $lineArray[$i]."\n";
+        for($i=$startLine;$i<=$endLine;$i++){
+            $body .= $lineArray[$i-1]."\n";
         }
-        $body = trim($body);
-        $body = ltrim($body,'{');
-        $body = rtrim($body,'}');
+        $leftBracePos = strpos($body,'{');
+        if ($leftBracePos===false){
+            return '';
+        }
+        $body = substr($body,$leftBracePos+1);
+        $rightBracePos = strrpos($body,'}');
+        if ($rightBracePos===false){
+            return '';
+        }
+        $body = substr($body,0,$rightBracePos);
         $body = trim($body);
         return $body;
     }
