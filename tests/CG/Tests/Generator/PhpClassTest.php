@@ -79,7 +79,7 @@ PHP
         );
 
         $class->setMethod(PhpMethod::create()
-            ->setName('BraceAbove')
+            ->setName('braceAbove')
             ->setVisibility('private')
             ->setBody(<<<'PHP'
 $ret = $this->bar();
@@ -88,7 +88,7 @@ PHP
         ));
 
         $class->setMethod(PhpMethod::create()
-            ->setName('BadFormat')
+            ->setName('badFormat')
             ->setVisibility('private')
             ->setBody(<<<'PHP'
 $ret = $this->bar();
@@ -100,6 +100,12 @@ PHP
             ->setName('oneLine')
             ->setVisibility('private')
             ->setBody("return 'abc';")
+        );
+
+        $class->setMethod(PhpMethod::create()
+                ->setName('braceInComment')
+                ->setVisibility('private')
+                ->setBody("return 'abc';")
         );
 
         $this->assertEquals($class, PhpClass::fromReflection(new \ReflectionClass('CG\Tests\Generator\Fixture\Entity')));

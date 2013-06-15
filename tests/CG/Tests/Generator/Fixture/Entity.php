@@ -38,16 +38,17 @@ abstract class Entity
         return 'abc';
     }
 
-    private function BraceAbove(){
+    private function braceAbove(){
         $ret = $this->bar();
         return $ret;
     }
 
-    private function BadFormat()
+    private function badFormat()
 
          {
              $ret = $this->bar();
              return $ret;
         }
     private function oneLine(){  return 'abc';  }
+    private function braceInComment()/* { */{  return 'abc';  } /* } */
 }
