@@ -55,7 +55,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
  * @param array        $b
  * @param \stdClass    $c
  * @param string       $d
- */')
+ */')->setBody('$this->id = $a;')
         ;
         $class->setMethod($method);
 
@@ -69,6 +69,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
             ->setName('bar')
             ->setStatic(true)
             ->setVisibility('private')
+            ->setBody("return 'abc';")
         );
 
         $this->assertEquals($class, PhpClass::fromReflection(new \ReflectionClass('CG\Tests\Generator\Fixture\Entity')));

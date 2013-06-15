@@ -25,11 +25,13 @@ abstract class Entity
      */
     final public function __construct($a, array &$b, \stdClass $c, $d = 'foo')
     {
+        $this->id = $a;
     }
 
     abstract protected function foo();
 
     private static function bar()
     {
+        return 'abc';
     }
 }
