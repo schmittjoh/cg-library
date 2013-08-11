@@ -47,6 +47,27 @@ class MethodInvocation
         $this->pointer = 0;
     }
 
+    public function getNamedArgument($name)
+    {
+        foreach ($this->reflection->getParameters() as $i => $param) {
+            if ($param->name !== $name) {
+                continue;
+            }
+
+            if ( ! array_key_exists($i, $this->arguments)) {
+                if ($param->isDefaultValueAvailable()) {
+                    return $param->getDefaultValue();
+                }
+
+                throw new \RuntimeException(sprintf('There was no value given for parameter "%s".', $param->name));
+            }
+
+            return $this->arguments[$i];
+        }
+
+        throw new \InvalidArgumentException(sprintf('The parameter "%s" does not exist.', $name));
+    }
+
     /**
      * Proceeds down the call-chain and eventually calls the original method.
      *
