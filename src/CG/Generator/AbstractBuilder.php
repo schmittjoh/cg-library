@@ -27,6 +27,9 @@ abstract class AbstractBuilder
         return $this->attributes[$key];
     }
 
+    /**
+     * @param string $key
+     */
     public function getAttributeOrElse($key, $default)
     {
         if ( ! isset($this->attributes[$key])) {

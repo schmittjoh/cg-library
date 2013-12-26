@@ -225,7 +225,7 @@ class PhpClass extends AbstractBuilder
 
     /**
      * @param string $name
-     * 
+     *
      * @return boolean
      */
     public function hasConstant($name)

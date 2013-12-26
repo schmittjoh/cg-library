@@ -25,12 +25,12 @@ namespace CG\Core;
  */
 class DefaultNamingStrategy implements NamingStrategyInterface
 {
-	private $prefix;
+    private $prefix;
 
-	public function __construct($prefix = 'EnhancedProxy')
-	{
-		$this->prefix = $prefix;
-	}
+    public function __construct($prefix = 'EnhancedProxy')
+    {
+        $this->prefix = $prefix;
+    }
 
     public function getClassName(\ReflectionClass $class)
     {
