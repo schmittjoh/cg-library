@@ -9,7 +9,7 @@ class Entity
         return 'foo';
     }
 
-    public final function getBaz()
+    final public function getBaz()
     {
     }
 

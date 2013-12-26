@@ -34,5 +34,5 @@ interface GeneratorInterface
      * @param PhpClass $generatedClass The generated class
      * @return void
      */
-    function generate(\ReflectionClass $originalClass, PhpClass $generatedClass);
+    public function generate(\ReflectionClass $originalClass, PhpClass $generatedClass);
 }

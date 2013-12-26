@@ -46,5 +46,5 @@ interface NamingStrategyInterface
      * @param \ReflectionClass $class
      * @return string the class name for the generated class
      */
-    function getClassName(\ReflectionClass $class);
+    public function getClassName(\ReflectionClass $class);
 }

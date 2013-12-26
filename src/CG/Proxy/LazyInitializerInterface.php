@@ -34,5 +34,5 @@ interface LazyInitializerInterface
      * @param object $object
      * @return void
      */
-    function initializeObject($object);
+    public function initializeObject($object);
 }
