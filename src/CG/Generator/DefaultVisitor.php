@@ -18,12 +18,19 @@
 
 namespace CG\Generator;
 
+use CG\Utils\Writer;
+use CG\Model\PhpClass;
+use CG\Model\PhpConstant;
+use CG\Model\PhpProperty;
+use CG\Model\PhpMethod;
+use CG\Model\PhpFunction;
+
 /**
  * The default code generation visitor.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class DefaultVisitor implements DefaultVisitorInterface
+class DefaultVisitor implements GeneratorVisitorInterface
 {
     protected $writer;
     private $isInterface;
@@ -81,25 +88,23 @@ class DefaultVisitor implements DefaultVisitorInterface
         // TODO: Interfaces should be modeled as separate classes.
         $this->isInterface = $class->getAttributeOrElse('interface', false);
         $this->writer->write($this->isInterface ? 'interface ' : 'class ');
-        $this->writer->write($class->getShortName());
+        $this->writer->write($class->getName());
 
         if ( ! $this->isInterface) {
             if ($parentClassName = $class->getParentClassName()) {
-                $this->writer->write(' extends '.('\\' === $parentClassName[0] ? $parentClassName : '\\'.$parentClassName));
+                $this->writer->write(' extends ' . $parentClassName);
             }
         }
 
-        $interfaceNames = $class->getInterfaceNames();
+        $interfaceNames = $class->getInterfaces();
         if (!empty($interfaceNames)) {
-            $interfaceNames = array_unique($interfaceNames);
+//             $interfaceNames = array_map(function($name) {
+//                 if ('\\' === $name[0]) {
+//                     return $name;
+//                 }
 
-            $interfaceNames = array_map(function($name) {
-                if ('\\' === $name[0]) {
-                    return $name;
-                }
-
-                return '\\'.$name;
-            }, $interfaceNames);
+//                 return '\\'.$name;
+//             }, $interfaceNames);
 
             $this->writer->write($this->isInterface ? ' extends ' : ' implements ');
             $this->writer->write(implode(', ', $interfaceNames));

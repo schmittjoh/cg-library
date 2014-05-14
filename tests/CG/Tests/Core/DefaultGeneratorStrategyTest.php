@@ -3,9 +3,9 @@
 namespace CG\Tests\Core;
 
 use CG\Core\DefaultGeneratorStrategy;
-use CG\Generator\PhpProperty;
-use CG\Generator\PhpMethod;
-use CG\Generator\PhpClass;
+use CG\Model\PhpProperty;
+use CG\Model\PhpMethod;
+use CG\Model\PhpClass;
 
 class DefaultGeneratorStrategyTest extends \PHPUnit_Framework_TestCase
 {

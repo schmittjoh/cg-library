@@ -18,13 +18,13 @@
 
 namespace CG\Proxy;
 
-use CG\Generator\Writer;
-use CG\Core\ReflectionUtils;
-use CG\Generator\GeneratorUtils;
-use CG\Generator\PhpParameter;
-use CG\Generator\PhpMethod;
-use CG\Generator\PhpProperty;
-use CG\Generator\PhpClass;
+use CG\Utils\Writer;
+use CG\Utils\ReflectionUtils;
+use CG\Utils\GeneratorUtils;
+use CG\Model\PhpParameter;
+use CG\Model\PhpMethod;
+use CG\Model\PhpProperty;
+use CG\Model\PhpClass;
 
 /**
  * Generator for creating lazy-initializing instances.
@@ -81,20 +81,22 @@ class LazyInitializerGenerator implements GeneratorInterface
         }
 
         if (null !== $this->markerInterface) {
-            $class->setImplementedInterfaces(array_merge(
-                $class->getImplementedInterfaces(),
+            $class->setInterfaces(array_merge(
+                $class->getInterfaces(),
                 array($this->markerInterface)
             ));
         }
 
         $initializer = new PhpProperty();
         $initializer->setName($this->prefix.'lazyInitializer');
+        $initializer->setType('\CG\Proxy\LazyInitializerInterface');
         $initializer->setVisibility(PhpProperty::VISIBILITY_PRIVATE);
         $class->setProperty($initializer);
 
         $initialized = new PhpProperty();
         $initialized->setName($this->prefix.'initialized');
         $initialized->setDefaultValue(false);
+        $initialized->setType('boolean');
         $initialized->setVisibility(PhpProperty::VISIBILITY_PRIVATE);
         $class->setProperty($initialized);
 

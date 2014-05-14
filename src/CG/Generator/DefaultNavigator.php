@@ -18,6 +18,8 @@
 
 namespace CG\Generator;
 
+use CG\Model\PhpClass;
+
 /**
  * The default navigator.
  *
@@ -65,7 +67,7 @@ class DefaultNavigator
         $this->methodSortFunc = $func;
     }
 
-    public function accept(DefaultVisitorInterface $visitor, PhpClass $class)
+    public function accept(GeneratorVisitorInterface $visitor, PhpClass $class)
     {
         $visitor->startVisitingClass($class);
 

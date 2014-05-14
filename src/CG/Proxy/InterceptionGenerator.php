@@ -18,12 +18,12 @@
 
 namespace CG\Proxy;
 
-use CG\Core\ClassUtils;
-use CG\Core\ReflectionUtils;
-use CG\Generator\PhpParameter;
-use CG\Generator\PhpProperty;
-use CG\Generator\PhpMethod;
-use CG\Generator\PhpClass;
+use CG\Utils\ClassUtils;
+use CG\Utils\ReflectionUtils;
+use CG\Model\PhpParameter;
+use CG\Model\PhpProperty;
+use CG\Model\PhpMethod;
+use CG\Model\PhpClass;
 
 /**
  * Interception Generator.

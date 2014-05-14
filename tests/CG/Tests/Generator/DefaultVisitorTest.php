@@ -3,10 +3,10 @@
 namespace CG\Tests\Generator;
 
 use CG\Generator\DefaultVisitor;
-use CG\Generator\PhpMethod;
-use CG\Generator\PhpParameter;
-use CG\Generator\Writer;
-use CG\Generator\PhpFunction;
+use CG\Model\PhpMethod;
+use CG\Model\PhpParameter;
+use CG\Utils\Writer;
+use CG\Model\PhpFunction;
 
 class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
 {

@@ -38,6 +38,13 @@ class MethodInvocation
     private $interceptors;
     private $pointer;
 
+    /**
+     * 
+     * @param \ReflectionMethod $reflection
+     * @param unknown $object
+     * @param array $arguments
+     * @param MethodInterceptorInterface[] $interceptors
+     */
     public function __construct(\ReflectionMethod $reflection, $object, array $arguments, array $interceptors)
     {
         $this->reflection = $reflection;

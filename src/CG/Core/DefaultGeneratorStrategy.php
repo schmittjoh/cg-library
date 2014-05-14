@@ -18,8 +18,8 @@
 
 namespace CG\Core;
 
-use CG\Generator\DefaultVisitorInterface;
-use CG\Generator\PhpClass;
+use CG\Generator\GeneratorVisitorInterface;
+use CG\Model\PhpClass;
 use CG\Generator\DefaultVisitor;
 use CG\Generator\DefaultNavigator;
 
@@ -36,7 +36,7 @@ class DefaultGeneratorStrategy implements GeneratorStrategyInterface
     private $navigator;
     private $visitor;
 
-    public function __construct(DefaultVisitorInterface $visitor = null)
+    public function __construct(GeneratorVisitorInterface $visitor = null)
     {
         $this->navigator = new DefaultNavigator();
         $this->visitor = $visitor ?: new DefaultVisitor();

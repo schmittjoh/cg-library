@@ -18,17 +18,28 @@
 
 namespace CG\Core;
 
-use CG\Model\PhpClass;
+use CG\Model\GenerateableInterface;
 
 /**
- * Generator Strategy Interface.
- *
- * Implementing classes are responsible for generating PHP code from the given
- * PhpClass instance.
+ * Abstract base class for all class generators.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-interface GeneratorStrategyInterface
+abstract class AbstractCodeGenerator implements CodeGeneratorInterface
 {
-    public function generate(PhpClass $class);
+    private $generatorStrategy;
+
+    public function setGeneratorStrategy(GeneratorStrategyInterface $generatorStrategy = null)
+    {
+        $this->generatorStrategy = $generatorStrategy;
+    }
+
+    protected function doGenerateCode(GenerateableInterface $model)
+    {
+        if (null === $this->generatorStrategy) {
+            $this->generatorStrategy = new DefaultGeneratorStrategy();
+        }
+
+        return $this->generatorStrategy->generate($model);
+    }
 }

@@ -16,19 +16,23 @@
  * limitations under the License.
  */
 
-namespace CG\Core;
-
-use CG\Model\PhpClass;
+namespace CG\Utils;
 
 /**
- * Generator Strategy Interface.
- *
- * Implementing classes are responsible for generating PHP code from the given
- * PhpClass instance.
+ * Some Generator utils.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-interface GeneratorStrategyInterface
+abstract class GeneratorUtils
 {
-    public function generate(PhpClass $class);
+    final private function __construct() {}
+
+    public static function callMethod(\ReflectionMethod $method, array $params = null)
+    {
+        if (null === $params) {
+            $params = array_map(function($p) { return '$'.$p->name; }, $method->getParameters());
+        }
+
+        return '\\'.$method->getDeclaringClass()->name.'::'.$method->name.'('.implode(', ', $params).')';
+    }
 }

@@ -16,19 +16,29 @@
  * limitations under the License.
  */
 
-namespace CG\Core;
+namespace CG\Proxy;
 
-use CG\Model\PhpClass;
+use CG\Utils\ClassUtils;
 
 /**
- * Generator Strategy Interface.
- *
- * Implementing classes are responsible for generating PHP code from the given
- * PhpClass instance.
+ * The default naming strategy.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-interface GeneratorStrategyInterface
+class DefaultNamingStrategy implements NamingStrategyInterface
 {
-    public function generate(PhpClass $class);
+    private $prefix;
+
+    public function __construct($prefix = 'EnhancedProxy')
+    {
+        $this->prefix = $prefix;
+    }
+
+    public function getClassName(\ReflectionClass $class)
+    {
+        $userClass = ClassUtils::getUserClass($class->name);
+
+        return $this->prefix.'_'.sha1($class->name).'\\'.self::SEPARATOR.'\\'.$userClass;
+    }
+
 }

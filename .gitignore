@@ -1,4 +1,9 @@
+.project
+.buildpath
+.settings/
 composer.lock
 phpunit.xml
 vendor/
+doc/
+cache/
 
