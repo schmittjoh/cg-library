@@ -8,18 +8,24 @@ class CodeGenerator extends AbstractCodeGenerator {
 	
 	private $generateDocblock = true;
 	
+	/**
+	 * Returns whether docblocks should be generated prior to code generation
+	 * @return boolean
+	 */
 	public function getGenerateDocblock() {
 		return $this->generateDocblock;
 	}
-	
+
+	/**
+	 * Sets whether docblocks should be generated prior to code generation
+	 * @param boolean $generateDocblock
+	 * @return CodeGenerator $this
+	 */
 	public function setGenerateDocblock($generateDocblock) {
 		$this->generateDocblock = $generateDocblock;
 		return $this;
 	}
-		
-	/* (non-PHPdoc)
-	 * @see \CG\Core\CodeGeneratorInterface::generateCode()
-	 */
+
 	public function generateCode(GenerateableInterface $model) {
 
 		if ($this->generateDocblock) {

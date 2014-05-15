@@ -36,6 +36,9 @@ class DefaultNavigator
     private $constantSortFunc;
     private $propertySortFunc;
     private $methodSortFunc;
+    
+    private static $defaultMethodSortFunc;
+    private static $defaultPropertySortFunc;
 
     /**
      * Sets a custom constant sorting function.
@@ -117,10 +120,9 @@ class DefaultNavigator
         if (null !== $this->methodSortFunc) {
             return $this->methodSortFunc;
         }
-
-        static $defaultSortFunc;
-        if (empty($defaultSortFunc)) {
-            $defaultSortFunc = function($a, $b) {
+        
+        if (empty(self::$defaultMethodSortFunc)) {
+            self::$defaultMethodSortFunc = function($a, $b) {
                 if ($a->isStatic() !== $isStatic = $b->isStatic()) {
                     return $isStatic ? 1 : -1;
                 }
@@ -141,7 +143,7 @@ class DefaultNavigator
             };
         }
 
-        return $defaultSortFunc;
+        return self::$defaultMethodSortFunc;
     }
 
     private function getPropertySortFunc()
@@ -150,9 +152,8 @@ class DefaultNavigator
             return $this->propertySortFunc;
         }
 
-        static $defaultSortFunc;
-        if (empty($defaultSortFunc)) {
-            $defaultSortFunc = function($a, $b) {
+        if (empty(self::$defaultPropertySortFunc)) {
+            self::$defaultPropertySortFunc = function($a, $b) {
                 if (($aV = $a->getVisibility()) !== $bV = $b->getVisibility()) {
                     $aV = 'public' === $aV ? 3 : ('protected' === $aV ? 2 : 1);
                     $bV = 'public' === $bV ? 3 : ('protected' === $bV ? 2 : 1);
@@ -169,6 +170,6 @@ class DefaultNavigator
             };
         }
 
-        return $defaultSortFunc;
+        return self::$defaultPropertySortFunc;
     }
 }

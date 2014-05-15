@@ -6,9 +6,16 @@ use CG\Model\PhpProperty;
 use CG\Model\PhpParameter;
 use CG\Model\PhpMethod;
 use CG\Model\PhpClass;
+use CG\Tests\Model\Fixture\Entity;
 
 class PhpClassTest extends \PHPUnit_Framework_TestCase
 {
+	public function setUp() {
+		// they are not explicitely instantiated through new WhatEver(); and such not
+		// required through composer's autoload
+		require_once __DIR__ . '/Fixture/Entity.php';
+	}
+	
     public function testFromReflection()
     {
         $class = new PhpClass();

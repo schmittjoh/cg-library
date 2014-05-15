@@ -10,6 +10,16 @@ use CG\Tests\Proxy\Fixture\TraceInterceptor;
 
 class EnhancerTest extends \PHPUnit_Framework_TestCase
 {
+	public function setUp() {
+		// they are not explicitely instantiated through new WhatEver(); and such not 
+		// required through composer's autoload
+		require_once __DIR__ . '/Fixture/Entity.php';
+		require_once __DIR__ . '/Fixture/SimpleClass.php';
+		require_once __DIR__ . '/Fixture/TraceInterceptor.php';
+		require_once __DIR__ . '/Fixture/MarkerInterface.php';
+		require_once __DIR__ . '/Fixture/SluggableInterface.php';
+	}
+	
     /**
      * @dataProvider getGenerationTests
      */

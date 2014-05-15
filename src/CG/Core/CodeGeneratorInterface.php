@@ -27,10 +27,9 @@ use CG\Model\GenerateableInterface;
  */
 interface CodeGeneratorInterface
 {
-    /**
-     * Generates PHP code
-     *
-     * @return string
-     */
-    public function generateCode(GenerateableInterface $model);
+	/**
+	 * 
+	 * @param GeneratorStrategyInterface $generatorStrategy
+	 */
+	public function setGeneratorStrategy(GeneratorStrategyInterface $generatorStrategy = null);
 }
