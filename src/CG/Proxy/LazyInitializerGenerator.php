@@ -87,21 +87,18 @@ class LazyInitializerGenerator implements GeneratorInterface
             ));
         }
 
-        $initializer = new PhpProperty();
-        $initializer->setName($this->prefix.'lazyInitializer');
+        $initializer = new PhpProperty($this->prefix.'lazyInitializer');
         $initializer->setType('\CG\Proxy\LazyInitializerInterface');
         $initializer->setVisibility(PhpProperty::VISIBILITY_PRIVATE);
         $class->setProperty($initializer);
 
-        $initialized = new PhpProperty();
-        $initialized->setName($this->prefix.'initialized');
+        $initialized = new PhpProperty($this->prefix.'initialized');
         $initialized->setDefaultValue(false);
         $initialized->setType('boolean');
         $initialized->setVisibility(PhpProperty::VISIBILITY_PRIVATE);
         $class->setProperty($initialized);
 
-        $initializerSetter = new PhpMethod();
-        $initializerSetter->setName($this->prefix.'setLazyInitializer');
+        $initializerSetter = new PhpMethod($this->prefix.'setLazyInitializer');
         $initializerSetter->setBody('$this->'.$this->prefix.'lazyInitializer = $initializer;');
 
         $parameter = new PhpParameter();
@@ -112,8 +109,7 @@ class LazyInitializerGenerator implements GeneratorInterface
 
         $this->addMethods($class, $methods);
 
-        $initializingMethod = new PhpMethod();
-        $initializingMethod->setName($this->prefix.'initialize');
+        $initializingMethod = new PhpMethod($this->prefix.'initialize');
         $initializingMethod->setVisibility(PhpMethod::VISIBILITY_PRIVATE);
         $initializingMethod->setBody(
             $this->writer

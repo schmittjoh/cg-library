@@ -40,9 +40,8 @@ class PhpProperty extends AbstractPhpMember
 
     public static function fromReflection(\ReflectionProperty $ref)
     {
-        $property = new static();
+        $property = new static($ref->name);
         $property
-            ->setName($ref->name)
             ->setStatic($ref->isStatic())
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
         ;

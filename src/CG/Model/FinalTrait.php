@@ -14,6 +14,7 @@ trait FinalTrait {
 
 	/**
 	 * @param boolean $bool
+	 * @return $this
 	 */
 	public function setFinal($bool)
 	{

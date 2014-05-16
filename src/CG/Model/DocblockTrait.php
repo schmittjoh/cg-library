@@ -7,6 +7,7 @@ trait DocblockTrait {
 
 	/**
 	 * @param Docblock|string $doc
+	 * @return $this
 	 */
 	public function setDocblock($doc)
 	{

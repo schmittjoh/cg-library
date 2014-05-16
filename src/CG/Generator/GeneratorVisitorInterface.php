@@ -18,11 +18,14 @@
 
 namespace CG\Generator;
 
-use CG\Model\PhpClass;
 use CG\Model\PhpConstant;
 use CG\Model\PhpProperty;
 use CG\Model\PhpMethod;
 use CG\Model\PhpFunction;
+use CG\Model\AbstractPhpStruct;
+use CG\Model\PhpClass;
+use CG\Model\PhpInterface;
+use CG\Model\PhpTrait;
 
 /**
  * The visitor interface required by the DefaultNavigator.
@@ -42,22 +45,32 @@ interface GeneratorVisitorInterface
      * @return void
      */
     public function startVisitingClass(PhpClass $class);
+    
+    /**
+     * @return void
+     */
+    public function startVisitingInterface(PhpInterface $interface);
+    
+    /**
+     * @return void
+     */
+    public function startVisitingTrait(PhpTrait $trait);
 
     /**
      * @return void
      */
-    public function startVisitingClassConstants();
+    public function startVisitingStructConstants();
 
     /**
      * @param  PhpConstant $constant
      * @return void
      */
-    public function visitClassConstant(PhpConstant $constant);
+    public function visitStructConstant(PhpConstant $constant);
 
     /**
      * @return void
      */
-    public function endVisitingClassConstants();
+    public function endVisitingStructConstants();
 
     /**
      * @return void
@@ -93,6 +106,16 @@ interface GeneratorVisitorInterface
      * @return void
      */
     public function endVisitingClass(PhpClass $class);
+    
+    /**
+     * @return void
+     */
+    public function endVisitingInterface(PhpInterface $interface);
+    
+    /**
+     * @return void
+     */
+    public function endVisitingTrait(PhpTrait $trait);
 
     /**
      * @return void

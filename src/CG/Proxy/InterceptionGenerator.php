@@ -73,16 +73,14 @@ class InterceptionGenerator implements GeneratorInterface
             $genClass->addRequiredFile($this->requiredFile);
         }
 
-        $interceptorLoader = new PhpProperty();
+        $interceptorLoader = new PhpProperty($this->prefix.'loader');
         $interceptorLoader
-            ->setName($this->prefix.'loader')
             ->setVisibility(PhpProperty::VISIBILITY_PRIVATE)
         ;
         $genClass->setProperty($interceptorLoader);
 
-        $loaderSetter = new PhpMethod();
+        $loaderSetter = new PhpMethod($this->prefix.'setLoader');
         $loaderSetter
-            ->setName($this->prefix.'setLoader')
             ->setVisibility(PhpMethod::VISIBILITY_PUBLIC)
             ->setBody('$this->'.$this->prefix.'loader = $loader;')
         ;

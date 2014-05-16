@@ -2,7 +2,7 @@
 
 namespace CG\Model;
 
-class PhpConstant extends AbstractModel implements GenerateableInterface
+class PhpConstant extends AbstractModel implements GenerateableInterface, DocblockInterface
 {
     use NameTrait;
     use LongDescriptionTrait;

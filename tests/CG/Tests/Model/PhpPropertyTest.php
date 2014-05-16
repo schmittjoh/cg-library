@@ -8,7 +8,7 @@ class PhpPropertyTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetDefaultValue()
     {
-        $prop = new PhpProperty();
+        $prop = new PhpProperty('needsName');
 
         $this->assertNull($prop->getDefaultValue());
         $this->assertFalse($prop->hasDefaultValue());

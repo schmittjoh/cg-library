@@ -37,7 +37,7 @@ class AbstractPhpMemberTest extends \PHPUnit_Framework_TestCase
     {
         $member = $this->getMember();
 
-        $this->assertNull($member->getName());
+        $this->assertNotNull($member->getName());
         $this->assertSame($member, $member->setName('foo'));
         $this->assertEquals('foo', $member->getName());
     }
@@ -53,6 +53,6 @@ class AbstractPhpMemberTest extends \PHPUnit_Framework_TestCase
 
     private function getMember()
     {
-        return $this->getMockForAbstractClass('CG\Model\AbstractPhpMember');
+        return $this->getMockForAbstractClass('CG\Model\AbstractPhpMember', ['__not_null__']);
     }
 }

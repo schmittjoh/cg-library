@@ -1,7 +1,7 @@
 <?php
 namespace CG\Model;
 
-class PhpClass extends AbstractPhpStruct implements GenerateableInterface {
+class PhpClass extends AbstractPhpStruct implements GenerateableInterface, TraitsInterface {
 
 	use InterfacesTrait;
 	use AbstractTrait;

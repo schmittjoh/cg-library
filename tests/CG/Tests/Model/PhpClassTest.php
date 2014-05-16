@@ -176,8 +176,6 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $class = new PhpClass();
 
         $this->assertEquals(array(), $class->getProperties());
-        $this->assertSame($class, $class->setProperties($props = array('foo' => new PhpProperty())));
-        $this->assertSame($props, $class->getProperties());
         $this->assertSame($class, $class->setProperty($prop = new PhpProperty('foo')));
         $this->assertSame(array('foo' => $prop), $class->getProperties());
         $this->assertTrue($class->hasProperty('foo'));
@@ -190,8 +188,6 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $class = new PhpClass();
 
         $this->assertEquals(array(), $class->getMethods());
-        $this->assertSame($class, $class->setMethods($methods = array('foo' => new PhpMethod())));
-        $this->assertSame($methods, $class->getMethods());
         $this->assertSame($class, $class->setMethod($method = new PhpMethod('foo')));
         $this->assertSame(array('foo' => $method), $class->getMethods());
         $this->assertTrue($class->hasMethod('foo'));

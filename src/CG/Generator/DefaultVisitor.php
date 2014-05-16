@@ -24,6 +24,13 @@ use CG\Model\PhpConstant;
 use CG\Model\PhpProperty;
 use CG\Model\PhpMethod;
 use CG\Model\PhpFunction;
+use CG\Model\AbstractPhpStruct;
+use CG\Model\PhpTrait;
+use CG\Model\NamespaceInterface;
+use CG\Model\DocblockInterface;
+use CG\Model\Docblock;
+use CG\Model\TraitsInterface;
+use CG\Model\PhpInterface;
 
 /**
  * The default code generation visitor.
@@ -33,7 +40,6 @@ use CG\Model\PhpFunction;
 class DefaultVisitor implements GeneratorVisitorInterface
 {
     protected $writer;
-    private $isInterface;
 
     public function __construct()
     {
@@ -44,88 +50,133 @@ class DefaultVisitor implements GeneratorVisitorInterface
     {
         $this->writer->reset();
     }
-
-    public function startVisitingClass(PhpClass $class)
-    {
-        if ($namespace = $class->getNamespace()) {
-            $this->writer->write('namespace '.$namespace.';'."\n\n");
-        }
-
-        if ($files = $class->getRequiredFiles()) {
-            foreach ($files as $file) {
-                $this->writer->writeln('require_once '.var_export($file, true).';');
-            }
-
-            $this->writer->write("\n");
-        }
-
-        if ($useStatements = $class->getUseStatements()) {
-            foreach ($useStatements as $alias => $namespace) {
-                $this->writer->write('use '.$namespace);
-
-                if (substr($namespace, strrpos($namespace, '\\') + 1) !== $alias) {
-                    $this->writer->write(' as '.$alias);
-                }
-
-                $this->writer->write(";\n");
-            }
-
-            $this->writer->write("\n");
-        }
-
-        if ($docblock = $class->getDocblock()) {
-            $this->writer->write($docblock);
-        }
-
-        if ($class->isAbstract()) {
-            $this->writer->write('abstract ');
-        }
-
-        if ($class->isFinal()) {
-            $this->writer->write('final ');
-        }
-
-        // TODO: Interfaces should be modeled as separate classes.
-        $this->isInterface = $class->getAttributeOrElse('interface', false);
-        $this->writer->write($this->isInterface ? 'interface ' : 'class ');
-        $this->writer->write($class->getName());
-
-        if ( ! $this->isInterface) {
-            if ($parentClassName = $class->getParentClassName()) {
-                $this->writer->write(' extends ' . $parentClassName);
-            }
-        }
-
-        $interfaceNames = $class->getInterfaces();
-        if (!empty($interfaceNames)) {
-//             $interfaceNames = array_map(function($name) {
-//                 if ('\\' === $name[0]) {
-//                     return $name;
-//                 }
-
-//                 return '\\'.$name;
-//             }, $interfaceNames);
-
-            $this->writer->write($this->isInterface ? ' extends ' : ' implements ');
-            $this->writer->write(implode(', ', $interfaceNames));
-        }
-
-        $this->writer
-            ->write("\n{\n")
-            ->indent()
-        ;
+    
+    private function visitNamespace(NamespaceInterface $model) {
+    	if ($namespace = $model->getNamespace()) {
+    		$this->writer->write('namespace '.$namespace.';'."\n\n");
+    	}
+    }
+    
+    private function visitRequiredFiles(AbstractPhpStruct $struct) {
+    	if ($files = $struct->getRequiredFiles()) {
+    		foreach ($files as $file) {
+    			$this->writer->writeln('require_once '.var_export($file, true).';');
+    		}
+    	
+    		$this->writer->write("\n");
+    	}
+    }
+    
+    private function visitUseStatements(AbstractPhpStruct $struct) {
+    	if ($useStatements = $struct->getUseStatements()) {
+    		foreach ($useStatements as $alias => $namespace) {
+    			$this->writer->write('use '.$namespace);
+    	
+    			if (substr($namespace, strrpos($namespace, '\\') + 1) !== $alias) {
+    				$this->writer->write(' as '.$alias);
+    			}
+    	
+    			$this->writer->write(";\n");
+    		}
+    	
+    		$this->writer->write("\n");
+    	}
+    }
+    
+    private function visitDocblock(DocblockInterface $model) {
+    	if ($docblock = $model->getDocblock()) {
+    		if ($docblock instanceof Docblock) {
+    			$docblock = $docblock->toString();
+    		}
+    		$this->writer->write($docblock);
+    	}
+    }
+    
+    private function visitTraits(TraitsInterface $struct) {
+    	foreach ($struct->getTraits() as $trait) {
+    		$this->writer->write('uses ');
+    		$this->writer->writeln($trait);
+    	}
     }
 
-    public function startVisitingClassConstants()
+	public function startVisitingClass(PhpClass $class) {
+		$this->visitNamespace($class);
+		$this->visitRequiredFiles($class);
+		$this->visitUseStatements($class);
+		$this->visitDocblock($class);
+
+		// signature
+		if ($class->isAbstract()) {
+			$this->writer->write('abstract ');
+		}
+
+		if ($class->isFinal()) {
+			$this->writer->write('final ');
+		}
+
+		$this->writer->write('class ');
+		$this->writer->write($class->getName());
+
+		if ($parentClassName = $class->getParentClassName()) {
+			$this->writer->write(' extends ' . $parentClassName);
+		}
+
+		if ($class->hasInterfaces()) {
+			$this->writer->write(' implements ');
+			$this->writer->write(implode(', ', $class->getInterfaces()));
+		}
+
+		// body
+		$this->writer->write("\n{\n")->indent();
+		
+		$this->visitTraits($class);
+	}
+	
+	public function startVisitingInterface(PhpInterface $interface) {
+		$this->visitNamespace($interface);
+		$this->visitRequiredFiles($interface);
+		$this->visitUseStatements($interface);
+		$this->visitDocblock($interface);
+	
+		// signature
+		$this->writer->write('interface ');
+		$this->writer->write($interface->getName());
+	
+		if ($interface->hasInterfaces()) {
+			$this->writer->write(' extends ');
+			$this->writer->write(implode(', ', $interface->getInterfaces()));
+		}
+	
+		// body
+		$this->writer->write("\n{\n")->indent();
+	}
+	
+	public function startVisitingTrait(PhpTrait $trait) {
+		$this->visitNamespace($trait);
+		$this->visitRequiredFiles($trait);
+		$this->visitUseStatements($trait);
+		$this->visitDocblock($trait);
+	
+		// signature
+		$this->writer->write('trait ');
+		$this->writer->write($trait->getName());
+
+		// body
+		$this->writer->write("\n{\n")->indent();
+	
+		$this->visitTraits($trait);
+	}
+
+    public function startVisitingStructConstants()
     {
     }
 
-    public function visitClassConstant(PhpConstant $constant)
+    public function visitStructConstant(PhpConstant $constant)
     {
         $this->writer->writeln('const '.$constant->getName().' = '.var_export($constant->getValue(), true).';');
     }
 
-    public function endVisitingClassConstants()
+    public function endVisitingStructConstants()
     {
         $this->writer->write("\n");
     }
@@ -184,7 +235,7 @@ class DefaultVisitor implements GeneratorVisitorInterface
 
         $this->writeParameters($method->getParameters());
 
-        if ($method->isAbstract() || $this->isInterface) {
+        if ($method->isAbstract() || $method->getParent() instanceof PhpInterface) {
             $this->writer->write(");\n\n");
 
             return;
@@ -205,14 +256,25 @@ class DefaultVisitor implements GeneratorVisitorInterface
     {
     }
 
-    public function endVisitingClass(PhpClass $class)
-    {
-        $this->writer
-            ->outdent()
-            ->rtrim()
-            ->write('}')
-        ;
-    }
+	private function endVisitingStruct(AbstractPhpStruct $struct) {
+		$this->writer
+			->outdent()
+			->rtrim()
+			->write('}')
+		;
+	}
+	
+	public function endVisitingClass(PhpClass $class) {
+		$this->endVisitingStruct($class);
+	}
+	
+	public function endVisitingInterface(PhpInterface $interface) {
+		$this->endVisitingStruct($interface);
+	}
+	
+	public function endVisitingTrait(PhpTrait $trait) {
+		$this->endVisitingStruct($trait);
+	}
 
     public function visitFunction(PhpFunction $function)
     {

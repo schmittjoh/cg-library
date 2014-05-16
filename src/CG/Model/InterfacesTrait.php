@@ -17,6 +17,7 @@ trait InterfacesTrait {
 	 * the interface is also added as use statement.
 	 * 
 	 * @param PhpInterface|string $interface interface or qualified name
+	 * @return $this
 	 */
 	public function addInterface($interface)
 	{
@@ -44,11 +45,16 @@ trait InterfacesTrait {
 		return $this->interfaces;
 	}
 	
+	public function hasInterfaces() {
+		return count($this->interfaces) > 0;
+	}
+	
 	/**
 	 * Removes an interface. If the interface is passed as PhpInterface object,
 	 * the interface is also remove from the use statements.
 	 * 
 	 * @param PhpInterface|string $interface interface or qualified name
+	 * @return $this
 	 */
 	public function removeInterface($interface)
 	{
@@ -69,6 +75,11 @@ trait InterfacesTrait {
 		return $this;
 	}
 
+	/**
+	 * 
+	 * @param array $interfaces
+	 * @return $this
+	 */
 	public function setInterfaces(array $interfaces)
 	{
 		foreach ($interfaces as $interface) {

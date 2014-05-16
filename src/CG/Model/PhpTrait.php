@@ -2,7 +2,7 @@
 
 namespace CG\Model;
 
-class PhpTrait extends AbstractPhpStruct implements GenerateableInterface
+class PhpTrait extends AbstractPhpStruct implements GenerateableInterface, TraitsInterface
 {
 	use PropertiesTrait;
 	use TraitsTrait;

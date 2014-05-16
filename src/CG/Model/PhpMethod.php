@@ -44,14 +44,13 @@ class PhpMethod extends AbstractPhpMember
 
     public static function fromReflection(\ReflectionMethod $ref)
     {
-        $method = new static();
+        $method = new static($ref->name);
         $method
             ->setFinal($ref->isFinal())
             ->setAbstract($ref->isAbstract())
             ->setStatic($ref->isStatic())
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
             ->setReferenceReturned($ref->returnsReference())
-            ->setName($ref->name)
         ;
 
         if ($docComment = $ref->getDocComment()) {

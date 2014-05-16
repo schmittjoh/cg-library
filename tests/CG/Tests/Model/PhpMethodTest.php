@@ -9,7 +9,7 @@ class PhpMethodTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetIsFinal()
     {
-        $method = new PhpMethod();
+        $method = new PhpMethod('needsName');
 
         $this->assertFalse($method->isFinal());
         $this->assertSame($method, $method->setFinal(true));
@@ -20,7 +20,7 @@ class PhpMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testSetIsAbstract()
     {
-        $method = new PhpMethod();
+        $method = new PhpMethod('needsName');
 
         $this->assertFalse($method->isAbstract());
         $this->assertSame($method, $method->setAbstract(true));
@@ -31,7 +31,7 @@ class PhpMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetParameters()
     {
-        $method = new PhpMethod();
+        $method = new PhpMethod('needsName');
 
         $this->assertEquals(array(), $method->getParameters());
         $this->assertSame($method, $method->setParameters($params = array(new PhpParameter())));
@@ -53,7 +53,7 @@ class PhpMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testSetGetBody()
     {
-        $method = new PhpMethod();
+        $method = new PhpMethod('needsName');
 
         $this->assertSame('', $method->getBody());
         $this->assertSame($method, $method->setBody('foo'));
@@ -62,7 +62,7 @@ class PhpMethodTest extends \PHPUnit_Framework_TestCase
 
     public function testSetIsReferenceReturned()
     {
-        $method = new PhpMethod();
+        $method = new PhpMethod('needsName');
 
         $this->assertFalse($method->isReferenceReturned());
         $this->assertSame($method, $method->setReferenceReturned(true));

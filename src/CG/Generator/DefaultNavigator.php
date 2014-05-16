@@ -19,6 +19,9 @@
 namespace CG\Generator;
 
 use CG\Model\PhpClass;
+use CG\Model\GenerateableInterface;
+use CG\Model\AbstractPhpStruct;
+use CG\Model\PhpFunction;
 
 /**
  * The default navigator.
@@ -70,22 +73,30 @@ class DefaultNavigator
         $this->methodSortFunc = $func;
     }
 
-    public function accept(GeneratorVisitorInterface $visitor, PhpClass $class)
+    public function accept(GeneratorVisitorInterface $visitor, GenerateableInterface $model) {
+    	if ($model instanceof AbstractPhpStruct) {
+    		$this->visitStruct($visitor, $model);
+    	} else if ($model instanceof PhpFunction) {
+    		$visitor->visitFunction($model);
+    	}
+    }
+    
+    private function visitStruct(GeneratorVisitorInterface $visitor, AbstractPhpStruct $struct)
     {
-        $visitor->startVisitingClass($class);
+        $visitor->startVisitingClass($struct);
 
-        $constants = $class->getConstants(true);
+        $constants = $struct->getConstants(true);
         if (!empty($constants)) {
             uksort($constants, $this->getConstantSortFunc());
 
-            $visitor->startVisitingClassConstants();
+            $visitor->startVisitingStructConstants();
             foreach ($constants as $constant) {
-                $visitor->visitClassConstant($constant);
+                $visitor->visitStructConstant($constant);
             }
-            $visitor->endVisitingClassConstants();
+            $visitor->endVisitingStructConstants();
         }
 
-        $properties = $class->getProperties();
+        $properties = $struct->getProperties();
         if (!empty($properties)) {
             usort($properties, $this->getPropertySortFunc());
 
@@ -96,7 +107,7 @@ class DefaultNavigator
             $visitor->endVisitingProperties();
         }
 
-        $methods = $class->getMethods();
+        $methods = $struct->getMethods();
         if (!empty($methods)) {
             usort($methods, $this->getMethodSortFunc());
 
@@ -107,7 +118,7 @@ class DefaultNavigator
             $visitor->endVisitingMethods();
         }
 
-        $visitor->endVisitingClass($class);
+        $visitor->endVisitingClass($struct);
     }
 
     private function getConstantSortFunc()

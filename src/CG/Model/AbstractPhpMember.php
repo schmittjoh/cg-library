@@ -23,7 +23,7 @@ namespace CG\Model;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-abstract class AbstractPhpMember extends AbstractModel
+abstract class AbstractPhpMember extends AbstractModel implements DocblockInterface
 {
 	use DocblockTrait;
 	use NameTrait;
@@ -35,8 +35,9 @@ abstract class AbstractPhpMember extends AbstractModel
 
     private $static = false;
     private $visibility = self::VISIBILITY_PUBLIC;
+    private $parent;
     
-    public function __construct($name = null)
+    public function __construct($name)
     {
         $this->setName($name);
     }
@@ -75,6 +76,22 @@ abstract class AbstractPhpMember extends AbstractModel
     public function getVisibility()
     {
         return $this->visibility;
+    }
+    
+    /**
+     * @param AbstractPhpStruct|null $parent
+     * @return $this
+     */
+    public function setParent($parent) {
+    	$this->parent = $parent;
+    	return $this;
+    }
+    
+    /**
+     * @return AbstractPhpStruct
+     */
+    public function getParent() {
+    	return $this->parent;
     }
 
 }

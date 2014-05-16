@@ -25,7 +25,7 @@ use CG\Utils\ReflectionUtils;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class PhpFunction extends AbstractModel implements GenerateableInterface
+class PhpFunction extends AbstractModel implements GenerateableInterface, NamespaceInterface, DocblockInterface
 {
     use QualifiedNameTrait;
     use DocblockTrait;

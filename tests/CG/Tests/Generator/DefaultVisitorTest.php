@@ -14,9 +14,8 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
     {
         $writer = new Writer();
 
-        $function = new PhpFunction();
+        $function = new PhpFunction('foo');
         $function
-            ->setName('foo')
             ->addParameter(PhpParameter::create('a'))
             ->addParameter(PhpParameter::create('b'))
             ->setBody(
@@ -39,11 +38,10 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function testVisitMethod()
     {
-        $method  = new PhpMethod();
+        $method  = new PhpMethod('foo');
         $visitor = new DefaultVisitor();
 
         $method
-            ->setName('foo')
             ->setReferenceReturned(true);
         $visitor->visitMethod($method);
 
@@ -56,12 +54,11 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('`callable` is only supported in PHP >=5.4.0');
         }
 
-        $method    = new PhpMethod();
+        $method    = new PhpMethod('foo');
         $parameter = new PhpParameter('bar');
         $parameter->setType('callable');
 
         $method
-            ->setName('foo')
             ->addParameter($parameter);
 
         $visitor = new DefaultVisitor();

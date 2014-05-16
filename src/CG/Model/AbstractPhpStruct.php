@@ -26,7 +26,7 @@ use CG\Utils\ReflectionUtils;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-abstract class AbstractPhpStruct extends AbstractModel
+abstract class AbstractPhpStruct extends AbstractModel implements NamespaceInterface, DocblockInterface
 {
 	use QualifiedNameTrait;
 	use DocblockTrait;
@@ -145,15 +145,28 @@ abstract class AbstractPhpStruct extends AbstractModel
     	}
     }
 
+    /**
+     * 
+     * @param PhpMethod[] $methods
+     * @return $this
+     */
     public function setMethods(array $methods)
     {
-        $this->methods = $methods;
+    	foreach ($this->methods as $method) {
+    		$method->setParent(null);
+    	}
+    	
+    	$this->methods = [];
+    	foreach ($methods as $method) {
+    		$this->setMethod($method);
+    	}
 
         return $this;
     }
 
     public function setMethod(PhpMethod $method)
     {
+    	$method->setParent($this);
         $this->methods[$method->getName()] = $method;
 
         return $this;
@@ -192,6 +205,8 @@ abstract class AbstractPhpStruct extends AbstractModel
         if (!array_key_exists($method, $this->methods)) {
             throw new \InvalidArgumentException(sprintf('The method "%s" does not exist.', $method));
         }
+        $m = $this->methods[$method];
+        $m->setParent(null);
         unset($this->methods[$method]);
 
         return $this;

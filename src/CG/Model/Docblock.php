@@ -145,7 +145,7 @@ class Docblock {
 		return $this;
 	}
 	
-	public function setReturn($type, $description) {
+	public function setReturn($type, $description = '') {
 		$this->setReturnType($type);
 		$this->setReturnDescription($description);
 		return $this;
