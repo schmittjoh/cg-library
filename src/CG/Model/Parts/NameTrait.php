@@ -1,5 +1,5 @@
 <?php
-namespace CG\Model;
+namespace CG\Model\Parts;
 
 trait NameTrait {
 

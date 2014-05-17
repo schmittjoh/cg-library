@@ -1,6 +1,8 @@
 <?php
 
-namespace CG\Model;
+namespace CG\Model\Parts;
+
+use CG\Model\PhpParameter;
 
 trait ParametersTrait {
 	

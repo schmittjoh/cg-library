@@ -1,14 +1,16 @@
 <?php
 
-namespace CG\Model;
+namespace CG\Model\Parts;
 
 trait QualifiedNameTrait {
+	
 	use NameTrait;
 	
 	private $namespace;
 
 	/**
 	 * @param string $namespace
+	 * @return $this
 	 */
 	public function setNamespace($namespace)
 	{
@@ -22,16 +24,17 @@ trait QualifiedNameTrait {
 	 * including the namespace.
 	 *
 	 * @param string $name
+	 * @return $this
 	 */
 	public function setQualifiedName($name)
 	{
 		if (false !== $pos = strrpos($name, '\\')) {
-			$this->namespace = substr($name, $name[0] == '\\' ? 1 : 0, $pos);
+			$this->namespace = trim(substr($name, 0, $pos), '\\');
 			$this->name = substr($name, $pos + 1);
 	
 			return $this;
 		}
-	
+
 		$this->namespace = null;
 		$this->name = $name;
 	

@@ -2,6 +2,9 @@
 
 namespace CG\Model;
 
+use CG\Model\Parts\InterfacesTrait;
+use CG\Model\Parts\ConstantsTrait;
+
 class PhpInterface extends AbstractPhpStruct implements GenerateableInterface
 {
 	use InterfacesTrait;

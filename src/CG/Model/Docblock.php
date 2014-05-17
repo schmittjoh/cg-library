@@ -3,6 +3,7 @@
 namespace CG\Model;
 
 use CG\Utils\Writer;
+
 class Docblock {
 	
 	/**

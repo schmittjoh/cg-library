@@ -20,6 +20,9 @@ namespace CG\Model;
 
 use Doctrine\Common\Annotations\PhpParser;
 use CG\Utils\ReflectionUtils;
+use CG\Model\Parts\QualifiedNameTrait;
+use CG\Model\Parts\DocblockTrait;
+use CG\Model\Parts\LongDescriptionTrait;
 
 /**
  * Represents an abstract php struct.
@@ -137,10 +140,20 @@ abstract class AbstractPhpStruct extends AbstractModel implements NamespaceInter
 
         return $this;
     }
-    
+
+	/**
+	 * Returns whether the given use statement is present
+	 * 
+	 * @param string $qualifiedName
+	 * @return boolean
+	 */
+	public function hasUseStatement($qualifiedName) {
+		return in_array($qualifiedName, $this->useStatements);
+	}
+
     public function removeUseStatement($qualifiedName) {
     	$offset = array_search($qualifiedName, $this->useStatements);
-    	if ($offset) {
+    	if ($offset !== null) {
     		unset($this->useStatements[$offset]);
     	}
     }

@@ -19,6 +19,8 @@
 namespace CG\Model;
 
 use CG\Utils\ReflectionUtils;
+use CG\Model\Parts\DefaultValueTrait;
+use CG\Model\Parts\TypeTrait;
 
 /**
  * Represents a PHP property.

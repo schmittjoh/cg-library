@@ -4,6 +4,7 @@
 composer.lock
 phpunit.xml
 vendor/
-doc/
+api/
 cache/
+coverage/
 

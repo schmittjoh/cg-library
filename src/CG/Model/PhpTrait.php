@@ -2,6 +2,9 @@
 
 namespace CG\Model;
 
+use CG\Model\Parts\PropertiesTrait;
+use CG\Model\Parts\TraitsTrait;
+
 class PhpTrait extends AbstractPhpStruct implements GenerateableInterface, TraitsInterface
 {
 	use PropertiesTrait;

@@ -19,6 +19,10 @@
 namespace CG\Model;
 
 use CG\Utils\ReflectionUtils;
+use CG\Model\Parts\AbstractTrait;
+use CG\Model\Parts\FinalTrait;
+use CG\Model\Parts\ParametersTrait;
+use CG\Model\Parts\BodyTrait;
 
 /**
  * Represents a PHP method.

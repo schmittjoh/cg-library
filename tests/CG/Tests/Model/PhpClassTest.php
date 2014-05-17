@@ -81,18 +81,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($class, PhpClass::fromReflection(new \ReflectionClass('CG\Tests\Model\Fixture\Entity')));
     }
 
-    public function testGetSetName()
-    {
-        $class = new PhpClass();
-        $this->assertNull($class->getName());
-
-        $class = new PhpClass('foo');
-        $this->assertEquals('foo', $class->getName());
-        $this->assertSame($class, $class->setName('bar'));
-        $this->assertEquals('bar', $class->getName());
-    }
-
-    public function testSetGetConstants()
+    public function testConstants()
     {
         $class = new PhpClass();
 
@@ -114,7 +103,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $class->removeConstant('foo');
     }
 
-    public function testSetIsAbstract()
+    public function testAbstract()
     {
         $class = new PhpClass();
 
@@ -125,7 +114,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($class->isAbstract());
     }
 
-    public function testSetIsFinal()
+    public function testFinal()
     {
         $class = new PhpClass();
 
@@ -136,7 +125,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($class->isFinal());
     }
 
-    public function testSetGetParentClassName()
+    public function testParentClassName()
     {
         $class = new PhpClass();
 
@@ -147,7 +136,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($class->getParentClassName());
     }
 
-    public function testSetGetInterfaceNames()
+    public function testInterfaces()
     {
         $class = new PhpClass();
 
@@ -158,20 +147,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('foo', 'bar', 'stdClass'), $class->getInterfaces());
     }
 
-    public function testSetGetUseStatements()
-    {
-        $class = new PhpClass();
-
-        $this->assertEquals(array(), $class->getUseStatements());
-        $this->assertSame($class, $class->setUseStatements(array('foo' => 'bar')));
-        $this->assertEquals(array('foo' => 'bar'), $class->getUseStatements());
-        $this->assertSame($class, $class->addUseStatement('Foo\Bar'));
-        $this->assertEquals(array('foo' => 'bar', 'Bar' => 'Foo\Bar'), $class->getUseStatements());
-        $this->assertSame($class, $class->addUseStatement('Foo\Bar', 'Baz'));
-        $this->assertEquals(array('foo' => 'bar', 'Bar' => 'Foo\Bar', 'Baz' => 'Foo\Bar'), $class->getUseStatements());
-    }
-
-    public function testSetGetProperties()
+    public function testProperties()
     {
         $class = new PhpClass();
 
@@ -181,37 +157,5 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasProperty('foo'));
         $this->assertSame($class, $class->removeProperty('foo'));
         $this->assertEquals(array(), $class->getProperties());
-    }
-
-    public function testSetGetMethods()
-    {
-        $class = new PhpClass();
-
-        $this->assertEquals(array(), $class->getMethods());
-        $this->assertSame($class, $class->setMethod($method = new PhpMethod('foo')));
-        $this->assertSame(array('foo' => $method), $class->getMethods());
-        $this->assertTrue($class->hasMethod('foo'));
-        $this->assertSame($class, $class->removeMethod('foo'));
-        $this->assertEquals(array(), $class->getMethods());
-    }
-
-    public function testSetGetDocblock()
-    {
-        $class = new PhpClass();
-
-        $this->assertNull($class->getDocblock());
-        $this->assertSame($class, $class->setDocblock('foo'));
-        $this->assertEquals('foo', $class->getDocblock());
-    }
-
-    public function testSetGetRequiredFiles()
-    {
-        $class = new PhpClass();
-
-        $this->assertEquals(array(), $class->getRequiredFiles());
-        $this->assertSame($class, $class->setRequiredFiles(array('foo')));
-        $this->assertEquals(array('foo'), $class->getRequiredFiles());
-        $this->assertSame($class, $class->addRequiredFile('bar'));
-        $this->assertEquals(array('foo', 'bar'), $class->getRequiredFiles());
     }
 }

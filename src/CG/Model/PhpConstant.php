@@ -2,6 +2,10 @@
 
 namespace CG\Model;
 
+use CG\Model\Parts\NameTrait;
+use CG\Model\Parts\LongDescriptionTrait;
+use CG\Model\Parts\DocblockTrait;
+
 class PhpConstant extends AbstractModel implements GenerateableInterface, DocblockInterface
 {
     use NameTrait;

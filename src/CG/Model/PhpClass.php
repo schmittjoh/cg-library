@@ -1,6 +1,13 @@
 <?php
 namespace CG\Model;
 
+use CG\Model\Parts\InterfacesTrait;
+use CG\Model\Parts\AbstractTrait;
+use CG\Model\Parts\FinalTrait;
+use CG\Model\Parts\ConstantsTrait;
+use CG\Model\Parts\PropertiesTrait;
+use CG\Model\Parts\TraitsTrait;
+
 class PhpClass extends AbstractPhpStruct implements GenerateableInterface, TraitsInterface {
 
 	use InterfacesTrait;

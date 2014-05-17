@@ -21,5 +21,9 @@
         <exclude>
             <group>performance</group>
         </exclude>
-    </groups>    
+    </groups>
+    
+    <logging>
+		<log type="coverage-html" target="coverage"/>
+	</logging>
 </phpunit>

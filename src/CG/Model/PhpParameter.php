@@ -18,6 +18,10 @@
 
 namespace CG\Model;
 
+use CG\Model\Parts\NameTrait;
+use CG\Model\Parts\DefaultValueTrait;
+use CG\Model\Parts\TypeTrait;
+
 /**
  * Represents a PHP parameter.
  *

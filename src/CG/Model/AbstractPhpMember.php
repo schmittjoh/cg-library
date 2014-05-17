@@ -18,6 +18,10 @@
 
 namespace CG\Model;
 
+use CG\Model\Parts\DocblockTrait;
+use CG\Model\Parts\NameTrait;
+use CG\Model\Parts\LongDescriptionTrait;
+
 /**
  * Abstract PHP member class.
  *

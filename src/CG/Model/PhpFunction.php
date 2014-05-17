@@ -19,6 +19,10 @@
 namespace CG\Model;
 
 use CG\Utils\ReflectionUtils;
+use CG\Model\Parts\QualifiedNameTrait;
+use CG\Model\Parts\DocblockTrait;
+use CG\Model\Parts\ParametersTrait;
+use CG\Model\Parts\BodyTrait;
 
 /**
  * Represents a PHP function.
