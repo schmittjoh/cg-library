@@ -20,7 +20,6 @@ namespace CG\Model;
 
 use CG\Utils\ReflectionUtils;
 use CG\Model\Parts\DefaultValueTrait;
-use CG\Model\Parts\TypeTrait;
 
 /**
  * Represents a PHP property.
@@ -30,7 +29,6 @@ use CG\Model\Parts\TypeTrait;
 class PhpProperty extends AbstractPhpMember
 {
     use DefaultValueTrait;
-    use TypeTrait;
 
     /**
      * @param string|null $name
@@ -60,16 +58,20 @@ class PhpProperty extends AbstractPhpMember
         return $property;
     }
     
-    /* (non-PHPdoc)
-     * @see \CG\Model\AbstractModel::generateDocblock()
-     */
+
     public function generateDocblock() {
-    	$docblock = new Docblock();
+    	$docblock = $this->getDocblock();
+    	if (!$docblock instanceof Docblock) {
+    		$docblock = new Docblock();
+    	}
     	$docblock
-	    	->setDescription($this->description)
-	    	->setLongDescription($this->longDescription)
-	    	->setVar($this->type, $this->typeDescription)
-    	;
+	    	->setDescription($this->getDefaultValue())
+	    	->setLongDescription($this->getLongDescription())
+		;
+    	
+    	if ($this->getType() != '') {
+	    	$docblock->setVar($this->getType(), $this->getTypeDescription());
+    	}   	
     	
     	$this->setDocblock($docblock);
     

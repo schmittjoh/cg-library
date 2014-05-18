@@ -23,6 +23,9 @@ use CG\Model\Parts\QualifiedNameTrait;
 use CG\Model\Parts\DocblockTrait;
 use CG\Model\Parts\ParametersTrait;
 use CG\Model\Parts\BodyTrait;
+use CG\Model\Parts\ReferenceReturnTrait;
+use CG\Model\Parts\TypeTrait;
+use CG\Model\Parts\LongDescriptionTrait;
 
 /**
  * Represents a PHP function.
@@ -35,22 +38,17 @@ class PhpFunction extends AbstractModel implements GenerateableInterface, Namesp
     use DocblockTrait;
     use ParametersTrait;
     use BodyTrait;
-
-    private $referenceReturned = false;
+    use ReferenceReturnTrait;
+    use TypeTrait;
+    use LongDescriptionTrait;
 
     public static function fromReflection(\ReflectionFunction $ref)
     {
-        $function = new static();
-
-        if (false === $pos = strrpos($ref->name, '\\')) {
-            $function->setName(substr($ref->name, $pos + 1));
-            $function->setNamespace(substr($ref->name, $pos));
-        } else {
-            $function->setName($ref->name);
-        }
-
-        $function->referenceReturned = $ref->returnsReference();
-        $function->docblock = ReflectionUtils::getUnindentedDocComment($ref->getDocComment());
+        $function = PhpFunction::create($ref->name)
+        	->setReferenceReturned($ref->returnsReference())
+        	->setDocblock(ReflectionUtils::getUnindentedDocComment($ref->getDocComment()))
+        	->setBody(ReflectionUtils::getFunctionBody($ref))
+        ;
 
         foreach ($ref->getParameters() as $refParam) {
             assert($refParam instanceof \ReflectionParameter); // hmm - assert here?
@@ -69,34 +67,28 @@ class PhpFunction extends AbstractModel implements GenerateableInterface, Namesp
 
     public function __construct($name = null)
     {
-        $this->setName($name);
-    }
-
-    /**
-     * @param boolean $bool
-     */
-    public function setReferenceReturned($bool)
-    {
-        $this->referenceReturned = (Boolean) $bool;
-
-        return $this;
-    }
-
-    public function isReferenceReturned()
-    {
-        return $this->referenceReturned;
+        $this->setQualifiedName($name);
     }
     
     /* (non-PHPdoc)
      * @see \CG\Model\AbstractModel::generateDocblock()
      */
     public function generateDocblock() {
-    	$docblock = new Docblock();
+    	$docblock = $this->getDocblock();
+    	if (!$docblock instanceof Docblock) {
+    		$docblock = new Docblock();
+    	}
     	$docblock
-	    	->setDescription($this->description)
-	    	->setLongDescription($this->longDescription)
-	    	->setVar($this->type, $this->typeDescription)
-    	;
+	    	->setDescription($this->getDescription())
+	    	->setLongDescription($this->getLongDescription());
+    	 
+    	if ($this->getType() != '') {
+    		$docblock->setReturn($this->getType(), $this->getTypeDescription());
+    	}
+
+    	foreach ($this->parameters as $param) {
+    		$docblock->addParam($param->getName(), $param->getType(), $param->getDescription());
+    	}
     	
     	$this->setDocblock($docblock);
     

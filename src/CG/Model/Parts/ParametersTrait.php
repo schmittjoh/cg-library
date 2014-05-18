@@ -20,7 +20,7 @@ trait ParametersTrait {
 	
 	public function addParameter(PhpParameter $parameter)
 	{
-		$this->parameters[] = $parameter;
+		$this->parameters[count($this->parameters)] = $parameter;
 	
 		return $this;
 	}
@@ -34,7 +34,7 @@ trait ParametersTrait {
 	{
 		if (is_int($nameOrIndex)) {
 			if ( ! isset($this->parameters[$nameOrIndex])) {
-				throw new \InvalidArgumentException(sprintf('There is no parameter at position %d (0-based).', $nameOrIndex));
+				throw new \InvalidArgumentException(sprintf('There is no parameter at position %d.', $nameOrIndex));
 			}
 	
 			return $this->parameters[$nameOrIndex];
@@ -54,7 +54,7 @@ trait ParametersTrait {
 	public function replaceParameter($position, PhpParameter $parameter)
 	{
 		if ($position < 0 || $position > count($this->parameters)) {
-			throw new \InvalidArgumentException(sprintf('The position must be in the range [0, %d].', strlen($this->parameters)));
+			throw new \InvalidArgumentException(sprintf('The position must be in the range [0, %d].', count($this->parameters)));
 		}
 		$this->parameters[$position] = $parameter;
 	

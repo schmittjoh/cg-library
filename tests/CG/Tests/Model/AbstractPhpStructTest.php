@@ -16,6 +16,7 @@ class AbstractPhpStructTest extends \PHPUnit_Framework_TestCase
 
         $class = new PhpClass('foo');
         $this->assertEquals('foo', $class->getName());
+        $this->assertEquals('foo', $class->getQualifiedName());
         $this->assertSame($class, $class->setName('bar'));
         $this->assertEquals('bar', $class->getName());
         

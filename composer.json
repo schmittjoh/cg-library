@@ -9,6 +9,9 @@
 	"authors" : [{
 			"name" : "Johannes M. Schmitt",
 			"email" : "schmittjoh@gmail.com"
+		}, {
+			"name" : "Thomas Gossmann",
+			"homepage" : "http://gos.si"
 		}
 	],
 	"require" : {

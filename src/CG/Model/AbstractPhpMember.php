@@ -21,6 +21,7 @@ namespace CG\Model;
 use CG\Model\Parts\DocblockTrait;
 use CG\Model\Parts\NameTrait;
 use CG\Model\Parts\LongDescriptionTrait;
+use CG\Model\Parts\TypeTrait;
 
 /**
  * Abstract PHP member class.
@@ -32,6 +33,7 @@ abstract class AbstractPhpMember extends AbstractModel implements DocblockInterf
 	use DocblockTrait;
 	use NameTrait;
 	use LongDescriptionTrait;
+	use TypeTrait;
 	
     const VISIBILITY_PRIVATE = 'private';
     const VISIBILITY_PROTECTED = 'protected';

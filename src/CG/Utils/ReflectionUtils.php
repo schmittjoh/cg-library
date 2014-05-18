@@ -43,7 +43,7 @@ abstract class ReflectionUtils
     public static function getUnindentedDocComment($docComment)
     {
         $lines = explode("\n", $docComment);
-        for ($i=0,$c=count($lines); $i<$c; $i++) {
+        for ($i = 0, $c = count($lines); $i < $c; $i++) {
             if (0 === $i) {
                 $docBlock = $lines[0]."\n";
                 continue;
@@ -51,12 +51,28 @@ abstract class ReflectionUtils
 
             $docBlock .= ' '.ltrim($lines[$i]);
 
-            if ($i+1 < $c) {
+            if ($i + 1 < $c) {
                 $docBlock .= "\n";
             }
         }
 
         return $docBlock;
+    }
+    
+    
+    
+    /**
+     * 
+     * @param \ReflectionFunctionAbstract $function
+     */
+    public static function getFunctionBody(\ReflectionFunctionAbstract $function) {
+    	$source = file($function->getFileName());
+    	$start = $function->getStartLine() - 1;
+    	$end = $function->getEndLine();
+    	$body = implode('', array_slice($source, $start, $end - $start));
+    	$open = strpos($body, '{');
+    	$close = strrpos($body, '}');
+    	return trim(substr($body, $open + 1, (strlen($body) - $close) * -1));
     }
 
     final private function __construct() { }

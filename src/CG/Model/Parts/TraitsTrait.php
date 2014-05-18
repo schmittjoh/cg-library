@@ -2,6 +2,8 @@
 
 namespace CG\Model\Parts;
 
+use CG\Model\PhpTrait;
+
 trait TraitsTrait {
 	
 	private $traits = [];
@@ -42,6 +44,20 @@ trait TraitsTrait {
 	public function getTraits()
 	{
 		return $this->traits;
+	}
+	
+
+	/**
+	 *
+	 * @param PhpTrait|string $interface
+	 * @return boolean
+	 */
+	public function hasTrait($interface) {
+		if (!$interface instanceof PhpTrait) {
+			$interface = new PhpTrait($interface);
+		}
+		$name = $interface->getName();
+		return in_array($name, $this->traits);
 	}
 	
 	/**

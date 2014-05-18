@@ -5,18 +5,31 @@ namespace CG\Model;
 use CG\Model\Parts\NameTrait;
 use CG\Model\Parts\LongDescriptionTrait;
 use CG\Model\Parts\DocblockTrait;
+use CG\Model\Parts\TypeTrait;
 
 class PhpConstant extends AbstractModel implements GenerateableInterface, DocblockInterface
 {
     use NameTrait;
     use LongDescriptionTrait;
    	use DocblockTrait;
+   	use TypeTrait;
     
     private $value;
 
-    public function __construct($name = null)
+    public static function create($name = null, $value = null) {
+    	$constant = new static();
+    	$constant
+    		->setName($name)
+    		->setValue($value)
+    	;
+    	
+    	return $constant;
+    }
+    
+    public function __construct($name = null, $value = null)
     {
         $this->setName($name);
+        $this->setValue($value);
     }
 
     public function setValue($value)
@@ -35,12 +48,17 @@ class PhpConstant extends AbstractModel implements GenerateableInterface, Docblo
      * @see \CG\Model\AbstractModel::generateDocblock()
     */
     public function generateDocblock() {
-    	$docblock = new Docblock();
+    	$docblock = $this->getDocblock();
+    	if (!$docblock instanceof Docblock) {
+    		$docblock = new Docblock();
+    	}
     	$docblock
-	    	->setDescription($this->description)
-	    	->setLongDescription($this->longDescription)
-	    	->setVar($this->type, $this->typeDescription)
-    	;
+	    	->setDescription($this->getDescription())
+	    	->setLongDescription($this->getLongDescription());
+    	
+    	if ($this->getType() != '') {
+	    	$docblock->setVar($this->getType(), $this->getTypeDescription());
+    	}
     	
     	$this->setDocblock($docblock);
     

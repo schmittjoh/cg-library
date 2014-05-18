@@ -23,6 +23,7 @@ use CG\Model\Parts\AbstractTrait;
 use CG\Model\Parts\FinalTrait;
 use CG\Model\Parts\ParametersTrait;
 use CG\Model\Parts\BodyTrait;
+use CG\Model\Parts\ReferenceReturnTrait;
 
 /**
  * Represents a PHP method.
@@ -35,14 +36,12 @@ class PhpMethod extends AbstractPhpMember
     use FinalTrait;
     use ParametersTrait;
     use BodyTrait;
-	
-    private $referenceReturned = false;
-
+    use ReferenceReturnTrait;
+    
     /**
      * @param string|null $name
      */
-    public static function create($name = null)
-    {
+    public static function create($name = null) {
         return new static($name);
     }
 
@@ -55,6 +54,7 @@ class PhpMethod extends AbstractPhpMember
             ->setStatic($ref->isStatic())
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
             ->setReferenceReturned($ref->returnsReference())
+            ->setBody(ReflectionUtils::getFunctionBody($ref))
         ;
 
         if ($docComment = $ref->getDocComment()) {
@@ -65,49 +65,37 @@ class PhpMethod extends AbstractPhpMember
             $method->addParameter(static::createParameter($param));
         }
 
-        // FIXME: Extract body?
         return $method;
     }
 
     /**
      * @return PhpParameter
      */
-    protected static function createParameter(\ReflectionParameter $parameter)
-    {
+    protected static function createParameter(\ReflectionParameter $parameter) {
         return PhpParameter::fromReflection($parameter);
     }
 
-    /**
-     * @param boolean $bool
-     */
-    public function setReferenceReturned($bool)
-    {
-        $this->referenceReturned = (Boolean) $bool;
-
-        return $this;
-    }    
-
-    public function isReferenceReturned()
-    {
-        return $this->referenceReturned;
-    }
-
-    
 	/* (non-PHPdoc)
 	 * @see \CG\Model\AbstractModel::generateDocblock()
 	 */
 	public function generateDocblock() {
-		$docblock = new Docblock();
-		$docblock
-			->setDescription($this->description)
-			->setLongDescription($this->longDescription)
-			->setReturn($this->type, $this->typeDescription)
-		;
-		
-		foreach ($this->parameters as $param) {
-			$docblock->addParam($param->getName(), $param->getType(), $param->getDescription());
+	    $docblock = $this->getDocblock();
+    	if (!$docblock instanceof Docblock) {
+    		$docblock = new Docblock();
+    	}
+    	$docblock
+	    	->setDescription($this->getDescription())
+	    	->setLongDescription($this->getLongDescription())
+    	;
+
+		if ($this->getType() != '') {
+			$docblock->setReturn($this->getType(), $this->getTypeDescription());
 		}
-		
+
+    	foreach ($this->parameters as $param) {
+    		$docblock->addParam($param->getName(), $param->getType(), $param->getDescription());
+    	}
+    	
 		$this->setDocblock($docblock);
 		
 		return $docblock;

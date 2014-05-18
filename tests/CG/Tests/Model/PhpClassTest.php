@@ -7,6 +7,9 @@ use CG\Model\PhpParameter;
 use CG\Model\PhpMethod;
 use CG\Model\PhpClass;
 use CG\Tests\Model\Fixture\Entity;
+use CG\Model\PhpConstant;
+use CG\Model\PhpInterface;
+use CG\Model\PhpTrait;
 
 class PhpClassTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,6 +58,9 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
             ->addParameter(PhpParameter::create()
                 ->setName('d')
                 ->setDefaultValue('foo')
+            )->addParameter(PhpParameter::create()
+				->setName('e')
+				->setType('callable')
             )->setDocblock('/**
  * Another doc comment.
  *
@@ -92,6 +98,9 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('foo' => 'bar', 'bar' => 'baz'), $class->getConstants());
         $this->assertSame($class, $class->removeConstant('foo'));
         $this->assertEquals(array('bar' => 'baz'), $class->getConstants());
+        $this->assertSame($class, $class->setConstant($bim = new PhpConstant('bim', 'bam')));
+        $this->assertTrue($class->hasConstant('bim'));
+        $this->assertSame($bim, $class->getConstant('bim'));
     }
 
     /**
@@ -101,6 +110,15 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
     {
         $class = new PhpClass();
         $class->removeConstant('foo');
+    }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testGetConstantThrowsExceptionWhenConstantDoesNotExist()
+    {
+    	$class = new PhpClass();
+    	$class->getConstant('foo');
     }
 
     public function testAbstract()
@@ -138,13 +156,44 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
 
     public function testInterfaces()
     {
-        $class = new PhpClass();
+        $class = new PhpClass('my\name\space\Class');
 
         $this->assertEquals(array(), $class->getInterfaces());
         $this->assertSame($class, $class->setInterfaces(array('foo', 'bar')));
         $this->assertEquals(array('foo', 'bar'), $class->getInterfaces());
         $this->assertSame($class, $class->addInterface('stdClass'));
         $this->assertEquals(array('foo', 'bar', 'stdClass'), $class->getInterfaces());
+        
+        $interface = new PhpInterface('my\name\space\Interface');
+        $class->addInterface($interface);
+        $this->assertTrue($class->hasInterface('my\name\space\Interface'));
+        $this->assertSame($class, $class->removeInterface($interface));
+        
+        $class->addInterface(new PhpInterface('other\name\space\Interface'));
+        $this->assertTrue($class->hasUseStatement('other\name\space\Interface'));
+        $this->assertSame($class, $class->removeInterface('other\name\space\Interface'));
+        $this->assertTrue($class->hasUseStatement('other\name\space\Interface'));
+    }
+    
+    public function testTraits()
+    {
+    	$class = new PhpClass('my\name\space\Class');
+    
+    	$this->assertEquals(array(), $class->getTraits());
+    	$this->assertSame($class, $class->setTraits(array('foo', 'bar')));
+    	$this->assertEquals(array('foo', 'bar'), $class->getTraits());
+    	$this->assertSame($class, $class->addTrait('stdClass'));
+    	$this->assertEquals(array('foo', 'bar', 'stdClass'), $class->getTraits());
+    
+    	$trait = new PhpTrait('my\name\space\Trait');
+    	$class->addTrait($trait);
+    	$this->assertTrue($class->hasTrait('my\name\space\Trait'));
+    	$this->assertSame($class, $class->removeTrait($trait));
+    
+    	$class->addTrait(new PhpTrait('other\name\space\Trait'));
+    	$this->assertTrue($class->hasUseStatement('other\name\space\Trait'));
+    	$this->assertSame($class, $class->removeTrait('other\name\space\Trait'));
+    	$this->assertTrue($class->hasUseStatement('other\name\space\Trait'));
     }
 
     public function testProperties()
@@ -157,5 +206,38 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($class->hasProperty('foo'));
         $this->assertSame($class, $class->removeProperty('foo'));
         $this->assertEquals(array(), $class->getProperties());
+        
+        $prop = new PhpProperty('bam');
+        $class->setProperty($prop);
+        $this->assertTrue($class->hasProperty($prop));
+        $this->assertSame($class, $class->removeProperty($prop));
+        
+        $class->setProperty($orphaned = new PhpProperty('orphaned'));
+        $this->assertSame($class, $orphaned->getParent());
+        $this->assertSame($orphaned, $class->getProperty('orphaned'));
+        $this->assertSame($orphaned, $class->getProperty($orphaned));
+        $this->assertEmpty($class->getProperty('prop-not-found'));
+        $this->assertTrue($class->hasProperty($orphaned));
+        $this->assertSame($class, $class->setProperties([$prop, $prop2 = new PhpProperty('bar')]));
+        $this->assertSame(['bam' => $prop, 'bar' => $prop2], $class->getProperties());
+        $this->assertNull($orphaned->getParent());
     }
+    
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testRemoveNonExistentProperty()
+    {
+    	$class = new PhpClass();
+    	$class->removeProperty('haha');
+    }
+    
+    public function testLongDescription() {
+    	$class = new PhpClass();
+    	
+    	$this->assertSame($class, $class->setLongDescription('very long description'));
+    	$this->assertEquals('very long description', $class->getLongDescription());
+    }
+
+
 }

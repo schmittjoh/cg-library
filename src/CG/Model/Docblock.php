@@ -4,6 +4,14 @@ namespace CG\Model;
 
 use CG\Utils\Writer;
 
+/**
+ * Represents a Docblock
+ * 
+ * To be replaced by https://github.com/phpDocumentor/ReflectionDocBlock
+ * when they have a toString()/export() method.
+ * 
+ * @author Thomas Gossmann
+ */
 class Docblock {
 	
 	/**
@@ -225,7 +233,7 @@ class Docblock {
 		return $this;
 	}
 	
-	public function toString() {
+	public function build() {
 		$writer = new Writer();
 		$writer->writeln('/**');
 		
@@ -348,5 +356,9 @@ class Docblock {
 		}
 		
 		return $writer->getContent();
+	}
+	
+	public function __toString() {
+		return $this->build();
 	}
 }

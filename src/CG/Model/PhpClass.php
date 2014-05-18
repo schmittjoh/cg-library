@@ -39,9 +39,6 @@ class PhpClass extends AbstractPhpStruct implements GenerateableInterface, Trait
 		return $this;
 	}
 
-	/* (non-PHPdoc)
-	 * @see \CG\Model\AbstractModel::generateDocblock()
-	*/
 	public function generateDocblock() {
 		$docblock = parent::generateDocblock();
 	

@@ -23,7 +23,7 @@ abstract class Entity
      * @param \stdClass    $c
      * @param string       $d
      */
-    final public function __construct($a, array &$b, \stdClass $c, $d = 'foo', callable $e)
+    final public function __construct($a, array &$b, \stdClass $c, $d = 'foo')
     {
     }
 

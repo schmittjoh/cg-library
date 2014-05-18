@@ -58,7 +58,7 @@ class PhpParameter extends AbstractModel
         if ($ref->isArray()) {
             $parameter->setType('array');
         } elseif ($class = $ref->getClass()) {
-            $parameter->setType($class->name);
+            $parameter->setType($class->getName());
         } elseif (method_exists($ref, 'isCallable') && $ref->isCallable()) {
             $parameter->setType('callable');
         }

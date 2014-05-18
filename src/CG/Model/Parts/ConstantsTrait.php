@@ -36,9 +36,10 @@ trait ConstantsTrait {
 	public function setConstant($nameOrConstant, $value = null)
 	{
 		if ($nameOrConstant instanceof PhpConstant) {
-			if (null !== $value) {
-				throw new \InvalidArgumentException('If a PhpConstant object is passed, $value must be null.');
-			}
+			// doh - why?
+// 			if (null !== $value) {
+// 				throw new \InvalidArgumentException('If a PhpConstant object is passed, $value must be null.');
+// 			}
 	
 			$name = $nameOrConstant->getName();
 			$constant = $nameOrConstant;
@@ -73,7 +74,7 @@ trait ConstantsTrait {
 	public function getConstant($name)
 	{
 		if ( ! isset($this->constants[$name])) {
-			throw new \InvalidArgumentException(sprintf('The constant "%s" does not exist.'));
+			throw new \InvalidArgumentException(sprintf('The constant "%s" does not exist.', $name));
 		}
 	
 		return $this->constants[$name];

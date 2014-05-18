@@ -43,6 +43,20 @@ trait PropertiesTrait {
 	/**
 	 * @param string $property
 	 */
+	public function getProperty($property)
+	{
+		if ($property instanceof PhpProperty) {
+			$property = $property->getName();
+		}
+	
+		if (isset($this->properties[$property])) {
+			return $this->properties[$property];
+		}
+	}
+	
+	/**
+	 * @param string $property
+	 */
 	public function hasProperty($property)
 	{
 		if ($property instanceof PhpProperty) {

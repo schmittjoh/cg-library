@@ -239,16 +239,15 @@ abstract class AbstractPhpStruct extends AbstractModel implements NamespaceInter
     {
         return $this->methods;
     }
-    
-    
-	/* (non-PHPdoc)
-	 * @see \CG\Model\AbstractModel::generateDocblock()
-	 */
+
 	public function generateDocblock() {
-		$docblock = new Docblock();
+		$docblock = $this->getDocblock();
+		if (!$docblock instanceof Docblock) {
+			$docblock = new Docblock();
+		}
 		$docblock
-			->setDescription($this->description)
-			->setLongDescription($this->longDescription)
+			->setDescription($this->getDescription())
+			->setLongDescription($this->getLongDescription())
 		;
 		
 		foreach ($this->methods as $method) {

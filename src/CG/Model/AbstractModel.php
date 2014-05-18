@@ -6,7 +6,7 @@ abstract class AbstractModel
 {
     private $attributes;
     
-    private $description;
+    protected $description;
 
     public function setAttribute($key, $value)
     {

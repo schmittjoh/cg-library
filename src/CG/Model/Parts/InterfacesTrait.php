@@ -2,6 +2,7 @@
 
 namespace CG\Model\Parts;
 
+use CG\Model\PhpInterface;
 trait InterfacesTrait {
 	
 	private $interfaces = [];
@@ -47,6 +48,19 @@ trait InterfacesTrait {
 	
 	public function hasInterfaces() {
 		return count($this->interfaces) > 0;
+	}
+	
+	/**
+	 * 
+	 * @param PhpInterface|string $interface
+	 * @return boolean
+	 */
+	public function hasInterface($interface) {
+		if (!$interface instanceof PhpInterface) {
+			$interface = new PhpInterface($interface);
+		}
+		$name = $interface->getName();
+		return in_array($name, $this->interfaces);
 	}
 	
 	/**
