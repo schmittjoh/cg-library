@@ -6,6 +6,8 @@ use CG\Model\Parts\NameTrait;
 use CG\Model\Parts\LongDescriptionTrait;
 use CG\Model\Parts\DocblockTrait;
 use CG\Model\Parts\TypeTrait;
+use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
+use CG\Utils\ReflectionUtils;
 
 class PhpConstant extends AbstractModel implements GenerateableInterface, DocblockInterface
 {
@@ -23,6 +25,21 @@ class PhpConstant extends AbstractModel implements GenerateableInterface, Docblo
     		->setValue($value)
     	;
     	
+    	return $constant;
+    }
+    
+    public static function fromReflection(\Reflection $ref)
+    {
+    	$constant = new static($ref->name);
+    	$constant
+	    	->setStatic($ref->isStatic())
+	    	->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
+    	;
+    
+    	$docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($ref->getDocComment()));
+    	$constant->setDocblock($docblock);
+    	$constant->setDescription($docblock->getShortDescription());
+    
     	return $constant;
     }
     
@@ -44,21 +61,15 @@ class PhpConstant extends AbstractModel implements GenerateableInterface, Docblo
         return $this->value;
     }
     
-    /* (non-PHPdoc)
-     * @see \CG\Model\AbstractModel::generateDocblock()
-    */
     public function generateDocblock() {
     	$docblock = $this->getDocblock();
-    	if (!$docblock instanceof Docblock) {
-    		$docblock = new Docblock();
-    	}
-    	$docblock
-	    	->setDescription($this->getDescription())
-	    	->setLongDescription($this->getLongDescription());
+		if (!$docblock instanceof Docblock) {
+			$docblock = new Docblock();
+		}
+		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
     	
-    	if ($this->getType() != '') {
-	    	$docblock->setVar($this->getType(), $this->getTypeDescription());
-    	}
+		$var = new VarTag('var', sprintf('%s %s', $this->getType(), $this->getTypeDescription()));
+		$docblock->appendTag($var);
     	
     	$this->setDocblock($docblock);
     

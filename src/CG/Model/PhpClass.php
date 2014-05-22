@@ -7,6 +7,8 @@ use CG\Model\Parts\FinalTrait;
 use CG\Model\Parts\ConstantsTrait;
 use CG\Model\Parts\PropertiesTrait;
 use CG\Model\Parts\TraitsTrait;
+use Doctrine\Common\Annotations\PhpParser;
+use CG\Utils\ReflectionUtils;
 
 class PhpClass extends AbstractPhpStruct implements GenerateableInterface, TraitsInterface {
 
@@ -18,6 +20,41 @@ class PhpClass extends AbstractPhpStruct implements GenerateableInterface, Trait
 	use TraitsTrait;
 	
 	private $parentClassName;
+	
+	public static function fromReflection(\ReflectionClass $ref)
+	{
+		$class = new static();
+		$class
+			->setQualifiedName($ref->name)
+			->setAbstract($ref->isAbstract())
+			->setFinal($ref->isFinal())
+			->setConstants($ref->getConstants())
+		;
+	
+		if (null === self::$phpParser) {
+			self::$phpParser = new PhpParser();
+		}
+	
+		$class->setUseStatements(self::$phpParser->parseClass($ref));
+	
+	
+        if ($doc = $ref->getDocComment()) {
+	        $docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($doc));
+	        $class->setDocblock($docblock);
+	        $class->setDescription($docblock->getShortDescription());
+	        $class->setLongDescription($docblock->getLongDescription());
+        }
+	
+		foreach ($ref->getMethods() as $method) {
+			$class->setMethod(static::createMethod($method));
+		}
+	
+		foreach ($ref->getProperties() as $property) {
+			$class->setProperty(static::createProperty($property));
+		}
+
+		return $class;
+	}
 	
 	public function __construct($name = null)
 	{

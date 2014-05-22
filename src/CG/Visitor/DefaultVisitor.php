@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace CG\Generator;
+namespace CG\Visitor;
 
 use CG\Utils\Writer;
 use CG\Model\PhpClass;
@@ -51,24 +51,30 @@ class DefaultVisitor implements GeneratorVisitorInterface
         $this->writer->reset();
     }
     
+    private function ensureBlankLine() {
+    	if (!$this->writer->endsWith("\n\n") && strlen($this->writer->rtrim()->getContent()) > 0) {
+    		$this->writer->writeln();
+    	}
+    }
+    
     private function visitNamespace(NamespaceInterface $model) {
     	if ($namespace = $model->getNamespace()) {
-    		$this->writer->write('namespace '.$namespace.';'."\n\n");
+    		$this->writer->writeln('namespace '.$namespace.';');
     	}
     }
     
     private function visitRequiredFiles(AbstractPhpStruct $struct) {
     	if ($files = $struct->getRequiredFiles()) {
+    		$this->ensureBlankLine();
     		foreach ($files as $file) {
     			$this->writer->writeln('require_once '.var_export($file, true).';');
     		}
-    	
-    		$this->writer->write("\n");
     	}
     }
     
     private function visitUseStatements(AbstractPhpStruct $struct) {
     	if ($useStatements = $struct->getUseStatements()) {
+    		$this->ensureBlankLine();
     		foreach ($useStatements as $alias => $namespace) {
     			$this->writer->write('use '.$namespace);
     	
@@ -78,17 +84,19 @@ class DefaultVisitor implements GeneratorVisitorInterface
     	
     			$this->writer->write(";\n");
     		}
-    	
-    		$this->writer->write("\n");
     	}
     }
     
     private function visitDocblock(DocblockInterface $model) {
     	if ($docblock = $model->getDocblock()) {
     		if ($docblock instanceof Docblock) {
-    			$docblock = $docblock->toString();
+    			$docblock = $docblock->build();
     		}
-    		$this->writer->write($docblock);
+    		
+    		if (!empty($docblock)) {
+    			$this->ensureBlankLine();
+    			$this->writer->writeln($docblock);
+    		}
     	}
     }
     
@@ -187,9 +195,7 @@ class DefaultVisitor implements GeneratorVisitorInterface
 
     public function visitProperty(PhpProperty $property)
     {
-        if ($docblock = $property->getDocblock()) {
-            $this->writer->write($docblock)->rtrim();
-        }
+    	$this->visitDocblock($property);
 
         $this->writer->write($property->getVisibility().' '.($property->isStatic()? 'static ' : '').'$'.$property->getName());
 
@@ -202,7 +208,7 @@ class DefaultVisitor implements GeneratorVisitorInterface
 
     public function endVisitingProperties()
     {
-        $this->writer->write("\n");
+        $this->writer->writeln();
     }
 
     public function startVisitingMethods()

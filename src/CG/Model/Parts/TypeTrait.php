@@ -13,11 +13,14 @@ trait TypeTrait {
 	public function setType($type, $description = '')
 	{
 		$this->type = $type;
-		$this->typeDescription = $description;
+		$this->setTypeDescription($description);
 	
 		return $this;
 	}
 	
+	protected function setTypeDescription($description) {
+		$this->typeDescription = $description;
+	}
 	
 	public function getType()
 	{

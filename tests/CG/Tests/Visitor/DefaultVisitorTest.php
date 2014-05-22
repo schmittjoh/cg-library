@@ -1,8 +1,8 @@
 <?php
 
-namespace CG\Tests\Generator;
+namespace CG\Tests\Visitor;
 
-use CG\Generator\DefaultVisitor;
+use CG\Visitor\DefaultVisitor;
 use CG\Model\PhpMethod;
 use CG\Model\PhpParameter;
 use CG\Utils\Writer;

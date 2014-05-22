@@ -22,6 +22,7 @@ abstract class Entity
      * @param array        $b
      * @param \stdClass    $c
      * @param string       $d
+     * @param callable     $e
      */
     final public function __construct($a, array &$b, \stdClass $c, $d = 'foo', callable $e)
     {

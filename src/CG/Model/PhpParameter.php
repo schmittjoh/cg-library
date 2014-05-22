@@ -21,6 +21,8 @@ namespace CG\Model;
 use CG\Model\Parts\NameTrait;
 use CG\Model\Parts\DefaultValueTrait;
 use CG\Model\Parts\TypeTrait;
+use phpDocumentor\Reflection\DocBlock\Tag\ParamTag;
+use CG\Utils\ReflectionUtils;
 
 /**
  * Represents a PHP parameter.
@@ -84,6 +86,34 @@ class PhpParameter extends AbstractModel
     public function isPassedByReference()
     {
         return $this->passedByReference;
+    }
+    
+    /**
+     * @return ParamTag
+     */
+    public function getDocblockTag() {
+    	return new ParamTag('param', sprintf('%s $%s %s',
+			$this->getType() ?: 'mixed',
+			$this->getName(),
+			$this->getTypeDescription()));
+    }
+
+	/**
+	 * 
+	 * @see #setDescription
+	 * @param string $description
+	 */
+    protected function setTypeDescription($description) {
+    	$this->setDescription($description);
+    }
+    
+    /**
+     * Alias for getDescription()
+     * 
+     * @return string
+     */
+    public function getTypeDescription() {
+    	return $this->getDescription();
     }
 
 }

@@ -18,10 +18,10 @@
 
 namespace CG\Core;
 
-use CG\Generator\GeneratorVisitorInterface;
+use CG\Visitor\GeneratorVisitorInterface;
 use CG\Model\PhpClass;
-use CG\Generator\DefaultVisitor;
-use CG\Generator\DefaultNavigator;
+use CG\Visitor\DefaultVisitor;
+use CG\Visitor\DefaultNavigator;
 
 /**
  * The default generator strategy.

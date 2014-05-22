@@ -35,7 +35,7 @@ abstract class AbstractPhpStruct extends AbstractModel implements NamespaceInter
 	use DocblockTrait;
 	use LongDescriptionTrait;
 
-    private static $phpParser;
+    protected static $phpParser;
 
     private $useStatements = [];
     private $requiredFiles = [];
@@ -48,37 +48,6 @@ abstract class AbstractPhpStruct extends AbstractModel implements NamespaceInter
     public static function create($name = null)
     {
         return new static($name);
-    }
-
-    public static function fromReflection(\ReflectionClass $ref)
-    {
-    	$class = new static();
-    	$class
-	    	->setQualifiedName($ref->name)
-	    	->setAbstract($ref->isAbstract())
-	    	->setFinal($ref->isFinal())
-	    	->setConstants($ref->getConstants())
-    	;
-    
-    	if (null === self::$phpParser) {
-    		self::$phpParser = new PhpParser();
-    	}
-    
-    	$class->setUseStatements(self::$phpParser->parseClass($ref));
-    
-    	if ($docComment = $ref->getDocComment()) {
-    		$class->setDocblock(ReflectionUtils::getUnindentedDocComment($docComment));
-    	}
-
-    	foreach ($ref->getMethods() as $method) {
-    		$class->setMethod(static::createMethod($method));
-    	}
-    
-    	foreach ($ref->getProperties() as $property) {
-    		$class->setProperty(static::createProperty($property));
-    	}
-    
-    	return $class;
     }
 
     /**
@@ -245,10 +214,7 @@ abstract class AbstractPhpStruct extends AbstractModel implements NamespaceInter
 		if (!$docblock instanceof Docblock) {
 			$docblock = new Docblock();
 		}
-		$docblock
-			->setDescription($this->getDescription())
-			->setLongDescription($this->getLongDescription())
-		;
+		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
 		
 		foreach ($this->methods as $method) {
 			$method->generateDocblock();

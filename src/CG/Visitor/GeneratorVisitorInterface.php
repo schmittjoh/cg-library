@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace CG\Generator;
+namespace CG\Visitor;
 
 use CG\Model\PhpConstant;
 use CG\Model\PhpProperty;

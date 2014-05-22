@@ -4,7 +4,7 @@ namespace CG\Model;
 
 abstract class AbstractModel
 {
-    private $attributes;
+    private $attributes = [];
     
     protected $description;
 
@@ -17,7 +17,9 @@ abstract class AbstractModel
 
     public function removeAttribute($key)
     {
+    	$val = $this->attributes[$key];
         unset($this->attributes[$key]);
+        return $val;
     }
 
     public function getAttribute($key)

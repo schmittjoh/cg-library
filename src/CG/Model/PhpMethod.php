@@ -24,6 +24,7 @@ use CG\Model\Parts\FinalTrait;
 use CG\Model\Parts\ParametersTrait;
 use CG\Model\Parts\BodyTrait;
 use CG\Model\Parts\ReferenceReturnTrait;
+use phpDocumentor\Reflection\DocBlock\Tag\ReturnTag;
 
 /**
  * Represents a PHP method.
@@ -57,8 +58,11 @@ class PhpMethod extends AbstractPhpMember
             ->setBody(ReflectionUtils::getFunctionBody($ref))
         ;
 
-        if ($docComment = $ref->getDocComment()) {
-            $method->setDocblock(ReflectionUtils::getUnindentedDocComment($docComment));
+        if ($doc = $ref->getDocComment()) {
+	        $docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($doc));
+	        $method->setDocblock($docblock);
+	        $method->setDescription($docblock->getShortDescription());
+	        $method->setLongDescription($docblock->getLongDescription());
         }
 
         foreach ($ref->getParameters() as $param) {
@@ -80,20 +84,18 @@ class PhpMethod extends AbstractPhpMember
 	 */
 	public function generateDocblock() {
 	    $docblock = $this->getDocblock();
-    	if (!$docblock instanceof Docblock) {
-    		$docblock = new Docblock();
-    	}
-    	$docblock
-	    	->setDescription($this->getDescription())
-	    	->setLongDescription($this->getLongDescription())
-    	;
-
-		if ($this->getType() != '') {
-			$docblock->setReturn($this->getType(), $this->getTypeDescription());
+		if (!$docblock instanceof Docblock) {
+			$docblock = new Docblock();
 		}
+		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
 
+		if ($this->getType()) {
+			$return = new ReturnTag('return', $this->getType() . ' ' . $this->getTypeDescription());
+			$docblock->appendTag($return);
+		}
+		
     	foreach ($this->parameters as $param) {
-    		$docblock->addParam($param->getName(), $param->getType(), $param->getDescription());
+    		$docblock->appendTag($param->getDocblockTag());
     	}
     	
 		$this->setDocblock($docblock);

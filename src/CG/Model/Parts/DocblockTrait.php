@@ -11,6 +11,9 @@ trait DocblockTrait {
 	 */
 	public function setDocblock($doc)
 	{
+		if (is_string($doc)) {
+			$doc = trim($doc);
+		}
 		$this->docblock = $doc;
 	
 		return $this;

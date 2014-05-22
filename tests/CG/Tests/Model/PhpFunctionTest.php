@@ -4,6 +4,7 @@ namespace CG\Tests\Model;
 
 use CG\Model\PhpParameter;
 use CG\Model\PhpFunction;
+use CG\Model\Docblock;
 
 class PhpFunctionTest extends \PHPUnit_Framework_TestCase {
 	
@@ -15,16 +16,20 @@ class PhpFunctionTest extends \PHPUnit_Framework_TestCase {
 	
 	public function testFromReflection() {
 
-		$function = new PhpFunction('fooBar');
-		$function
-			->addParameter(PhpParameter::create('baz')->setDefaultValue(null))
-			->setBody('return \'wurst\';')
-			->setDocblock('/**
+		$doc = new Docblock('/**
  * Makes foo with bar
  * 
  * @param string $baz
  * @return string
  */');
+		$function = new PhpFunction('fooBar');
+		$function
+			->addParameter(PhpParameter::create('baz')->setDefaultValue(null))
+			->setBody('return \'wurst\';')
+			->setDocblock($doc)
+			->setDescription($doc->getShortDescription())
+			->setLongDescription($doc->getLongDescription())
+		;
 		
 		$this->assertEquals($function, PhpFunction::fromReflection(new \ReflectionFunction('fooBar')));
 	}

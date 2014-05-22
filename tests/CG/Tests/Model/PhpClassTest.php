@@ -10,6 +10,7 @@ use CG\Tests\Model\Fixture\Entity;
 use CG\Model\PhpConstant;
 use CG\Model\PhpInterface;
 use CG\Model\PhpTrait;
+use CG\Model\Docblock;
 
 class PhpClassTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,27 +22,41 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
 	
     public function testFromReflection()
     {
+    	$classDoc = new Docblock('/**
+ * Doc Comment.
+ *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ */');
+    	$propDoc = new Docblock('/**
+ * @var integer
+ */');
         $class = new PhpClass();
         $class
             ->setQualifiedName('CG\Tests\Model\Fixture\Entity')
             ->setAbstract(true)
-            ->setDocblock('/**
- * Doc Comment.
- *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- */')
-             ->setProperty(PhpProperty::create('id')
+            ->setDocblock($classDoc)
+            ->setDescription($classDoc->getShortDescription())
+            ->setLongDescription($classDoc->getLongDescription())
+            ->setProperty(PhpProperty::create('id')
                  ->setVisibility('private')
-                 ->setDocblock('/**
- * @var integer
- */')
-             )
-             ->setProperty(PhpProperty::create('enabled')
+                 ->setDocblock($propDoc)
+            	 ->setDescription($propDoc->getShortDescription())
+            )
+            ->setProperty(PhpProperty::create('enabled')
                  ->setVisibility('private')
                  ->setDefaultValue(false)
-             )
+            )
         ;
 
+        $methodDoc = new Docblock('/**
+ * Another doc comment.
+ *
+ * @param unknown_type $a
+ * @param array        $b
+ * @param \stdClass    $c
+ * @param string       $d
+ * @param callable     $e
+ */');
         $method = PhpMethod::create()
             ->setName('__construct')
             ->setFinal(true)
@@ -58,17 +73,14 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
             ->addParameter(PhpParameter::create()
                 ->setName('d')
                 ->setDefaultValue('foo')
-            )->addParameter(PhpParameter::create()
+            )
+            ->addParameter(PhpParameter::create()
 				->setName('e')
 				->setType('callable')
-            )->setDocblock('/**
- * Another doc comment.
- *
- * @param unknown_type $a
- * @param array        $b
- * @param \stdClass    $c
- * @param string       $d
- */')
+            )
+            ->setDocblock($methodDoc)
+            ->setDescription($methodDoc->getShortDescription())
+            ->setLongDescription($methodDoc->getLongDescription())
         ;
         $class->setMethod($method);
 

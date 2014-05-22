@@ -93,6 +93,10 @@ class Writer
 
         return $this;
     }
+    
+    public function endsWith($search) {
+    	return substr($this->content, -strlen($search)) === $search;
+    }
 
     public function reset()
     {

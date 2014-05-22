@@ -3,286 +3,76 @@
 namespace CG\Model;
 
 use CG\Utils\Writer;
+use phpDocumentor\Reflection\DocBlock\Tag\AuthorTag;
+use phpDocumentor\Reflection\DocBlock\Tag\SeeTag;
+use phpDocumentor\Reflection\DocBlock\Tag\ParamTag;
+use phpDocumentor\Reflection\DocBlock\Tag\ThrowsTag;
+use phpDocumentor\Reflection\DocBlock\Tag\ReturnTag;
+use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
+use phpDocumentor\Reflection\DocBlock\Context;
+use phpDocumentor\Reflection\DocBlock\Location;
 
 /**
  * Represents a Docblock
  * 
- * To be replaced by https://github.com/phpDocumentor/ReflectionDocBlock
- * when they have a toString()/export() method.
- * 
  * @author Thomas Gossmann
  */
-class Docblock {
-	
-	/**
-	 * 
-	 * @var string
-	 */
-	private $description;
-	
-	/**
-	 * 
-	 * @var string
-	 */
-	private $longDescription;
-	
-	/**
-	 * 
-	 * @var array;
-	 */
-	private $params = [];
-	
-	/**
-	 * 
-	 * @var string
-	 */
-	private $returnType;
-	
-	/**
-	 * 
-	 * @var string
-	 */
-	private $returnDescription;
-	
-	/**
-	 * 
-	 * @var array
-	 */
-	private $sees = [];
-	
-	/**
-	 * 
-	 * @var array
-	 */
-	private $authors = [];
-	
-	/**
-	 * 
-	 * @var array
-	 */
-	private $throws = [];
-	
-	
-	/**
-	 * 
-	 * @var string
-	 */
-	private $varType;
-	
-	/**
-	 * 
-	 * @var string
-	 */
-	private $varDescription;
-	
-	public function __construct() {
-		
-	}
-	
-	/**
-	 * @return Docblock
-	 */
-	public static function create() {
-		return new static();
-	}
-	
-	/**
-	 *
-	 * @return the string
-	 */
-	public function getDescription() {
-		return $this->description;
-	}
-	
-	/**
-	 *
-	 * @param string $description        	
-	 */
-	public function setDescription($description) {
-		$this->description = $description;
-		return $this;
-	}
-	
-	/**
-	 *
-	 * @return the string
-	 */
-	public function getLongDescription() {
-		return $this->longDescription;
-	}
-	
-	/**
-	 *
-	 * @param string $longDescription        	
-	 */
-	public function setLongDescription($longDescription) {
-		$this->longDescription = $longDescription;
-		return $this;
-	}
-	
-	/**
-	 *
-	 * @return the string
-	 */
-	public function getReturnType() {
-		return $this->returnType;
-	}
-	
-	/**
-	 *
-	 * @param string $returnType        	
-	 */
-	public function setReturnType($returnType) {
-		$this->returnType = $returnType;
-		return $this;
-	}
-	
-	/**
-	 *
-	 * @return the string
-	 */
-	public function getReturnDescription() {
-		return $this->returnDescription;
-	}
-	
-	/**
-	 *
-	 * @param string $returnDescription        	
-	 */
-	public function setReturnDescription($returnDescription) {
-		$this->returnDescription = $returnDescription;
-		return $this;
-	}
-	
-	public function setReturn($type, $description = '') {
-		$this->setReturnType($type);
-		$this->setReturnDescription($description);
-		return $this;
-	}
-	
-	/**
-	 *
-	 * @return string
-	 */
-	public function getVarType() {
-		return $this->varType;
-	}
-	
-	/**
-	 *
-	 * @param $varType
-	 */
-	public function setVarType($varType) {
-		$this->varType = $varType;
-		return $this;
-	}
-	
-	/**
-	 *
-	 * @return string
-	 */
-	public function getVarDescription() {
-		return $this->varDescription;
-	}
-	
-	/**
-	 *
-	 * @param $varDescription
-	 */
-	public function setVarDescription($varDescription) {
-		$this->varDescription = $varDescription;
-		return $this;
-	}
-	
-	public function setVar($type, $description) {
-		$this->setVarType($type);
-		$this->setVarDescription($description);
-		return $this;
-	}
-	
-	public function addAuthor($name, $email = '') {
-		$this->authors[] = [
-			'name' => $name,
-			'email' => $email
-		];
-		return $this;
-	}
-	
-	public function addSee($location, $description) {
-		$this->sees[] = [
-			'location' => $location,
-			'description' => $description
-		];
-		return $this;
-	}
-	
-	public function addParam($var, $type, $description) {
-		$this->params[] = [
-			'var' => $var,
-			'type' => $type,
-			'description' => $description
-		];
-		return $this;
-	}
-	
-	public function addThrow($type, $description) {
-		$this->throws[] = [
-			'type' => $type,
-			'description' => $description
-		];
-		return $this;
+class Docblock extends \phpDocumentor\Reflection\DocBlock {
+
+	public function __construct($docblock = null, Context $context = null, Location $location = null) {
+		if ($docblock === null) {
+			$docblock = '';
+		}
+		parent::__construct($docblock, $context, $location);
 	}
 	
 	public function build() {
 		$writer = new Writer();
 		$writer->writeln('/**');
+		$hasTags = false;
 		
-		// description
-		if ($this->description) {
-			$chunks = explode("\n", wordwrap($this->description));
+		// text
+		$text = trim($this->getText());
+		if (!empty($text)) {
+			$chunks = explode("\n", wordwrap($text));
 			foreach ($chunks as $line) {
 				$writer->writeln(' * ' . $line);
 			}
-		}
-		
-		// long description
-		if ($this->longDescription) {
-			if ($this->description) {
-				$writer->writeln(' * ');
-			}
-			
-			$chunks = explode("\n", wordwrap($this->longDescription));
-			foreach ($chunks as $line) {
-				$writer->writeln(' * ' . $line);
-			}
+		} else {
+			$hasTags = true;
 		}
 		
 		// authors
-		if (count($this->authors)) {
-			$writer->writeln(' * ');
+		if ($this->hasTag('author')) {
+			$this->prependBlankLine($writer, $hasTags);
 			
-			foreach ($this->authors as $author) {
-				$writer->write(' * @author ' . $author['name']);
-				if (!empty($author['email'])) {
-					$writer->write(' <' . $author['email'] . '>');
+			/* @var $author AuthorTag */
+			foreach ($this->getTagsByName('author') as $author) {
+				$writer->write(' * @author ' . $author->getAuthorName());
+				$email = $author->getAuthorEmail();
+				if (!empty($email)) {
+					$writer->write(' <' . $email . '>');
 				}
 				$writer->writeln();
 			}
 		}
-		
+
 		// sees
-		if (count($this->sees)) {
-			$writer->writeln(' * ');
+		if ($this->hasTag('see')) {
+			$this->prependBlankLine($writer, $hasTags);
 			
-			foreach ($this->sees as $see) {
+			/* @var $author SeeTag */
+			foreach ($this->getTagsByName('see') as $see) {
 				$writer->write(' * @see');
 
-				if (!empty($see['location'])) {
-					$writer->write(' ' . $see['location']);
+				$reference = $see->getReference();
+				if (!empty($reference)) {
+					$writer->write(' ' . $reference);
 				}
 				
-				if (!empty($see['description'])) {
-					$writer->write(' ' . $see['description']);
+				$description = $see->getDescription();
+				if (!empty($description)) {
+					$writer->write(' ' . $description);
 				}
 				
 				$writer->writeln();
@@ -290,37 +80,45 @@ class Docblock {
 		}
 		
 		// params
-		if (count($this->params)) {
-			$writer->writeln(' * ');
+		if ($this->hasTag('param')) {
+			$this->prependBlankLine($writer, $hasTags);
 			
-			foreach ($this->params as $param) {
+			/* @var $param ParamTag */
+			foreach ($this->getTagsByName('param') as $param) {
 				$writer->write(' * @param');
 				
-				if (!empty($param['type'])) {
-					$writer->write(' ' . $param['type']);
+				$type = $param->getType();
+				if (!empty($type)) {
+					$writer->write(' ' . $type);
 				}
 				
-				$writer->write(' ' . $param['name']);
+				$writer->write(' ' . $param->getVariableName());
 				
-				if (!empty($param['description'])) {
-					$writer->write(' ' . $param['description']);
+				$description = $param->getDescription();
+				if (!empty($description)) {
+					$writer->write(' ' . $description);
 				}
+				
+				$writer->writeln();
 			}
 		}
 		
 		// throws
-		if (count($this->throws)) {
-			$writer->writeln(' * ');
+		if ($this->hasTag('throws')) {
+			$this->prependBlankLine($writer, $hasTags);
 			
-			foreach ($this->throws as $throw) {
+			/* @var $throw ThrowsTag */
+			foreach ($this->getTagsByName('throws') as $throw) {
 				$writer->write(' * @throw');
 				
-				if (!empty($throw['type'])) {
-					$writer->write(' ' . $throw['type']);
+				$type = $throw->getType();
+				if (!empty($type)) {
+					$writer->write(' ' . $type);
 				}
 				
-				if (!empty($throw['description'])) {
-					$writer->write(' ' . $throw['description']);
+				$description = $throw->getDescription();
+				if (!empty($description)) {
+					$writer->write(' ' . $description);
 				}
 				
 				$writer->writeln();
@@ -328,34 +126,53 @@ class Docblock {
 		}
 		
 		// return
-		if ($this->returnType || $this->returnDescription) {
-			$writer->writeln(' * ');
+		if ($this->hasTag('return')) {
+			$this->prependBlankLine($writer, $hasTags);
+			
+			/* @var $return ReturnTag */
+			$return = $this->getTagsByName('return')[0];
 			$writer->write(' * @return');
 			
-			if ($this->returnType) {
-				$writer->write(' ' . $this->returnType);
-			}
+			$writer->write(' ' . $return->getType());
 			
-			if ($this->returnDescription) {
-				$writer->write(' ' . $this->returnDescription);
+			$description = $return->getDescription();
+			if (!empty($description)) {
+				$writer->write(' ' . $description);
 			}
+			$writer->writeln();
 		}
 		
 		// var
-		if ($this->varType || $this->varDescription) {
-			$writer->writeln(' * ');
+		if ($this->hasTag('var')) {
+			$this->prependBlankLine($writer, $hasTags);
+			
+			/* @var $var VarTag */
+			$var = $this->getTagsByName('var')[0];
 			$writer->write(' * @var');
-				
-			if ($this->varType) {
-				$writer->write(' ' . $this->varType);
+			$writer->write(' ' . $var->getType());
+			
+			$name = $var->getVariableName();
+			if (!empty($name)) {
+				$writer->write(' ' . $name);
 			}
 				
-			if ($this->varDescription) {
-				$writer->write(' ' . $this->varDescription);
+			$description = $var->getDescription();
+			if (!empty($description)) {
+				$writer->write(' ' . $description);
 			}
+			$writer->writeln();
 		}
 		
+		$writer->write(' */');
+		
 		return $writer->getContent();
+	}
+	
+	private function prependBlankLine(&$writer, &$flag) {
+		if (!$flag) {
+			$writer->writeln(' * ');
+			$flag = true;
+		}
 	}
 	
 	public function __toString() {

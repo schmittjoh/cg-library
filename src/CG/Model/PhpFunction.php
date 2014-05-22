@@ -26,6 +26,7 @@ use CG\Model\Parts\BodyTrait;
 use CG\Model\Parts\ReferenceReturnTrait;
 use CG\Model\Parts\TypeTrait;
 use CG\Model\Parts\LongDescriptionTrait;
+use phpDocumentor\Reflection\DocBlock\Tag\ReturnTag;
 
 /**
  * Represents a PHP function.
@@ -46,9 +47,13 @@ class PhpFunction extends AbstractModel implements GenerateableInterface, Namesp
     {
         $function = PhpFunction::create($ref->name)
         	->setReferenceReturned($ref->returnsReference())
-        	->setDocblock(ReflectionUtils::getUnindentedDocComment($ref->getDocComment()))
         	->setBody(ReflectionUtils::getFunctionBody($ref))
         ;
+        
+        $docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($ref->getDocComment()));
+        $function->setDocblock($docblock);
+        $function->setDescription($docblock->getShortDescription());
+        $function->setLongDescription($docblock->getLongDescription());
 
         foreach ($ref->getParameters() as $refParam) {
             assert($refParam instanceof \ReflectionParameter); // hmm - assert here?
@@ -75,19 +80,18 @@ class PhpFunction extends AbstractModel implements GenerateableInterface, Namesp
      */
     public function generateDocblock() {
     	$docblock = $this->getDocblock();
-    	if (!$docblock instanceof Docblock) {
-    		$docblock = new Docblock();
-    	}
-    	$docblock
-	    	->setDescription($this->getDescription())
-	    	->setLongDescription($this->getLongDescription());
-    	 
-    	if ($this->getType() != '') {
-    		$docblock->setReturn($this->getType(), $this->getTypeDescription());
-    	}
+		if (!$docblock instanceof Docblock) {
+			$docblock = new Docblock();
+		}
+		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
 
+   	 	if ($this->getType()) {
+			$return = new ReturnTag('return', $this->getType() . ' ' . $this->getTypeDescription());
+			$docblock->appendTag($return);
+		}
+		
     	foreach ($this->parameters as $param) {
-    		$docblock->addParam($param->getName(), $param->getType(), $param->getDescription());
+    		$docblock->appendTag($param->getDocblockTag());
     	}
     	
     	$this->setDocblock($docblock);

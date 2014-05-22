@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-namespace CG\Generator;
+namespace CG\Visitor;
 
 use CG\Model\PhpClass;
 use CG\Model\GenerateableInterface;
@@ -144,13 +144,15 @@ class DefaultNavigator
 
                     return $aV > $bV ? -1 : 1;
                 }
+                
+                return strcasecmp($a->getName(), $b->getName());
 
-                $rs = strcasecmp($a->getName(), $b->getName());
-                if (0 === $rs) {
-                    return 0;
-                }
+//                 $rs = strcasecmp($a->getName(), $b->getName());
+//                 if (0 === $rs) {
+//                     return 0;
+//                 }
 
-                return $rs > 0 ? -1 : 1;
+//                 return $rs > 0 ? -1 : 1;
             };
         }
 
@@ -171,13 +173,15 @@ class DefaultNavigator
 
                     return $aV > $bV ? -1 : 1;
                 }
+                
+                return strcasecmp($a->getName(), $b->getName());
 
-                $rs = strcasecmp($a->getName(), $b->getName());
-                if (0 === $rs) {
-                    return 0;
-                }
+//                 $rs = strcasecmp($a->getName(), $b->getName());
+//                 if (0 === $rs) {
+//                     return 0;
+//                 }
 
-                return $rs > 0 ? -1 : 1;
+//                 return $rs > 0 ? -1 : 1;
             };
         }
 
