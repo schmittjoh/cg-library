@@ -16,7 +16,8 @@
 	],
 	"require" : {
 		"php" : ">=5.4.0",
-		"doctrine/annotations" : "~1"
+		"doctrine/annotations" : "~1",
+		"phpdocumentor/reflection-docblock" : "~2"
 	},
 	"autoload" : {
 		"psr-0" : {
