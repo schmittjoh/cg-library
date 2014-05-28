@@ -6,8 +6,9 @@ use CG\Model\Parts\NameTrait;
 use CG\Model\Parts\LongDescriptionTrait;
 use CG\Model\Parts\DocblockTrait;
 use CG\Model\Parts\TypeTrait;
-use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
 use CG\Utils\ReflectionUtils;
+use gossi\docblock\DocBlock;
+use gossi\docblock\tags\VarTag;
 
 class PhpConstant extends AbstractModel implements GenerateableInterface, DocblockInterface
 {
@@ -36,7 +37,7 @@ class PhpConstant extends AbstractModel implements GenerateableInterface, Docblo
 	    	->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
     	;
     
-    	$docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($ref->getDocComment()));
+    	$docblock = new DocBlock($ref);
     	$constant->setDocblock($docblock);
     	$constant->setDescription($docblock->getShortDescription());
     
@@ -63,16 +64,18 @@ class PhpConstant extends AbstractModel implements GenerateableInterface, Docblo
     
     public function generateDocblock() {
     	$docblock = $this->getDocblock();
-		if (!$docblock instanceof Docblock) {
-			$docblock = new Docblock();
+		if (!$docblock instanceof DocBlock) {
+			$docblock = new DocBlock();
 		}
-		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
-    	
-		$var = new VarTag('var', sprintf('%s %s', $this->getType(), $this->getTypeDescription()));
-		$docblock->appendTag($var);
+		$docblock->setShortDescription($this->getDescription());
+		$docblock->setLongDescription($this->getLongDescription());
+
+		$docblock->appendTag(VarTag::create()
+			->setType($this->getType())
+			->setDescription($this->getTypeDescription()));
     	
     	$this->setDocblock($docblock);
-    
+   
     	return $docblock;
     }
 }

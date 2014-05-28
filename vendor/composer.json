@@ -17,7 +17,7 @@
 	"require" : {
 		"php" : ">=5.4.0",
 		"doctrine/annotations" : "~1",
-		"gossi/docblock" : "~1"
+		"phpdocumentor/reflection-docblock" : "~2"
 	},
 	"autoload" : {
 		"psr-0" : {

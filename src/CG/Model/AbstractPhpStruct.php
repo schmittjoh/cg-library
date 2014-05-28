@@ -23,6 +23,7 @@ use CG\Utils\ReflectionUtils;
 use CG\Model\Parts\QualifiedNameTrait;
 use CG\Model\Parts\DocblockTrait;
 use CG\Model\Parts\LongDescriptionTrait;
+use gossi\docblock\DocBlock;
 
 /**
  * Represents an abstract php struct.
@@ -211,10 +212,11 @@ abstract class AbstractPhpStruct extends AbstractModel implements NamespaceInter
 
 	public function generateDocblock() {
 		$docblock = $this->getDocblock();
-		if (!$docblock instanceof Docblock) {
-			$docblock = new Docblock();
+		if (!$docblock instanceof DocBlock) {
+			$docblock = new DocBlock();
 		}
-		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
+		$docblock->setShortDescription($this->getDescription());
+		$docblock->setLongDescription($this->getLongDescription());
 		
 		foreach ($this->methods as $method) {
 			$method->generateDocblock();

@@ -10,7 +10,7 @@ use CG\Tests\Model\Fixture\Entity;
 use CG\Model\PhpConstant;
 use CG\Model\PhpInterface;
 use CG\Model\PhpTrait;
-use CG\Model\Docblock;
+use gossi\docblock\DocBlock;
 
 class PhpClassTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,12 +22,12 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
 	
     public function testFromReflection()
     {
-    	$classDoc = new Docblock('/**
+    	$classDoc = new DocBlock('/**
  * Doc Comment.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */');
-    	$propDoc = new Docblock('/**
+    	$propDoc = new DocBlock('/**
  * @var integer
  */');
         $class = new PhpClass();
@@ -48,7 +48,7 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
             )
         ;
 
-        $methodDoc = new Docblock('/**
+        $methodDoc = new DocBlock('/**
  * Another doc comment.
  *
  * @param unknown_type $a

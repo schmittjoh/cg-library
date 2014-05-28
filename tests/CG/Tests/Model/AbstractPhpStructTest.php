@@ -89,7 +89,7 @@ class AbstractPhpStructTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($class->getDocblock());
         $this->assertSame($class, $class->setDocblock('foo'));
-        $this->assertEquals('foo', $class->getDocblock());
+        $this->assertEquals('foo', $class->getDocblock()->getShortDescription());
     }
 
     public function testRequiredFiles()

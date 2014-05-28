@@ -99,7 +99,7 @@ class Enhancer extends AbstractProxyClassGenerator
             $writer
                 ->writeln('/**')
                 ->writeln(' * CG library enhanced proxy class.')
-                ->writeln(' *')
+                ->writeln(' * ')
                 ->writeln(' * This code was generated automatically by the CG library, manual changes to it')
                 ->writeln(' * will be lost upon next generation.')
                 ->writeln(' */')

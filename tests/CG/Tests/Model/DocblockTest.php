@@ -10,11 +10,11 @@ use CG\Model\PhpConstant;
 use CG\Model\PhpTrait;
 use CG\Model\PhpParameter;
 use CG\Model\PhpFunction;
-use phpDocumentor\Reflection\DocBlock\Tag\AuthorTag;
-use phpDocumentor\Reflection\DocBlock\Tag\ThrowsTag;
-use CG\Model\Docblock;
-use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
-use phpDocumentor\Reflection\DocBlock\Tag\SeeTag;
+use gossi\docblock\tags\AuthorTag;
+use gossi\docblock\tags\ThrowsTag;
+use gossi\docblock\DocBlock;
+use gossi\docblock\tags\SeeTag;
+use gossi\docblock\tags\VarTag;
 
 class DocblockTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,9 +67,10 @@ class DocblockTest extends \PHPUnit_Framework_TestCase
 		$this->assertNotNull($class->getMethod(self::METHOD)->getDocblock());
 		$this->assertNotNull($class->getConstant(self::CONSTANT)->getDocblock());
 		
-		$author = new AuthorTag('author', '');
-		$author->setAuthorName('gossi');
-		$author->setAuthorEmail('iiih@mail.me');
+		$author = AuthorTag::create()
+			->setName('gossi')
+			->setEmail('iiih@mail.me')
+		;
 		$docblock->appendTag($author);
 		
 		$this->assertTrue($docblock->hasTag('author'));
@@ -81,7 +82,7 @@ class DocblockTest extends \PHPUnit_Framework_TestCase
  * 
  * @author gossi <iiih@mail.me>
  */';
-		$this->assertEquals($expected, $docblock->build());
+		$this->assertEquals($expected, $docblock->toString());
 	}
 	
 	public function testInterface() {
@@ -151,7 +152,7 @@ class DocblockTest extends \PHPUnit_Framework_TestCase
 		$constant = $this->getProperty();
 		$docblock = $constant->generateDocblock();
 		
-		$this->assertEquals($expected, $docblock->build());
+		$this->assertEquals($expected, $docblock->toString());
 	}
 	
 	public function testMethod() {
@@ -162,38 +163,42 @@ class DocblockTest extends \PHPUnit_Framework_TestCase
  * 
  * @see MyClass#myMethod see-desc
  * @param mixed $a method-param
- * @throw \Exception when something goes wrong
+ * @throws \Exception when something goes wrong
  * @return string this method returns a string
  */';
-		$throws = new ThrowsTag('throws', '\Exception when something goes wrong');
-		$doc = new Docblock();
+		$throws = new ThrowsTag('\Exception when something goes wrong');
+		$doc = new DocBlock();
 		$doc->appendTag($throws);
 
 		$method = $this->getMethod();
 		$method->setDocblock($doc);
 		$docblock = $method->generateDocblock();
 		
-		$see = new SeeTag('see', 'MyClass#myMethod see-desc');
+		$see = new SeeTag('MyClass#myMethod see-desc');
 		$docblock->appendTag($see);
 
 		$this->assertSame($docblock, $doc);
-	
-		$this->assertEquals($expected, $docblock->build());
-	}
-	
-	public function testVar() {
-		$expected = '/**
- * @var mixed $foo bar
- */';
-		$docblock = new Docblock();
-		$var = new VarTag('var', 'mixed $foo bar');
-		$docblock->appendTag($var);
-		
-		$this->assertEquals($expected, $docblock->build());
+		$this->assertEquals($expected, $docblock->toString());
 	}
 	
 	public function testEmptyDocblock() {
-		$docblock = new Docblock();
-		$this->assertEquals("/**\n */", $docblock->build());
+		$docblock = new DocBlock();
+		$this->assertEquals("/**\n */", $docblock->toString());
+	}
+	
+	public function testObjectParam() {
+		$expected = '/**
+ * @param Request $r
+ * @param mixed $a
+ * @return Response this method returns a response object
+ */';
+		$function = PhpFunction::create(self::METHOD)
+			->setType('Response', 'this method returns a response object')
+			->addParameter(PhpParameter::create('r')->setType('Request'))
+			->addParameter(PhpParameter::create('a')->setType('mixed'));
+		
+		$docblock = $function->generateDocblock();
+		$this->assertNotNull($docblock);
+		$this->assertSame($expected, $docblock->toString());
 	}
 }

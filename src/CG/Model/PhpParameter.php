@@ -21,8 +21,8 @@ namespace CG\Model;
 use CG\Model\Parts\NameTrait;
 use CG\Model\Parts\DefaultValueTrait;
 use CG\Model\Parts\TypeTrait;
-use phpDocumentor\Reflection\DocBlock\Tag\ParamTag;
 use CG\Utils\ReflectionUtils;
+use gossi\docblock\tags\ParamTag;
 
 /**
  * Represents a PHP parameter.
@@ -92,10 +92,10 @@ class PhpParameter extends AbstractModel
      * @return ParamTag
      */
     public function getDocblockTag() {
-    	return new ParamTag('param', sprintf('%s $%s %s',
-			$this->getType() ?: 'mixed',
-			$this->getName(),
-			$this->getTypeDescription()));
+    	return ParamTag::create()
+    		->setType($this->getType() ?: 'mixed')
+    		->setVariable($this->getName())
+    		->setDescription($this->getTypeDescription());
     }
 
 	/**

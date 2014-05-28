@@ -6,12 +6,12 @@ class GenerationTestClass
     const b = 'bar';
 
     /**
-     * @var 
+     * @var
      */
     public $a;
 
     /**
-     * @var 
+     * @var
      */
     public $b;
 

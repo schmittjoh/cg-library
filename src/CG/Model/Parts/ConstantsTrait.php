@@ -40,7 +40,6 @@ trait ConstantsTrait {
 // 			if (null !== $value) {
 // 				throw new \InvalidArgumentException('If a PhpConstant object is passed, $value must be null.');
 // 			}
-	
 			$name = $nameOrConstant->getName();
 			$constant = $nameOrConstant;
 		} else {

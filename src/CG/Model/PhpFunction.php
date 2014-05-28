@@ -26,7 +26,8 @@ use CG\Model\Parts\BodyTrait;
 use CG\Model\Parts\ReferenceReturnTrait;
 use CG\Model\Parts\TypeTrait;
 use CG\Model\Parts\LongDescriptionTrait;
-use phpDocumentor\Reflection\DocBlock\Tag\ReturnTag;
+use gossi\docblock\DocBlock;
+use gossi\docblock\tags\ReturnTag;
 
 /**
  * Represents a PHP function.
@@ -50,7 +51,7 @@ class PhpFunction extends AbstractModel implements GenerateableInterface, Namesp
         	->setBody(ReflectionUtils::getFunctionBody($ref))
         ;
         
-        $docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($ref->getDocComment()));
+        $docblock = new DocBlock($ref);
         $function->setDocblock($docblock);
         $function->setDescription($docblock->getShortDescription());
         $function->setLongDescription($docblock->getLongDescription());
@@ -81,13 +82,15 @@ class PhpFunction extends AbstractModel implements GenerateableInterface, Namesp
     public function generateDocblock() {
     	$docblock = $this->getDocblock();
 		if (!$docblock instanceof Docblock) {
-			$docblock = new Docblock();
+			$docblock = new DocBlock();
 		}
-		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
+		$docblock->setShortDescription($this->getDescription());
+		$docblock->setLongDescription($this->getLongDescription());
 
    	 	if ($this->getType()) {
-			$return = new ReturnTag('return', $this->getType() . ' ' . $this->getTypeDescription());
-			$docblock->appendTag($return);
+			$docblock->appendTag(ReturnTag::create()
+				->setType($this->getType())
+				->setDescription($this->getTypeDescription()));
 		}
 		
     	foreach ($this->parameters as $param) {

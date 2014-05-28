@@ -4,8 +4,7 @@ namespace CG\Tests\Model;
 
 use CG\Model\PhpParameter;
 use CG\Model\PhpFunction;
-use CG\Model\Docblock;
-
+use gossi\docblock\DocBlock;
 class PhpFunctionTest extends \PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
@@ -16,7 +15,7 @@ class PhpFunctionTest extends \PHPUnit_Framework_TestCase {
 	
 	public function testFromReflection() {
 
-		$doc = new Docblock('/**
+		$doc = new DocBlock('/**
  * Makes foo with bar
  * 
  * @param string $baz

@@ -9,6 +9,7 @@ use CG\Model\Parts\PropertiesTrait;
 use CG\Model\Parts\TraitsTrait;
 use Doctrine\Common\Annotations\PhpParser;
 use CG\Utils\ReflectionUtils;
+use gossi\docblock\DocBlock;
 
 class PhpClass extends AbstractPhpStruct implements GenerateableInterface, TraitsInterface {
 
@@ -38,8 +39,8 @@ class PhpClass extends AbstractPhpStruct implements GenerateableInterface, Trait
 		$class->setUseStatements(self::$phpParser->parseClass($ref));
 	
 	
-        if ($doc = $ref->getDocComment()) {
-	        $docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($doc));
+        if ($ref->getDocComment()) {
+	        $docblock = new DocBlock($ref);
 	        $class->setDocblock($docblock);
 	        $class->setDescription($docblock->getShortDescription());
 	        $class->setLongDescription($docblock->getLongDescription());

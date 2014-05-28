@@ -1,26 +1,34 @@
 <?php
 namespace CG\Model\Parts;
 
+use gossi\docblock\DocBlock;
+
 trait DocblockTrait {
 	
+	/**
+	 * @var DocBlock
+	 */
 	private $docblock;
 
 	/**
-	 * @param Docblock|string $doc
+	 * @param DocBlock|string $doc
 	 * @return $this
 	 */
-	public function setDocblock($doc)
-	{
+	public function setDocblock($doc) {
 		if (is_string($doc)) {
 			$doc = trim($doc);
+			$doc = new DocBlock($doc);
 		}
 		$this->docblock = $doc;
 	
 		return $this;
 	}
 	
-	public function getDocblock()
-	{
+	/**
+	 * 
+	 * @return DocBlock
+	 */
+	public function getDocblock() {
 		return $this->docblock;
 	}
 }

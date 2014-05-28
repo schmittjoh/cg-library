@@ -20,7 +20,8 @@ namespace CG\Model;
 
 use CG\Utils\ReflectionUtils;
 use CG\Model\Parts\DefaultValueTrait;
-use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
+use gossi\docblock\tags\VarTag;
+use gossi\docblock\DocBlock;
 
 /**
  * Represents a PHP property.
@@ -47,8 +48,8 @@ class PhpProperty extends AbstractPhpMember
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
         ;
 
-        if ($doc = $ref->getDocComment()) {
-	        $docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($doc));
+        if ($ref->getDocComment()) {
+	        $docblock = new DocBlock($ref);
 	        $property->setDocblock($docblock);
 	        $property->setDescription($docblock->getShortDescription());
         }
@@ -65,12 +66,14 @@ class PhpProperty extends AbstractPhpMember
     public function generateDocblock() {
     	$docblock = $this->getDocblock();
 		if (!$docblock instanceof Docblock) {
-			$docblock = new Docblock();
+			$docblock = new DocBlock();
 		}
-		$docblock->setText(sprintf("%s\n\n%s", $this->getDescription(), $this->getLongDescription()));
-    	
-    	$var = new VarTag('var', sprintf('%s %s', $this->getType(), $this->getTypeDescription()));
-		$docblock->appendTag($var);  	
+		$docblock->setShortDescription($this->getDescription());
+		$docblock->setLongDescription($this->getLongDescription());
+		
+		$docblock->appendTag(VarTag::create()
+			->setType($this->getType())
+			->setDescription($this->getTypeDescription()));  	
     	
     	$this->setDocblock($docblock);
     
