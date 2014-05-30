@@ -7,6 +7,8 @@ use CG\Model\PhpProperty;
 use CG\Model\PhpMethod;
 use CG\Model\PhpClass;
 use CG\Core\CodeGenerator;
+use CG\Model\PhpFunction;
+use CG\Model\PhpParameter;
 
 class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,5 +50,35 @@ class CodeGeneratorTest extends \PHPUnit_Framework_TestCase
 
         return $class;
 	}
+	
+	public function testPrimitveParameter() {
+		$expected = 'function fn($a)
+{
+}';
+		$fn = PhpFunction::create('fn')
+			->addParameter(PhpParameter::create('a')->setType('int'))
+		;
+		
+		$codegen = new CodeGenerator();
+		$codegen->setGenerateDocblock(false);
+		$code = $codegen->generateCode($fn);
+		
+		$this->assertEquals($expected, $code);
+	}
 
+	public function testNonPrimitveParameter() {
+		$expected = 'function fn(Response $a)
+{
+}';
+		$fn = PhpFunction::create('fn')
+		->addParameter(PhpParameter::create('a')->setType('Response'))
+		;
+	
+		$codegen = new CodeGenerator();
+		$codegen->setGenerateDocblock(false);
+		$code = $codegen->generateCode($fn);
+	
+		$this->assertEquals($expected, $code);
+	}
+	
 }

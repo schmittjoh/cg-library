@@ -19,9 +19,9 @@
 namespace CG\Core;
 
 use CG\Visitor\GeneratorVisitorInterface;
-use CG\Model\PhpClass;
 use CG\Visitor\DefaultVisitor;
 use CG\Visitor\DefaultNavigator;
+use CG\Model\GenerateableInterface;
 
 /**
  * The default generator strategy.
@@ -57,7 +57,7 @@ class DefaultGeneratorStrategy implements GeneratorStrategyInterface
         $this->navigator->setPropertySortFunc($func);
     }
 
-    public function generate(PhpClass $class)
+    public function generate(GenerateableInterface $class)
     {
         $this->visitor->reset();
         $this->navigator->accept($this->visitor, $class);

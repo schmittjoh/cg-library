@@ -88,7 +88,7 @@ class InterceptionGenerator implements GeneratorInterface
         $loaderParam = new PhpParameter();
         $loaderParam
             ->setName('loader')
-            ->setType('CG\Proxy\InterceptorLoaderInterface')
+            ->setType('\CG\Proxy\InterceptorLoaderInterface')
         ;
         $loaderSetter->addParameter($loaderParam);
 

@@ -5,6 +5,7 @@ namespace CG\Model;
 use CG\Model\Parts\InterfacesTrait;
 use CG\Model\Parts\ConstantsTrait;
 use CG\Utils\ReflectionUtils;
+use gossi\docblock\DocBlock;
 
 class PhpInterface extends AbstractPhpStruct implements GenerateableInterface
 {
@@ -24,8 +25,8 @@ class PhpInterface extends AbstractPhpStruct implements GenerateableInterface
 		$interface->setUseStatements(self::$phpParser->parseClass($ref));
 	
 	
-        if ($doc = $ref->getDocComment()) {
-	        $docblock = new Docblock(ReflectionUtils::getUnindentedDocComment($doc));
+        if ($ref->getDocComment()) {
+	        $docblock = new DocBlock($ref);
 	        $interface->setDocblock($docblock);
 	        $interface->setDescription($docblock->getShortDescription());
 	        $interface->setLongDescription($docblock->getLongDescription());

@@ -3,6 +3,7 @@
 namespace CG\Model\Parts;
 
 use CG\Model\PhpConstant;
+
 trait ConstantsTrait {
 
 	/**

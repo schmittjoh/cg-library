@@ -28,7 +28,6 @@ use CG\Model\AbstractPhpStruct;
 use CG\Model\PhpTrait;
 use CG\Model\NamespaceInterface;
 use CG\Model\DocblockInterface;
-use CG\Model\Docblock;
 use CG\Model\TraitsInterface;
 use CG\Model\PhpInterface;
 
@@ -40,6 +39,11 @@ use CG\Model\PhpInterface;
 class DefaultVisitor implements GeneratorVisitorInterface
 {
     protected $writer;
+
+    protected static $noTypeHints = [
+    	'string', 'int', 'integer', 'bool', 'boolean', 'float', 
+    	'double', 'object', 'mixed'
+    ];
 
     public function __construct()
     {
@@ -318,13 +322,9 @@ class DefaultVisitor implements GeneratorVisitorInterface
             }
             $first = false;
 
-            if ($type = $parameter->getType()) {
-                if ('array' === $type || 'callable' === $type) {
-                    $this->writer->write($type . ' ');
-                } else {
-                    $this->writer->write(('\\' === $type[0] ? $type : '\\'. $type) . ' ');
-                }
-            }
+			if (($type = $parameter->getType()) && !in_array($type, self::$noTypeHints)) {
+            	$this->writer->write($type . ' ');
+			}
 
             if ($parameter->isPassedByReference()) {
                 $this->writer->write('&');
