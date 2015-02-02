@@ -18,12 +18,12 @@
 
 namespace CG\Proxy;
 
-use CG\Core\ClassUtils;
-use CG\Core\ReflectionUtils;
-use CG\Generator\PhpParameter;
-use CG\Generator\PhpProperty;
-use CG\Generator\PhpMethod;
-use CG\Generator\PhpClass;
+use CG\Utils\ClassUtils;
+use CG\Utils\ReflectionUtils;
+use CG\Model\PhpParameter;
+use CG\Model\PhpProperty;
+use CG\Model\PhpMethod;
+use CG\Model\PhpClass;
 
 /**
  * Interception Generator.
@@ -73,16 +73,14 @@ class InterceptionGenerator implements GeneratorInterface
             $genClass->addRequiredFile($this->requiredFile);
         }
 
-        $interceptorLoader = new PhpProperty();
+        $interceptorLoader = new PhpProperty($this->prefix.'loader');
         $interceptorLoader
-            ->setName($this->prefix.'loader')
             ->setVisibility(PhpProperty::VISIBILITY_PRIVATE)
         ;
         $genClass->setProperty($interceptorLoader);
 
-        $loaderSetter = new PhpMethod();
+        $loaderSetter = new PhpMethod($this->prefix.'setLoader');
         $loaderSetter
-            ->setName($this->prefix.'setLoader')
             ->setVisibility(PhpMethod::VISIBILITY_PUBLIC)
             ->setBody('$this->'.$this->prefix.'loader = $loader;')
         ;
@@ -90,7 +88,7 @@ class InterceptionGenerator implements GeneratorInterface
         $loaderParam = new PhpParameter();
         $loaderParam
             ->setName('loader')
-            ->setType('CG\Proxy\InterceptorLoaderInterface')
+            ->setType('\CG\Proxy\InterceptorLoaderInterface')
         ;
         $loaderSetter->addParameter($loaderParam);
 

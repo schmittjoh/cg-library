@@ -18,7 +18,7 @@
 
 namespace CG\Core;
 
-use CG\Generator\PhpClass;
+use CG\Model\GenerateableInterface;
 
 /**
  * Generator Strategy Interface.
@@ -30,5 +30,5 @@ use CG\Generator\PhpClass;
  */
 interface GeneratorStrategyInterface
 {
-    public function generate(PhpClass $class);
+    public function generate(GenerateableInterface $class);
 }

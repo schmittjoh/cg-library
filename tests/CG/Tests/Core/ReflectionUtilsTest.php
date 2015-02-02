@@ -2,8 +2,8 @@
 
 namespace CG\Tests\Core;
 
-use CG\Generator\Writer;
-use CG\Core\ReflectionUtils;
+use CG\Utils\Writer;
+use CG\Utils\ReflectionUtils;
 
 class ReflectionUtilsTest extends \PHPUnit_Framework_TestCase
 {

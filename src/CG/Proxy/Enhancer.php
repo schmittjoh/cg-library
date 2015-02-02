@@ -18,11 +18,9 @@
 
 namespace CG\Proxy;
 
-use CG\Core\NamingStrategyInterface;
-use CG\Generator\Writer;
-use CG\Generator\PhpMethod;
-use CG\Generator\PhpClass;
-use CG\Core\AbstractClassGenerator;
+use CG\Utils\Writer;
+use CG\Model\PhpMethod;
+use CG\Model\PhpClass;
 
 /**
  * Class enhancing generator implementation.
@@ -35,12 +33,14 @@ use CG\Core\AbstractClassGenerator;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class Enhancer extends AbstractClassGenerator
+class Enhancer extends AbstractProxyClassGenerator
 {
     private $generatedClass;
     private $class;
     private $interfaces;
     private $generators;
+    
+    private static $docBlock;
 
     public function __construct(\ReflectionClass $class, array $interfaces = array(), array $generators = array())
     {
@@ -64,7 +64,7 @@ class Enhancer extends AbstractClassGenerator
         $generatedClass = $this->getClassName($this->class);
 
         if (!class_exists($generatedClass, false)) {
-            eval($this->generateClass());
+            eval($this->generateCode());
         }
 
         $ref = new \ReflectionClass($generatedClass);
@@ -84,7 +84,7 @@ class Enhancer extends AbstractClassGenerator
             throw new \RuntimeException(sprintf('The directory "%s" is not writable.', $dir));
         }
 
-        file_put_contents($filename, "<?php\n\n".$this->generateClass());
+        file_put_contents($filename, "<?php\n\n".$this->generateCode());
     }
 
     /**
@@ -92,35 +92,34 @@ class Enhancer extends AbstractClassGenerator
      *
      * @return string
      */
-    final public function generateClass()
+    final public function generateCode()
     {
-        static $docBlock;
-        if (empty($docBlock)) {
+        if (empty(self::$docBlock)) {
             $writer = new Writer();
             $writer
                 ->writeln('/**')
                 ->writeln(' * CG library enhanced proxy class.')
-                ->writeln(' *')
+                ->writeln(' * ')
                 ->writeln(' * This code was generated automatically by the CG library, manual changes to it')
                 ->writeln(' * will be lost upon next generation.')
                 ->writeln(' */')
             ;
-            $docBlock = $writer->getContent();
+            self::$docBlock = $writer->getContent();
         }
 
         $this->generatedClass = PhpClass::create()
-            ->setDocblock($docBlock)
-            ->setParentClassName($this->class->name)
+            ->setDocblock(self::$docBlock)
+            ->setParentClassName('\\'.$this->class->name)
         ;
 
         $proxyClassName = $this->getClassName($this->class);
         if (false === strpos($proxyClassName, NamingStrategyInterface::SEPARATOR)) {
             throw new \RuntimeException(sprintf('The proxy class name must be suffixed with "%s" and an optional string, but got "%s".', NamingStrategyInterface::SEPARATOR, $proxyClassName));
         }
-        $this->generatedClass->setName($proxyClassName);
+        $this->generatedClass->setQualifiedName($proxyClassName);
 
         if (!empty($this->interfaces)) {
-            $this->generatedClass->setInterfaceNames(array_map(function($v) { return '\\'.$v; }, $this->interfaces));
+            $this->generatedClass->setInterfaces(array_map(function($v) { return '\\'.$v; }, $this->interfaces));
 
             foreach ($this->getInterfaceMethods() as $method) {
                 $method = PhpMethod::fromReflection($method);
@@ -136,7 +135,7 @@ class Enhancer extends AbstractClassGenerator
             }
         }
 
-        return $this->generateCode($this->generatedClass);
+        return $this->doGenerateCode($this->generatedClass);
     }
 
     /**

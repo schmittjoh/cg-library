@@ -2,7 +2,7 @@
 
 namespace CG\Tests\Core;
 
-use CG\Core\ClassUtils;
+use CG\Utils\ClassUtils;
 
 class ClassUtilsTest extends \PHPUnit_Framework_TestCase
 {

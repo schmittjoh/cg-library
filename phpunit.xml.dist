@@ -13,13 +13,21 @@
 >
     <testsuites>
         <testsuite name="CG Test Suite">
-            <directory>./tests/CG/</directory>
+            <directory>tests/CG/</directory>
         </testsuite>
     </testsuites>
     
-    <groups>
-        <exclude>
-            <group>performance</group>
-        </exclude>
-    </groups>    
+    <filter>
+    	<blacklist>
+    		<directory>tests/</directory>
+    		<directory>vendor/</directory>
+    	</blacklist>
+    	<whitelist processUncoveredFilesFromWhitelist="true">
+    		<directory suffix=".php">src/</directory>
+    	</whitelist>
+    </filter>
+    
+    <logging>
+		<log type="coverage-html" target="coverage"/>
+	</logging>
 </phpunit>

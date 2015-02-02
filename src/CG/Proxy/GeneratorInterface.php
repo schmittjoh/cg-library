@@ -18,7 +18,7 @@
 
 namespace CG\Proxy;
 
-use CG\Generator\PhpClass;
+use CG\Model\PhpClass;
 
 /**
  * Interface for enhancing generators.

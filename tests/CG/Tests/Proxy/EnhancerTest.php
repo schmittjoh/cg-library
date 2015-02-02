@@ -10,6 +10,16 @@ use CG\Tests\Proxy\Fixture\TraceInterceptor;
 
 class EnhancerTest extends \PHPUnit_Framework_TestCase
 {
+	public function setUp() {
+		// they are not explicitely instantiated through new WhatEver(); and such not 
+		// required through composer's autoload
+		require_once __DIR__ . '/Fixture/Entity.php';
+		require_once __DIR__ . '/Fixture/SimpleClass.php';
+		require_once __DIR__ . '/Fixture/TraceInterceptor.php';
+		require_once __DIR__ . '/Fixture/MarkerInterface.php';
+		require_once __DIR__ . '/Fixture/SluggableInterface.php';
+	}
+	
     /**
      * @dataProvider getGenerationTests
      */
@@ -18,7 +28,7 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
         $enhancer = new Enhancer(new \ReflectionClass($class), $interfaces, $generators);
         $enhancer->setNamingStrategy($this->getNamingStrategy($generatedClass));
 
-        $this->assertEquals($this->getContent(substr($generatedClass, strrpos($generatedClass, '\\') + 1)), $enhancer->generateClass());
+        $this->assertEquals($this->getContent(substr($generatedClass, strrpos($generatedClass, '\\') + 1)), $enhancer->generateCode());
     }
 
     public function getGenerationTests()
@@ -91,7 +101,7 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
      */
     private function getNamingStrategy($name)
     {
-        $namingStrategy = $this->getMock('CG\Core\NamingStrategyInterface');
+        $namingStrategy = $this->getMock('CG\Proxy\NamingStrategyInterface');
         $namingStrategy
             ->expects($this->any())
             ->method('getClassName')
