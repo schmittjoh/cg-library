@@ -46,6 +46,11 @@ class DefaultVisitor implements DefaultVisitorInterface
 
         if ($files = $class->getRequiredFiles()) {
             foreach ($files as $file) {
+                if ($file instanceof RelativePath) {
+                    $this->writer->writeln('require_once __DIR__ . '.var_export('/'.$file->getRelativePath(), true).';');
+                    continue;
+                }
+                
                 $this->writer->writeln('require_once '.var_export($file, true).';');
             }
 
