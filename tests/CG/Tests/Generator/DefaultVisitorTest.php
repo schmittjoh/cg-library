@@ -2,9 +2,11 @@
 
 namespace CG\Tests\Generator;
 
+use CG\Core\DefaultGeneratorStrategy;
 use CG\Generator\DefaultVisitor;
 use CG\Generator\PhpMethod;
 use CG\Generator\PhpParameter;
+use CG\Generator\PhpClass;
 use CG\Generator\Writer;
 use CG\Generator\PhpFunction;
 
@@ -68,6 +70,53 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
         $visitor->visitMethod($method);
 
         $this->assertEquals($this->getContent('callable_parameter.php'), $visitor->getContent());
+    }
+
+    public function testVisitClassWithPhp7Features()
+    {
+        if (PHP_VERSION_ID < 70000) {
+            $this->markTestSkipped('Test only valid for PHP >=7.0');
+        }
+
+        $ref = new \ReflectionClass('CG\Tests\Generator\Fixture\EntityPhp7');
+        $class = PhpClass::fromReflection($ref);
+
+        $generator = new DefaultGeneratorStrategy();
+        $content = $generator->generate($class);
+
+
+        $this->assertEquals($this->getContent('php7_class.php'), $content);
+    }
+
+
+    /**
+     * @dataProvider visitFunctionWithPhp7FeaturesDataProvider
+     */
+    public function testVisitFunctionWithPhp7Features($filename, $function)
+    {
+        if (PHP_VERSION_ID < 70000) {
+            $this->markTestSkipped('Test only valid for PHP >=7.0');
+        }
+
+        $visitor = new DefaultVisitor();
+        $visitor->visitFunction($function);
+
+        $this->assertEquals($this->getContent($filename.'.php'), $visitor->getContent());
+
+    }
+
+    public function visitFunctionWithPhp7FeaturesDataProvider()
+    {
+        $builtinReturn = PhpFunction::create('foo')
+                            ->setReturnType('bool');
+        $nonbuiltinReturn = PhpFunction::create('foo')
+                            ->setReturnType('\Foo');
+
+
+        return array(
+            array('php7_builtin_return', $builtinReturn),
+            array('php7_func_nonbuiltin_return', $nonbuiltinReturn),
+        );
     }
 
     /**
