@@ -72,7 +72,7 @@ class DefaultVisitor implements DefaultVisitorInterface
         }
 
         if ($docblock = $class->getDocblock()) {
-            $this->writer->write($docblock);
+            $this->writer->writeln($docblock);
         }
 
         if ($class->isAbstract()) {
@@ -137,7 +137,7 @@ class DefaultVisitor implements DefaultVisitorInterface
     public function visitProperty(PhpProperty $property)
     {
         if ($docblock = $property->getDocblock()) {
-            $this->writer->write($docblock)->rtrim();
+            $this->writer->writeln($docblock)->rtrim();
         }
 
         $this->writer->write($property->getVisibility().' '.($property->isStatic()? 'static ' : '').'$'.$property->getName());
