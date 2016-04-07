@@ -33,6 +33,8 @@ class PhpFunction extends AbstractBuilder
     private $body = '';
     private $referenceReturned = false;
     private $docblock;
+    private $returnType;
+    private $returnTypeBuiltin = false;
 
     public static function fromReflection(\ReflectionFunction $ref)
     {
@@ -45,6 +47,11 @@ class PhpFunction extends AbstractBuilder
             $function->setName($ref->name);
         }
 
+        if (method_exists($ref, 'getReturnType')) {
+            if ($type = $ref->getReturnType()) {
+                $function->setReturnType((string)$type);
+            }
+        }
         $function->referenceReturned = $ref->returnsReference();
         $function->docblock = ReflectionUtils::getUnindentedDocComment($ref->getDocComment());
 
@@ -123,6 +130,13 @@ class PhpFunction extends AbstractBuilder
     {
         $this->referenceReturned = (Boolean) $bool;
 
+        return $this;
+    }
+
+    public function setReturnType($type)
+    {
+        $this->returnType = $type;
+        $this->returnTypeBuiltin = BuiltinType::isBuiltIn($type);
         return $this;
     }
 
@@ -246,4 +260,20 @@ class PhpFunction extends AbstractBuilder
     {
         return $this->referenceReturned;
     }
+
+    public function getReturnType()
+    {
+        return $this->returnType;
+    }
+
+    public function hasReturnType()
+    {
+        return null !== $this->getReturnType();
+    }
+
+    public function hasBuiltinReturnType()
+    {
+        return $this->returnTypeBuiltin;
+    }
+
 }

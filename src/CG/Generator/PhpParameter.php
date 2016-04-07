@@ -30,6 +30,7 @@ class PhpParameter extends AbstractBuilder
     private $hasDefaultValue = false;
     private $passedByReference = false;
     private $type;
+    private $typeBuiltin;
 
     /**
      * @param string|null $name
@@ -51,12 +52,18 @@ class PhpParameter extends AbstractBuilder
             $parameter->setDefaultValue($ref->getDefaultValue());
         }
 
-        if ($ref->isArray()) {
-            $parameter->setType('array');
-        } elseif ($class = $ref->getClass()) {
-            $parameter->setType($class->name);
-        } elseif (method_exists($ref, 'isCallable') && $ref->isCallable()) {
-            $parameter->setType('callable');
+        if (method_exists($ref, 'getType')) {
+            if ($type = $ref->getType()) {
+                $parameter->setType((string)$type);
+            }
+        } else {
+            if ($ref->isArray()) {
+                $parameter->setType('array');
+            } elseif ($class = $ref->getClass()) {
+                $parameter->setType($class->name);
+            } elseif (method_exists($ref, 'isCallable') && $ref->isCallable()) {
+                $parameter->setType('callable');
+            }
         }
 
         return $parameter;
@@ -109,6 +116,7 @@ class PhpParameter extends AbstractBuilder
     public function setType($type)
     {
         $this->type = $type;
+        $this->typeBuiltin = BuiltinType::isBuiltIn($type);
 
         return $this;
     }
@@ -136,5 +144,15 @@ class PhpParameter extends AbstractBuilder
     public function getType()
     {
         return $this->type;
+    }
+
+    public function hasType()
+    {
+        return null !== $this->type;
+    }
+
+    public function hasBuiltinType()
+    {
+        return $this->typeBuiltin;
     }
 }

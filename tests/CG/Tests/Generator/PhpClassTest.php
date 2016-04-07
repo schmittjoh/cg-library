@@ -164,6 +164,29 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('foo' => 'bar', 'Bar' => 'Foo\Bar', 'Baz' => 'Foo\Bar'), $class->getUseStatements());
     }
 
+    /**
+     * @dataProvider usesClassDataProvider
+     */
+    public function testUsesClass($usage, $typedef, $expected)
+    {
+        $class = new PhpClass();
+        $class->addUseStatement($usage);
+        $this->assertEquals($class->uses($typedef), $expected);
+    }
+
+    public function usesClassDataProvider()
+    {
+        return array(
+            array('\DateTime', '\DateTime', false), // using fqdn from root ignores use statements
+            array('\DateTime', 'DateTime', true),
+            array('Foo\Bar\Baz', 'Baz', true),
+            array('Foo\Bar\Baz', 'Bar', false),
+            array('Foo\Bar\Baz', 'Foo', false),
+            array('Foo\Bar', 'Bar\Baz', true),
+            array('Foo\Bar', '\Bar\Baz', false)
+        );
+    }
+
     public function testSetGetProperties()
     {
         $class = new PhpClass();

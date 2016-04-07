@@ -161,7 +161,12 @@ class PhpClass extends AbstractBuilder
 
     public function setUseStatements(array $useStatements)
     {
-        $this->useStatements = $useStatements;
+        foreach ($useStatements as $alias => $namespace) {
+            if (!is_string($alias)) {
+                $alias = null;
+            }
+            $this->addUseStatement($namespace, $alias);
+        }
 
         return $this;
     }
@@ -465,5 +470,29 @@ class PhpClass extends AbstractBuilder
     public function getDocblock()
     {
         return $this->docblock;
+    }
+
+    public function hasUseStatements()
+    {
+        return count($this->getUseStatements()) > 0;
+    }
+
+    public function uses($typeDef)
+    {
+        if (empty($typeDef)) {
+            throw new \InvalidArgumentException("Empty type definition name given in " . __METHOD__);
+        }
+
+        if (!$this->hasUseStatements()) {
+            return false;
+        }
+
+        if ('\\' === $typeDef[0]) {
+            return false; // typedef references the root
+        }
+
+        $parts = explode('\\', $typeDef);
+        $typeDef = array_shift($parts);
+        return isset($this->useStatements[$typeDef]);
     }
 }

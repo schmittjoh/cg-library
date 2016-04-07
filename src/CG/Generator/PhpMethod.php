@@ -31,6 +31,8 @@ class PhpMethod extends AbstractPhpMember
     private $abstract = false;
     private $parameters = array();
     private $referenceReturned = false;
+    private $returnType = null;
+    private $returnTypeBuiltin = false;
     private $body = '';
 
     /**
@@ -52,6 +54,12 @@ class PhpMethod extends AbstractPhpMember
             ->setReferenceReturned($ref->returnsReference())
             ->setName($ref->name)
         ;
+
+        if (method_exists($ref, 'getReturnType')) {
+            if ($type = $ref->getReturnType()) {
+                $method->setReturnType((string)$type);
+            }
+        }
 
         if ($docComment = $ref->getDocComment()) {
             $method->setDocblock(ReflectionUtils::getUnindentedDocComment($docComment));
@@ -124,6 +132,13 @@ class PhpMethod extends AbstractPhpMember
     {
         $this->parameters[] = $parameter;
 
+        return $this;
+    }
+
+    public function setReturnType($type)
+    {
+        $this->returnType = $type;
+        $this->returnTypeBuiltin = BuiltinType::isBuiltin($type);
         return $this;
     }
 
@@ -200,5 +215,20 @@ class PhpMethod extends AbstractPhpMember
     public function getParameters()
     {
         return $this->parameters;
+    }
+
+    public function getReturnType()
+    {
+        return $this->returnType;
+    }
+
+    public function hasReturnType()
+    {
+        return null !== $this->getReturnType();
+    }
+
+    public function hasBuiltInReturnType()
+    {
+        return $this->returnTypeBuiltin;
     }
 }

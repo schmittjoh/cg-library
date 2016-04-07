@@ -72,7 +72,7 @@ class DefaultVisitor implements DefaultVisitorInterface
         }
 
         if ($docblock = $class->getDocblock()) {
-            $this->writer->write($docblock);
+            $this->writer->writeln($docblock);
         }
 
         if ($class->isAbstract()) {
@@ -137,7 +137,7 @@ class DefaultVisitor implements DefaultVisitorInterface
     public function visitProperty(PhpProperty $property)
     {
         if ($docblock = $property->getDocblock()) {
-            $this->writer->write($docblock)->rtrim();
+            $this->writer->writeln($docblock)->rtrim();
         }
 
         $this->writer->write($property->getVisibility().' '.($property->isStatic()? 'static ' : '').'$'.$property->getName());
@@ -184,15 +184,25 @@ class DefaultVisitor implements DefaultVisitorInterface
 
         $this->writeParameters($method->getParameters());
 
+        $this->writer->write(")");
+
+        if ($method->hasReturnType()) {
+            $type = $method->getReturnType();
+            $this->writer->write(': ');
+            if (!$method->hasBuiltInReturnType() && '\\' !== $type[0]) {
+                $this->writer->write('\\');
+            }
+            $this->writer->write($type);
+        }
+
         if ($method->isAbstract() || $this->isInterface) {
-            $this->writer->write(");\n\n");
+            $this->writer->write(";\n\n");
 
             return;
         }
 
         $this->writer
-            ->writeln(")")
-            ->writeln('{')
+            ->writeln("\n{")
             ->indent()
             ->writeln($method->getBody())
             ->outdent()
@@ -221,13 +231,25 @@ class DefaultVisitor implements DefaultVisitorInterface
         }
 
         if ($docblock = $function->getDocblock()) {
-            $this->writer->write($docblock)->rtrim();
+            $this->writer->writeln($docblock)->rtrim();
         }
 
         $this->writer->write("function {$function->getName()}(");
         $this->writeParameters($function->getParameters());
+        $this->writer->write(')');
+
+        if ($function->hasReturnType()) {
+            $type = $function->getReturnType();
+            $this->writer->write(': ');
+            if (!$function->hasBuiltinReturnType() && '\\' !== $type[0]) {
+                $this->writer->write('\\');
+            }
+
+            $this->writer->write($type);
+        }
+
         $this->writer
-            ->write(")\n{\n")
+            ->write("\n{\n")
             ->indent()
             ->writeln($function->getBody())
             ->outdent()
@@ -250,12 +272,12 @@ class DefaultVisitor implements DefaultVisitorInterface
             }
             $first = false;
 
-            if ($type = $parameter->getType()) {
-                if ('array' === $type || 'callable' === $type) {
-                    $this->writer->write($type . ' ');
-                } else {
-                    $this->writer->write(('\\' === $type[0] ? $type : '\\'. $type) . ' ');
+            if ($parameter->hasType()) {
+                $type = $parameter->getType();
+                if (!$parameter->hasBuiltinType() && '\\' !== $type[0]) {
+                    $this->writer->write('\\');
                 }
+                $this->writer->write($type . ' ');
             }
 
             if ($parameter->isPassedByReference()) {
