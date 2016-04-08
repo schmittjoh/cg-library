@@ -4,9 +4,11 @@ namespace CG\Tests\Proxy;
 
 use CG\Proxy\LazyInitializerInterface;
 use CG\Proxy\InterceptionGenerator;
+use CG\Proxy\AdvancedInterceptionGenerator;
 use CG\Proxy\LazyInitializerGenerator;
 use CG\Proxy\Enhancer;
 use CG\Tests\Proxy\Fixture\TraceInterceptor;
+use CG\Tests\Proxy\Fixture\AdvancedTraceInterceptor;
 
 class EnhancerTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,7 +46,27 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
         $traceable->setLoader($this->getLoader(array(
             $interceptor1 = new TraceInterceptor(),
             $interceptor2 = new TraceInterceptor(),
-        )));
+        ), 'CG\Proxy\InterceptorLoaderInterface'));
+
+        $this->assertEquals('foo', $traceable->getName());
+        $this->assertEquals('foo', $traceable->getName());
+        $this->assertEquals(2, count($interceptor1->getLog()));
+        $this->assertEquals(2, count($interceptor2->getLog()));
+    }
+
+    public function testAdvancedInterceptionGenerator()
+    {
+        $enhancer = new Enhancer(new \ReflectionClass('CG\Tests\Proxy\Fixture\Entity'), array(), array(
+            $generator = new AdvancedInterceptionGenerator()
+        ));
+        $enhancer->setNamingStrategy($this->getNamingStrategy('CG\Tests\Proxy\Fixture\Entity__CG__Traceable_'.sha1(microtime(true))));
+        $generator->setPrefix('');
+
+        $traceable = $enhancer->createInstance();
+        $traceable->setLoader($this->getLoader(array(
+            $interceptor1 = new AdvancedTraceInterceptor(),
+            $interceptor2 = new AdvancedTraceInterceptor(),
+        ), 'CG\Proxy\AdvancedInterceptorLoaderInterface'));
 
         $this->assertEquals('foo', $traceable->getName());
         $this->assertEquals('foo', $traceable->getName());
@@ -65,9 +87,9 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($entity, $initializer->getLastObject());
     }
 
-    private function getLoader(array $interceptors)
+    private function getLoader(array $interceptors, $class)
     {
-        $loader = $this->getMock('CG\Proxy\InterceptorLoaderInterface');
+        $loader = $this->getMock($class);
         $loader
             ->expects($this->any())
             ->method('loadInterceptors')

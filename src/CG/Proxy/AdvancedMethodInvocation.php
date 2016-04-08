@@ -28,9 +28,19 @@ namespace CG\Proxy;
  * proceed() method on this class.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Thomas Rabaix <thomas.rabaix@gmail.com>
  */
-class MethodInvocation
+class AdvancedMethodInvocation
 {
+
+    /**
+     * @var \ReflectionClass
+     */
+    public $reflectionClass;
+
+    /**
+     * @var \ReflectionMethod
+     */
     public $reflection;
     public $object;
     public $arguments;
@@ -39,39 +49,20 @@ class MethodInvocation
     private $pointer;
 
     /**
+     * @param \ReflectionClass  $class
      * @param \ReflectionMethod $reflection
      * @param object            $object
      * @param array             $arguments
      * @param array             $interceptors
      */
-    public function __construct(\ReflectionMethod $reflection, $object, array $arguments, array $interceptors)
+    public function __construct(\ReflectionClass $class, \ReflectionMethod $reflection, $object, array $arguments, array $interceptors)
     {
+        $this->reflectionClass = $class;
         $this->reflection = $reflection;
         $this->object = $object;
         $this->arguments = $arguments;
         $this->interceptors = $interceptors;
         $this->pointer = 0;
-    }
-
-    public function getNamedArgument($name)
-    {
-        foreach ($this->reflection->getParameters() as $i => $param) {
-            if ($param->name !== $name) {
-                continue;
-            }
-
-            if ( ! array_key_exists($i, $this->arguments)) {
-                if ($param->isDefaultValueAvailable()) {
-                    return $param->getDefaultValue();
-                }
-
-                throw new \RuntimeException(sprintf('There was no value given for parameter "%s".', $param->name));
-            }
-
-            return $this->arguments[$i];
-        }
-
-        throw new \InvalidArgumentException(sprintf('The parameter "%s" does not exist.', $name));
     }
 
     /**
@@ -99,6 +90,6 @@ class MethodInvocation
      */
     public function __toString()
     {
-        return sprintf('%s::%s', $this->reflection->class, $this->reflection->name);
+        return sprintf('%s::%s', $this->reflectionClass->name, $this->reflection->name);
     }
 }

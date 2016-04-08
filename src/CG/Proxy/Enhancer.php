@@ -42,6 +42,11 @@ class Enhancer extends AbstractClassGenerator
     private $interfaces;
     private $generators;
 
+    /**
+     * @param \ReflectionClass $class
+     * @param array            $interfaces
+     * @param array            $generators
+     */
     public function __construct(\ReflectionClass $class, array $interfaces = array(), array $generators = array())
     {
         if (empty($generators) && empty($interfaces)) {
@@ -56,7 +61,8 @@ class Enhancer extends AbstractClassGenerator
     /**
      * Creates a new instance  of the enhanced class.
      *
-     * @param  array  $args
+     * @param array $args
+     *
      * @return object
      */
     public function createInstance(array $args = array())
@@ -72,6 +78,11 @@ class Enhancer extends AbstractClassGenerator
         return $ref->newInstanceArgs($args);
     }
 
+    /**
+     * @param string $filename
+     *
+     * @throws \RuntimeException
+     */
     public function writeClass($filename)
     {
         if (!is_dir($dir = dirname($filename))) {
@@ -117,6 +128,7 @@ class Enhancer extends AbstractClassGenerator
         if (false === strpos($proxyClassName, NamingStrategyInterface::SEPARATOR)) {
             throw new \RuntimeException(sprintf('The proxy class name must be suffixed with "%s" and an optional string, but got "%s".', NamingStrategyInterface::SEPARATOR, $proxyClassName));
         }
+
         $this->generatedClass->setName($proxyClassName);
 
         if (!empty($this->interfaces)) {
@@ -141,6 +153,8 @@ class Enhancer extends AbstractClassGenerator
 
     /**
      * Adds stub methods for the interfaces that have been implemented.
+     *
+     * @return array
      */
     protected function getInterfaceMethods()
     {
