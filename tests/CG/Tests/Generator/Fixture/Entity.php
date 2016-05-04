@@ -25,11 +25,30 @@ abstract class Entity
      */
     final public function __construct($a, array &$b, \stdClass $c, $d = 'foo')
     {
+        $this->id = $a;
+        if ($d === 'foo'){
+            $this->enabled = true;
+        }
     }
 
     abstract protected function foo();
 
     private static function bar()
     {
+        return 'abc';
     }
+
+    private function braceAbove(){
+        $ret = $this->bar();
+        return $ret;
+    }
+
+    private function badFormat()
+
+         {
+             $ret = $this->bar();
+             return $ret;
+        }
+    private function oneLine(){  return 'abc';  }
+    private function braceInComment()/* { */{  return 'abc';  } /* } */
 }

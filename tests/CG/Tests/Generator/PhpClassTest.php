@@ -55,7 +55,13 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
  * @param array        $b
  * @param \stdClass    $c
  * @param string       $d
- */')
+ */')->setBody(<<<'PHP'
+$this->id = $a;
+        if ($d === 'foo'){
+            $this->enabled = true;
+        }
+PHP
+)
         ;
         $class->setMethod($method);
 
@@ -69,6 +75,37 @@ class PhpClassTest extends \PHPUnit_Framework_TestCase
             ->setName('bar')
             ->setStatic(true)
             ->setVisibility('private')
+            ->setBody("return 'abc';")
+        );
+
+        $class->setMethod(PhpMethod::create()
+            ->setName('braceAbove')
+            ->setVisibility('private')
+            ->setBody(<<<'PHP'
+$ret = $this->bar();
+        return $ret;
+PHP
+        ));
+
+        $class->setMethod(PhpMethod::create()
+            ->setName('badFormat')
+            ->setVisibility('private')
+            ->setBody(<<<'PHP'
+$ret = $this->bar();
+             return $ret;
+PHP
+            ));
+
+        $class->setMethod(PhpMethod::create()
+            ->setName('oneLine')
+            ->setVisibility('private')
+            ->setBody("return 'abc';")
+        );
+
+        $class->setMethod(PhpMethod::create()
+                ->setName('braceInComment')
+                ->setVisibility('private')
+                ->setBody("return 'abc';")
         );
 
         $this->assertEquals($class, PhpClass::fromReflection(new \ReflectionClass('CG\Tests\Generator\Fixture\Entity')));
