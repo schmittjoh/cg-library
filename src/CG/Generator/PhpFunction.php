@@ -40,9 +40,9 @@ class PhpFunction extends AbstractBuilder
     {
         $function = new static();
 
-        if (false === $pos = strrpos($ref->name, '\\')) {
+        if (false !== $pos = strrpos($ref->name, '\\')) {
             $function->setName(substr($ref->name, $pos + 1));
-            $function->setNamespace(substr($ref->name, $pos));
+            $function->setNamespace(substr($ref->name, 0, $pos));
         } else {
             $function->setName($ref->name);
         }
@@ -103,6 +103,7 @@ class PhpFunction extends AbstractBuilder
      */
     public function setQualifiedName($name)
     {
+        $name = ltrim($name,'\\');
         if (false !== $pos = strrpos($name, '\\')) {
             $this->namespace = substr($name, 0, $pos);
             $this->name = substr($name, $pos + 1);

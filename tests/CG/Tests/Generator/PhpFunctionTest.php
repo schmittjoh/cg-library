@@ -7,6 +7,21 @@ use CG\Generator\PhpFunction;
 
 class PhpFunctionTest extends \PHPUnit_Framework_TestCase
 {
+    public function testFromReflection(){
+        require_once __DIR__.'/Fixture/TestFunction.php';
+        $func = PhpFunction::fromReflection(new \ReflectionFunction('\CG\Tests\Generator\Fixture\TestFunction'));
+        $expect = PhpFunction::create()
+            ->setQualifiedName('\CG\Tests\Generator\Fixture\TestFunction')
+            ->setDocblock('/**
+ * @return string
+ */')
+            ->setParameters(array(PhpParameter::create('a')))
+            ;
+        $this->assertEquals('CG\Tests\Generator\Fixture',$func->getNamespace());
+        $this->assertEquals('TestFunction',$func->getName());
+        $this->assertEquals('CG\Tests\Generator\Fixture\TestFunction',$func->getQualifiedName());
+        $this->assertEquals($expect,$func);
+    }
     public function testSetGetName()
     {
         $func = new PhpFunction();
