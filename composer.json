@@ -3,7 +3,7 @@
     "description": "Toolset for generating PHP code",
     "keywords": ["code generation"],
     "type": "library",
-    "license": "Apache2",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Johannes M. Schmitt",
