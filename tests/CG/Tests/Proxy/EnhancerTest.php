@@ -67,7 +67,7 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
 
     private function getLoader(array $interceptors)
     {
-        $loader = $this->getMock('CG\Proxy\InterceptorLoaderInterface');
+        $loader = $this->createMock('CG\Proxy\InterceptorLoaderInterface');
         $loader
             ->expects($this->any())
             ->method('loadInterceptors')
@@ -91,7 +91,7 @@ class EnhancerTest extends \PHPUnit_Framework_TestCase
      */
     private function getNamingStrategy($name)
     {
-        $namingStrategy = $this->getMock('CG\Core\NamingStrategyInterface');
+        $namingStrategy = $this->createMock('CG\Core\NamingStrategyInterface');
         $namingStrategy
             ->expects($this->any())
             ->method('getClassName')
