@@ -98,12 +98,12 @@ class PhpClass extends AbstractBuilder
         $builtNamespace = '';
         $buildingNamespace = false;
         $matchedNamespace = false;
-        $useStatements = [];
+        $useStatements = array();
         $record = false;
-        $currentUse = [
+        $currentUse = array(
             'class' => '',
             'as' => '',
-        ];
+        );
         foreach ($tokens as $token) {
             if ($token[0] === T_NAMESPACE) {
                 $buildingNamespace = true;
@@ -128,10 +128,10 @@ class PhpClass extends AbstractBuilder
                 if ($record) {
                     $useStatements[] = $currentUse;
                     $record = false;
-                    $currentUse = [
+                    $currentUse = array(
                         'class' => '',
                         'as' => '',
-                    ];
+                    );
                 }
                 continue;
             }
