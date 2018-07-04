@@ -1,11 +1,28 @@
 language: php
 
-php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - hhvm
+sudo: false
+
+matrix:
+    include:
+        - php: hhvm
+          sudo: required
+          dist: trusty
+          group: edge
+        - php: hhvm-nightly
+          sudo: required
+          dist: trusty
+          group: edge
+        - php: 5.3
+          dist: precise
+        - php: 5.5
+        - php: 5.6
+        - php: 7.0
+        - php: 7.1
+        - php: 7.2
+    fast_finish: true
+    allow_failures:
+        - php: hhvm
+        - php: hhvm-nightly
 
 before_script:
     - curl -s http://getcomposer.org/installer | php

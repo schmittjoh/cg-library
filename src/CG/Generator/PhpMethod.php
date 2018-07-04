@@ -69,8 +69,49 @@ class PhpMethod extends AbstractPhpMember
             $method->addParameter(static::createParameter($param));
         }
 
-        // FIXME: Extract body?
+        $method->setBody(self::getReflectionMethodBody($ref));
         return $method;
+    }
+
+    /**
+     * @param \ReflectionMethod $reflection
+     *
+     * @return string
+     */
+    protected static function getReflectionMethodBody(\ReflectionMethod $reflection)
+    {
+        $tokens = token_get_all(file_get_contents($reflection->getFileName()));
+        $body = '';
+        $started = false;
+        $final = false;
+        $startLine = $reflection->getStartLine();
+        $endLineLine = $reflection->getEndLine();
+        foreach ($tokens as $token) {
+            if (!is_array($token)) {
+                if ($final && '}' == $token) {
+                    break;
+                }
+
+                if ($started) {
+                    $body .= $token;
+                }
+
+                continue;
+            }
+
+            if ($token[2] >= $endLineLine) {
+                break;
+            }
+            if ($token[2] > $startLine) {
+                if (($token[2] + 1) == $endLineLine) {
+                    $final = true;
+                }
+                $started = true;
+                $body .= $token[1];
+            }
+        }
+
+        return trim($body);
     }
 
     /**

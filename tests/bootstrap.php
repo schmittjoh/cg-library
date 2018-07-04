@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
 /*
  * This file is part of the CG library.
  *

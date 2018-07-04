@@ -37,6 +37,7 @@ class Php7ClassTest extends \PHPUnit_Framework_TestCase
  */')
             ->setVisibility('public')
             ->setReturnType('int')
+            ->setBody('return $this->id;')
         );
 
         $class->setMethod(PhpMethod::create()
@@ -52,6 +53,8 @@ class Php7ClassTest extends \PHPUnit_Framework_TestCase
                     ->setDefaultValue(null)
             )
             ->setReturnType('self')
+            ->setBody('$this->id = $id;
+        return $this;')
         );
 
         $class->setMethod(PhpMethod::create()
@@ -110,6 +113,10 @@ class Php7ClassTest extends \PHPUnit_Framework_TestCase
             ->setName('getBaz')
             ->setReturnType('CG\Tests\Generator\Fixture\SubFixture\Baz')
         );
+
+        $class->addUseStatement('\DateTime');
+        $class->addUseStatement('CG\Tests\Generator\Fixture\SubFixture\Foo');
+        $class->addUseStatement('CG\Tests\Generator\Fixture\SubFixture', 'Sub');
 
         $this->assertEquals($class, PhpClass::fromReflection(new \ReflectionClass('CG\Tests\Generator\Fixture\EntityPhp7')));
     }

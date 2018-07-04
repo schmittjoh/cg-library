@@ -84,10 +84,8 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
         $generator = new DefaultGeneratorStrategy();
         $content = $generator->generate($class);
 
-
         $this->assertEquals($this->getContent('php7_class.php'), $content);
     }
-
 
     /**
      * @dataProvider visitFunctionWithPhp7FeaturesDataProvider

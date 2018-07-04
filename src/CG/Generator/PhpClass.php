@@ -81,7 +81,98 @@ class PhpClass extends AbstractBuilder
             $class->setProperty(static::createProperty($property));
         }
 
+        $useStatements = self::getUseStatementsFromReflection($ref);
+        if (!empty($useStatements)) {
+            foreach ($useStatements as $useStatement) {
+                $class->addUseStatement($useStatement['class'], $useStatement['as']);
+            }
+        }
+
         return $class;
+    }
+
+    protected static function getUseStatementsFromReflection(\ReflectionClass $reflection)
+    {
+        $tokens = token_get_all(file_get_contents($reflection->getFileName()));
+
+        $builtNamespace = '';
+        $buildingNamespace = false;
+        $matchedNamespace = false;
+        $useStatements = array();
+        $record = false;
+        $currentUse = array(
+            'class' => '',
+            'as' => '',
+        );
+        foreach ($tokens as $token) {
+            if ($token[0] === T_NAMESPACE) {
+                $buildingNamespace = true;
+                if ($matchedNamespace) {
+                    break;
+                }
+            }
+            if ($buildingNamespace) {
+                if ($token === ';') {
+                    $buildingNamespace = false;
+                    continue;
+                }
+                switch ($token[0]) {
+                    case T_STRING:
+                    case T_NS_SEPARATOR:
+                        $builtNamespace .= $token[1];
+                        break;
+                }
+                continue;
+            }
+            if ($token === ';' || !is_array($token)) {
+                if ($record) {
+                    $useStatements[] = $currentUse;
+                    $record = false;
+                    $currentUse = array(
+                        'class' => '',
+                        'as' => '',
+                    );
+                }
+                continue;
+            }
+            if ($token[0] === T_CLASS) {
+                break;
+            }
+            if (strcasecmp($builtNamespace, $reflection->getNamespaceName()) === 0) {
+                $matchedNamespace = true;
+            }
+            if ($matchedNamespace) {
+                if ($token[0] === T_USE) {
+                    $record = 'class';
+                }
+                if ($token[0] === T_AS) {
+                    $record = 'as';
+                }
+                if ($record) {
+                    switch ($token[0]) {
+                        case T_STRING:
+                        case T_NS_SEPARATOR:
+                            if ($record) {
+                                $currentUse[$record] .= $token[1];
+                            }
+                            break;
+                    }
+                }
+            }
+            if ($token[2] >= $reflection->getStartLine()) {
+                break;
+            }
+        }
+        // Make sure the as key has the name of the class even
+        // if there is no alias in the use statement.
+        foreach ($useStatements as &$useStatement) {
+            if (empty($useStatement['as'])) {
+
+                $useStatement['as'] = basename($useStatement['class']);
+            }
+        }
+
+        return $useStatements;
     }
 
     /**

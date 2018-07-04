@@ -1,5 +1,9 @@
 namespace CG\Tests\Generator\Fixture;
 
+use \DateTime;
+use CG\Tests\Generator\Fixture\SubFixture\Foo;
+use CG\Tests\Generator\Fixture\SubFixture as Sub;
+
 /**
  * Doc Comment.
  *
@@ -26,6 +30,8 @@ class EntityPhp7
      */
     public function setId(int $id = NULL): self
     {
+        $this->id = $id;
+                return $this;
     }
 
     public function setArray(array &$array = NULL): array
@@ -45,6 +51,7 @@ class EntityPhp7
      */
     public function getId(): int
     {
+        return $this->id;
     }
 
     public function getFoo(): \CG\Tests\Generator\Fixture\SubFixture\Foo
