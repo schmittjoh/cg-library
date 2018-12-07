@@ -12,7 +12,7 @@ class BuiltinType
 
     public static function isBuiltin($type)
     {
-        return in_array($type, static::$builtinTypes);
+        return in_array(ltrim($type, '?'), static::$builtinTypes);
     }
 }
     

@@ -30,7 +30,7 @@ class PhpParameter extends AbstractBuilder
     private $hasDefaultValue = false;
     private $passedByReference = false;
     private $type;
-    private $typeBuiltin;
+    private $typeBuiltin = false;
 
     /**
      * @param string|null $name
@@ -54,7 +54,7 @@ class PhpParameter extends AbstractBuilder
 
         if (method_exists($ref, 'getType')) {
             if ($type = $ref->getType()) {
-                $parameter->setType((string)$type);
+                $parameter->setType($type);
             }
         } else {
             if ($ref->isArray()) {
@@ -111,10 +111,13 @@ class PhpParameter extends AbstractBuilder
     }
 
     /**
-     * @param string $type
+     * @param \ReflectionType|string $type
      */
     public function setType($type)
     {
+        if ($type instanceof \ReflectionType) {
+            $type = ($type->allowsNull() ? '?' : '') . $type->getName();
+        }
         $this->type = $type;
         $this->typeBuiltin = BuiltinType::isBuiltIn($type);
 

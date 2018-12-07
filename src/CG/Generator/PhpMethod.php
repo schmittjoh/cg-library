@@ -52,12 +52,11 @@ class PhpMethod extends AbstractPhpMember
             ->setStatic($ref->isStatic())
             ->setVisibility($ref->isPublic() ? self::VISIBILITY_PUBLIC : ($ref->isProtected() ? self::VISIBILITY_PROTECTED : self::VISIBILITY_PRIVATE))
             ->setReferenceReturned($ref->returnsReference())
-            ->setName($ref->name)
-        ;
+            ->setName($ref->name);
 
         if (method_exists($ref, 'getReturnType')) {
             if ($type = $ref->getReturnType()) {
-                $method->setReturnType((string)$type);
+                $method->setReturnType($type);
             }
         }
 
@@ -106,7 +105,7 @@ class PhpMethod extends AbstractPhpMember
      */
     public function setReferenceReturned($bool)
     {
-        $this->referenceReturned = (Boolean) $bool;
+        $this->referenceReturned = (Boolean)$bool;
 
         return $this;
     }
@@ -135,8 +134,16 @@ class PhpMethod extends AbstractPhpMember
         return $this;
     }
 
+    /**
+     * @param \ReflectionType|string $type
+     * @return $this
+     */
     public function setReturnType($type)
     {
+        if ($type instanceof \ReflectionType) {
+            $type = ($type->allowsNull() ? '?' : '') . $type->getName();
+        }
+
         $this->returnType = $type;
         $this->returnTypeBuiltin = BuiltinType::isBuiltin($type);
         return $this;

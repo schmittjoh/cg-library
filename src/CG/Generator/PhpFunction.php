@@ -49,7 +49,7 @@ class PhpFunction extends AbstractBuilder
 
         if (method_exists($ref, 'getReturnType')) {
             if ($type = $ref->getReturnType()) {
-                $function->setReturnType((string)$type);
+                $function->setReturnType($type);
             }
         }
         $function->referenceReturned = $ref->returnsReference();
@@ -133,10 +133,18 @@ class PhpFunction extends AbstractBuilder
         return $this;
     }
 
+    /**
+     * @param \ReflectionType|string $type
+     * @return $this
+     */
     public function setReturnType($type)
     {
+        if ($type instanceof \ReflectionType) {
+            $type = ($type->allowsNull() ? '?' : '') . $type->getName();
+        }
+
         $this->returnType = $type;
-        $this->returnTypeBuiltin = BuiltinType::isBuiltIn($type);
+        $this->returnTypeBuiltin = BuiltinType::isBuiltin($type);
         return $this;
     }
 
