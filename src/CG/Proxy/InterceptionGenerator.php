@@ -95,11 +95,15 @@ class InterceptionGenerator implements GeneratorInterface
         $loaderSetter->addParameter($loaderParam);
 
         $interceptorCode =
-             '$ref = new \ReflectionMethod(%s, %s);'."\n"
+            '$ref = new \ReflectionMethod(%s, %s);'."\n"
             .'$interceptors = $this->'.$this->prefix.'loader->loadInterceptors($ref, $this, array(%s));'."\n"
             .'$invocation = new \CG\Proxy\MethodInvocation($ref, $this, array(%s), $interceptors);'."\n\n"
-            .'return $invocation->proceed();'
         ;
+
+        $voidReturns = array(
+            true => '$invocation->proceed();',
+            false => 'return $invocation->proceed();'
+        );
 
         foreach ($methods as $method) {
             $params = array();
@@ -108,8 +112,11 @@ class InterceptionGenerator implements GeneratorInterface
             }
             $params = implode(', ', $params);
 
-            $genMethod = PhpMethod::fromReflection($method)
-                ->setBody(sprintf($interceptorCode, var_export(ClassUtils::getUserClass($method->class), true), var_export($method->name, true), $params, $params))
+            $genMethod = PhpMethod::fromReflection($method);
+
+            $isVoid = 'void' === $genMethod->getReturnType();
+
+            $genMethod->setBody(sprintf($interceptorCode . $voidReturns[$isVoid], var_export(ClassUtils::getUserClass($method->class), true), var_export($method->name, true), $params, $params))
                 ->setDocblock(null)
             ;
             $genClass->setMethod($genMethod);
