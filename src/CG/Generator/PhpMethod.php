@@ -57,7 +57,7 @@ class PhpMethod extends AbstractPhpMember
 
         if (method_exists($ref, 'getReturnType')) {
             if ($type = $ref->getReturnType()) {
-                $method->setReturnType((string)$type);
+                $method->setReturnType($type);
             }
         }
 
@@ -137,8 +137,8 @@ class PhpMethod extends AbstractPhpMember
 
     public function setReturnType($type)
     {
-        $this->returnType = $type;
-        $this->returnTypeBuiltin = BuiltinType::isBuiltin($type);
+        $this->returnType = (string)$type;
+        $this->returnTypeBuiltin = $type->isBuiltin();
         return $this;
     }
 

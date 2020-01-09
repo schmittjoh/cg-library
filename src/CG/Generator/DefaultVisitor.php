@@ -189,7 +189,7 @@ class DefaultVisitor implements DefaultVisitorInterface
         if ($method->hasReturnType()) {
             $type = $method->getReturnType();
             $this->writer->write(': ');
-            if (!$method->hasBuiltInReturnType() && '\\' !== $type[0]) {
+            if (!$method->hasBuiltInReturnType() && '\\' !== $type[0] && $type !== 'self') {
                 $this->writer->write('\\');
             }
             $this->writer->write($type);
@@ -277,7 +277,7 @@ class DefaultVisitor implements DefaultVisitorInterface
                 if ($parameter->isNullable()) {
                     $this->writer->write('?');
                 }
-                if (!$parameter->hasBuiltinType() && '\\' !== $type[0]) {
+                if (!$parameter->hasBuiltinType() && '\\' !== $type[0] && $type !== 'self') {
                     $this->writer->write('\\');
                 }
                 $this->writer->write($type . ' ');
