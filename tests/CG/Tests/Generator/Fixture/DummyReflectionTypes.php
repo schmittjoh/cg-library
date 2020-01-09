@@ -43,6 +43,10 @@ function dummyReturnInt(): int {
     return 1;
 }
 
+function dummyReturnVoid(): void {
+    // Do nothing;
+}
+
 function getArrayReflectionType() {
     return (new ReflectionFunction('dummyReturnArray'))->getReturnType();
 }
@@ -77,4 +81,8 @@ function getFooReflectionType() {
 
 function getIntReflectionType() {
     return (new ReflectionFunction('dummyReturnInt'))->getReturnType();
+}
+
+function getVoidReflectionType() {
+    return (new ReflectionFunction('dummyReturnVoid'))->getReturnType();
 }
