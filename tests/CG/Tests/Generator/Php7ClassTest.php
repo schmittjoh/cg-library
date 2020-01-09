@@ -1,7 +1,9 @@
 <?php
 namespace CG\Tests\Generator;
 
-require_once(dirname(__FILE__).'/Fixture/DummyReflectionTypes.php');
+if (PHP_VERSION_ID >= 70000) {
+    require_once(dirname(__FILE__).'/Fixture/DummyReflectionTypes.php');
+}
 
 use CG\Generator\PhpProperty;
 use CG\Generator\PhpParameter;
