@@ -113,7 +113,8 @@ class InterceptionGenerator implements GeneratorInterface
             $params = implode(', ', $params);
 
             $genMethod = PhpMethod::fromReflection($method);
-            $isVoid = 'void' === $genMethod->getReturnType();
+            $isVoid = $genMethod->hasBuiltInReturnType()
+                && 'void' === $genMethod->getReturnType();
 
             $genMethod->setBody(
                     sprintf(
