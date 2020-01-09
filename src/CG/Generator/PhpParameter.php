@@ -28,6 +28,7 @@ class PhpParameter extends AbstractBuilder
     private $name;
     private $defaultValue;
     private $hasDefaultValue = false;
+    private $nullable = false;
     private $passedByReference = false;
     private $type;
     private $typeBuiltin;
@@ -55,6 +56,20 @@ class PhpParameter extends AbstractBuilder
         if (method_exists($ref, 'getType')) {
             if ($type = $ref->getType()) {
                 $parameter->setType((string)$type);
+                /*
+                 * Types of parameters with default value null are considered
+                 * as nullable by ReflectionType but we don't want code generator
+                 * to add "?" to the type because in PHP 7.0 this would fail.
+                 *
+                 * If instead the code generator just sets the default value to null class inheritance compatibility
+                 * is maintained even if generated code will have just the default value null and not the "?".
+                 */
+                if (!(
+                    $ref->isDefaultValueAvailable()
+                    && is_null($ref->getDefaultValue())
+                )) {
+                    $parameter->setNullable($type->allowsNull());
+                }
             }
         } else {
             if ($ref->isArray()) {
@@ -72,6 +87,14 @@ class PhpParameter extends AbstractBuilder
     public function __construct($name = null)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @param boolean $nullable
+     */
+    public function setNullable($nullable)
+    {
+        $this->nullable = $nullable;
     }
 
     /**
@@ -134,6 +157,11 @@ class PhpParameter extends AbstractBuilder
     public function hasDefaultValue()
     {
         return $this->hasDefaultValue;
+    }
+
+    public function isNullable()
+    {
+        return $this->nullable;
     }
 
     public function isPassedByReference()
