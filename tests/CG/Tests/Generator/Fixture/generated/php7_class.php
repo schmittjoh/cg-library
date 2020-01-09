@@ -24,7 +24,7 @@ class EntityPhp7
      * @param int $id
      * @return EntityPhp7
      */
-    public function setId(int $id = NULL): self
+    public function setId(int $id = NULL): \CG\Tests\Generator\Fixture\EntityPhp7
     {
     }
 

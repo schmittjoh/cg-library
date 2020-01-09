@@ -1,6 +1,7 @@
 <?php
-
 namespace CG\Tests\Generator;
+
+require_once(dirname(__FILE__).'/Fixture/DummyReflectionTypes.php');
 
 use CG\Generator\PhpProperty;
 use CG\Generator\PhpParameter;
@@ -36,7 +37,7 @@ class Php7ClassTest extends \PHPUnit_Framework_TestCase
  * @return int
  */')
             ->setVisibility('public')
-            ->setReturnType('int')
+            ->setReturnType(getIntReflectionType())
         );
 
         $class->setMethod(PhpMethod::create()
@@ -51,19 +52,19 @@ class Php7ClassTest extends \PHPUnit_Framework_TestCase
                     ->setType('int')
                     ->setDefaultValue(null)
             )
-            ->setReturnType('self')
+            ->setReturnType(getEntityPhp7ReflectionType())
         );
 
         $class->setMethod(PhpMethod::create()
             ->setName('getTime')
             ->setVisibility('public')
-            ->setReturnType('DateTime')
+            ->setReturnType(getDateTimeReflectionType())
         );
 
         $class->setMethod(PhpMethod::create()
             ->setName('getTimeZone')
             ->setVisibility('public')
-            ->setReturnType('DateTimeZone')
+            ->setReturnType(getDateTimeZoneReflectionType())
         );
 
         $class->setMethod(PhpMethod::create()
@@ -87,7 +88,7 @@ class Php7ClassTest extends \PHPUnit_Framework_TestCase
         $class->setMethod(PhpMethod::create()
             ->setName('setArray')
             ->setVisibility('public')
-            ->setReturnType('array')
+            ->setReturnType(getArrayReflectionType())
             ->addParameter(PhpParameter::create()
                 ->setName('array')
                 ->setDefaultValue(null)
@@ -98,17 +99,17 @@ class Php7ClassTest extends \PHPUnit_Framework_TestCase
 
         $class->setMethod(PhpMethod::create()
             ->setName('getFoo')
-            ->setReturnType('CG\Tests\Generator\Fixture\SubFixture\Foo')
+            ->setReturnType(getFooReflectionType())
         );
 
         $class->setMethod(PhpMethod::create()
             ->setName('getBar')
-            ->setReturnType('CG\Tests\Generator\Fixture\SubFixture\Bar')
+            ->setReturnType(getBarReflectionType())
         );
 
         $class->setMethod(PhpMethod::create()
             ->setName('getBaz')
-            ->setReturnType('CG\Tests\Generator\Fixture\SubFixture\Baz')
+            ->setReturnType(getBazReflectionType())
         );
 
         $this->assertEquals($class, PhpClass::fromReflection(new \ReflectionClass('CG\Tests\Generator\Fixture\EntityPhp7')));
