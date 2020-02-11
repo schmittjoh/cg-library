@@ -31,7 +31,7 @@ class EntityPhp7
      * @param int $id
      * @return EntityPhp7
      */
-    public function setId(int $id = null): self
+    public function setId(int $id = null): EntityPhp7
     {
         $this->id = $id;
         return $this;

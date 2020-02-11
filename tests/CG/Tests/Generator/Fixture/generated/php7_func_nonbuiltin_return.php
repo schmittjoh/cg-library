@@ -1,3 +1,3 @@
-function foo(): \Foo
+function foo(): \CG\Tests\Generator\Fixture\SubFixture\Foo
 {
 }

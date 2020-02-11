@@ -1,6 +1,9 @@
 <?php
-
 namespace CG\Tests\Generator;
+
+if (PHP_VERSION_ID >= 70000) {
+    require_once(dirname(__FILE__).'/Fixture/DummyReflectionTypes.php');
+}
 
 use CG\Core\DefaultGeneratorStrategy;
 use CG\Generator\DefaultVisitor;
@@ -107,10 +110,14 @@ class DefaultVisitorTest extends \PHPUnit_Framework_TestCase
 
     public function visitFunctionWithPhp7FeaturesDataProvider()
     {
+        if (PHP_VERSION_ID < 70000) {
+            return array();
+        }
+
         $builtinReturn = PhpFunction::create('foo')
-                            ->setReturnType('bool');
+                            ->setReturnType(getBoolReflectionType());
         $nonbuiltinReturn = PhpFunction::create('foo')
-                            ->setReturnType('\Foo');
+                            ->setReturnType(getFooReflectionType());
 
 
         return array(
