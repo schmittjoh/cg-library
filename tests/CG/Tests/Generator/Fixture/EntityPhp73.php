@@ -17,4 +17,8 @@ class EntityPhp73
     public function doNothing() : void {
         // Do nothing
     }
+
+    public function doNothing2() : ?string {
+        return null;
+    }
 }

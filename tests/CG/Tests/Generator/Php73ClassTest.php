@@ -33,6 +33,12 @@ class Php73ClassTest extends \PHPUnit_Framework_TestCase
             ->setReturnType(getVoidReflectionType())
         );
 
+        $class->setMethod(PhpMethod::create()
+            ->setName('doNothing2')
+            ->setVisibility('public')
+            ->setReturnType(getNullableStringReflectionType())
+        );
+
         $this->assertEquals($class, PhpClass::fromReflection(new \ReflectionClass('CG\Tests\Generator\Fixture\EntityPhp73')));
     }
 }

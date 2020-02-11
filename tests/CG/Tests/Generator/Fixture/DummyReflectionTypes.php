@@ -4,6 +4,10 @@ require_once(dirname(__FILE__).'/SubFixture/Foo.php');
 require_once(dirname(__FILE__).'/SubFixture/Bar.php');
 require_once(dirname(__FILE__).'/SubFixture/Baz.php');
 
+function dummyNullableReturnString(): ?string {
+    return null;
+}
+
 function dummyReturnArray(): array {
     return array();
 }
@@ -81,6 +85,10 @@ function getFooReflectionType() {
 
 function getIntReflectionType() {
     return (new ReflectionFunction('dummyReturnInt'))->getReturnType();
+}
+
+function getNullableStringReflectionType() {
+    return (new ReflectionFunction('dummyNullableReturnString'))->getReturnType();
 }
 
 function getVoidReflectionType() {

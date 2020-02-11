@@ -32,6 +32,7 @@ class PhpMethod extends AbstractPhpMember
     private $parameters = array();
     private $referenceReturned = false;
     private $returnType = null;
+    private $returnTypeAllowsNull = false;
     private $returnTypeBuiltin = false;
     private $body = '';
 
@@ -139,6 +140,7 @@ class PhpMethod extends AbstractPhpMember
     {
         $this->returnType = (string)$type;
         $this->returnTypeBuiltin = $type->isBuiltin();
+        $this->returnTypeAllowsNull = $type->allowsNull();
         return $this;
     }
 
@@ -230,5 +232,10 @@ class PhpMethod extends AbstractPhpMember
     public function hasBuiltInReturnType()
     {
         return $this->returnTypeBuiltin;
+    }
+
+    public function allowsNullReturn()
+    {
+        return $this->returnTypeAllowsNull;
     }
 }
