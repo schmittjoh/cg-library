@@ -57,7 +57,11 @@ class PhpMethod extends AbstractPhpMember
 
         if (method_exists($ref, 'getReturnType')) {
             if ($type = $ref->getReturnType()) {
-                $method->setReturnType((string)$type);
+                if ($type instanceof \ReflectionNamedType) {
+                    $method->setReturnType($type->getName());
+                } else {
+                    $method->setReturnType((string)$type);
+                }
             }
         }
 
