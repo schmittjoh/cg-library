@@ -31,6 +31,24 @@ class PhpParameter extends AbstractBuilder
     private $passedByReference = false;
     private $type;
     private $typeBuiltin;
+    private $nullable;
+
+    /**
+     * @return mixed
+     */
+    public function isNullable()
+    {
+        return $this->nullable;
+    }
+
+    /**
+     * @param mixed $nullable
+     * @return void
+     */
+    public function setNullable(bool $nullable): void
+    {
+        $this->nullable = $nullable;
+    }
 
     /**
      * @param string|null $name
@@ -46,6 +64,7 @@ class PhpParameter extends AbstractBuilder
         $parameter
             ->setName($ref->name)
             ->setPassedByReference($ref->isPassedByReference())
+            ->setNullable($ref->allowsNull())
         ;
 
         if ($ref->isDefaultValueAvailable()) {
@@ -113,7 +132,7 @@ class PhpParameter extends AbstractBuilder
     /**
      * @param string $type
      */
-    public function setType($type)
+    public function setType($type, $allowsNull = false)
     {
         $this->type = $type;
         $this->typeBuiltin = BuiltinType::isBuiltIn($type);
