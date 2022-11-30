@@ -189,6 +189,11 @@ class DefaultVisitor implements DefaultVisitorInterface
         if ($method->hasReturnType()) {
             $type = $method->getReturnType();
             $this->writer->write(': ');
+
+            if ($method->isReturnNullable()) {
+                $this->writer->write('?');
+            }
+            
             if (!$method->hasBuiltInReturnType() && '\\' !== $type[0]) {
                 $this->writer->write('\\');
             }
@@ -241,6 +246,11 @@ class DefaultVisitor implements DefaultVisitorInterface
         if ($function->hasReturnType()) {
             $type = $function->getReturnType();
             $this->writer->write(': ');
+            
+            if ($function->isReturnNullable()) {
+                $this->writer->write('?');
+            }
+            
             if (!$function->hasBuiltinReturnType() && '\\' !== $type[0]) {
                 $this->writer->write('\\');
             }
@@ -266,6 +276,7 @@ class DefaultVisitor implements DefaultVisitorInterface
     private function writeParameters(array $parameters)
     {
         $first = true;
+        /** @var PhpParameter $parameter */
         foreach ($parameters as $parameter) {
             if (!$first) {
                 $this->writer->write(', ');
@@ -274,6 +285,9 @@ class DefaultVisitor implements DefaultVisitorInterface
 
             if ($parameter->hasType()) {
                 $type = $parameter->getType();
+                if ($parameter->isNullable()) {
+                    $this->writer->write('?');
+                }
                 if (!$parameter->hasBuiltinType() && '\\' !== $type[0]) {
                     $this->writer->write('\\');
                 }

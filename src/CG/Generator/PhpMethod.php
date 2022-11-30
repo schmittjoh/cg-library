@@ -34,6 +34,7 @@ class PhpMethod extends AbstractPhpMember
     private $returnType = null;
     private $returnTypeBuiltin = false;
     private $body = '';
+    private $returnNullable = false;
 
     /**
      * @param string|null $name
@@ -41,6 +42,23 @@ class PhpMethod extends AbstractPhpMember
     public static function create($name = null)
     {
         return new static($name);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isReturnNullable(): ?bool
+    {
+        return $this->returnNullable;
+    }
+
+    /**
+     * @param bool $returnNullable
+     * @return void
+     */
+    public function setReturnNullable(bool $returnNullable): void
+    {
+        $this->returnNullable = $returnNullable;
     }
 
     public static function fromReflection(\ReflectionMethod $ref)
@@ -57,7 +75,8 @@ class PhpMethod extends AbstractPhpMember
 
         if (method_exists($ref, 'getReturnType')) {
             if ($type = $ref->getReturnType()) {
-                $method->setReturnType((string)$type);
+                $method->setReturnType((string)$type, $type->allowsNull());
+                $method->setReturnNullable($type->allowsNull());
             }
         }
 
@@ -135,7 +154,7 @@ class PhpMethod extends AbstractPhpMember
         return $this;
     }
 
-    public function setReturnType($type)
+    public function setReturnType($type, $allowsNull = false)
     {
         $this->returnType = $type;
         $this->returnTypeBuiltin = BuiltinType::isBuiltin($type);

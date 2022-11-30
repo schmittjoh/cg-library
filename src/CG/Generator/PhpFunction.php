@@ -35,6 +35,24 @@ class PhpFunction extends AbstractBuilder
     private $docblock;
     private $returnType;
     private $returnTypeBuiltin = false;
+    private $returnNullable = false;
+
+    /**
+     * @return bool
+     */
+    public function isReturnNullable(): ?bool
+    {
+        return $this->returnNullable;
+    }
+
+    /**
+     * @param bool $returnNullable
+     * @return void
+     */
+    public function setReturnNullable(bool $returnNullable): void
+    {
+        $this->returnNullable = $returnNullable;
+    }
 
     public static function fromReflection(\ReflectionFunction $ref)
     {
@@ -50,6 +68,7 @@ class PhpFunction extends AbstractBuilder
         if (method_exists($ref, 'getReturnType')) {
             if ($type = $ref->getReturnType()) {
                 $function->setReturnType((string)$type);
+                $function->setReturnNullable($type->allowsNull());
             }
         }
         $function->referenceReturned = $ref->returnsReference();
